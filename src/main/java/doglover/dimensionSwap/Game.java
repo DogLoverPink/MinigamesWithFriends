@@ -34,7 +34,7 @@ public class Game {
     private List<Gamemode> gamemodes = new ArrayList<>();
     private boolean isRunning;
 
-    private Map<Player, FastBoard> boards = new HashMap<>();
+    private final Map<Player, FastBoard> boards = new HashMap<>();
 
     public Set<Player> getPlayers() {
         return players;
@@ -137,6 +137,8 @@ public class Game {
             }
         }
         players.clear();
+        boards.clear();
+        points.clear();
 
     }
 
@@ -218,6 +220,11 @@ public class Game {
         addPointsToPlayer(winner, 1);
 
         if (!isRunning) {
+            Location dmloc = winner.getWorld().getSpawnLocation();
+            BlockUtils.removeWallsAroundLocation(dmloc);
+            aliveDeathMatchPlayers.clear();
+            deadDeathMatchPlayers.clear();
+            inDeathMatch = false;
             return;
         }
 
