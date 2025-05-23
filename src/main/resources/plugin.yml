@@ -1,0 +1,10 @@
+name: DimensionSwap
+version: '0.5'
+main: doglover.dimensionSwap.DimensionSwap
+api-version: '1.21'
+
+commands:
+  dimensionswap:
+    description: Swap the dimensions of two players
+    aliases:
+      - ds
