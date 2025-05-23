@@ -1,7 +1,6 @@
 package doglover.dimensionSwap.gamemodes;
 
 import doglover.dimensionSwap.DimensionSwap;
-import doglover.dimensionSwap.GameConfig;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -19,11 +18,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
     List<String> yetToBeUsedWorlds = new ArrayList<>();
     private int maxRounds;
     private int currentRound = 0;
-    GameConfig config;
 
-    public  GameConfig getConfig() {
-        return config;
-    }
 
     public static void initialize() {
         savedWorldsFolder = new File( DimensionSwap.getGamePlugin().getDataFolder() + "/" + "savedDimensionTPWorlds" );
@@ -57,14 +52,10 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameStart() {
-        GameConfig gameConfig = GameConfig.loadGameConfig();
-//        GameConfig gameConfig = new GameConfig();
-        gameConfig.saveConfig();
-        config = gameConfig;
-        this.setMinTicks(config.getMinimumSecondsBeforeSwap() * 20);
-        this.setMaxTicks(config.getMaximumSecondsBeforeSwap() * 20);
+        this.setMinTicks(getGame().getConfig().getDimensionSwapConfig().getMinimumSecondsBeforeSwap() * 20);
+        this.setMaxTicks(getGame().getConfig().getDimensionSwapConfig().getMaximumSecondsBeforeSwap() * 20);
         super.onGameStart();
-        this.maxRounds = config.getNumbersOfSwaps();
+        this.maxRounds = getGame().getConfig().getDimensionSwapConfig().getNumberOfSwaps();
         this.currentRound = 0;
         refreshWorldFolders();
         try {

@@ -1,5 +1,6 @@
 package doglover.dimensionSwap;
 
+import doglover.dimensionSwap.configs.MainGameConfig;
 import doglover.dimensionSwap.gamemodes.Gamemode;
 import doglover.dimensionSwap.utils.BlockUtils;
 import fr.mrmicky.fastboard.FastBoard;
@@ -19,8 +20,15 @@ import java.util.*;
 
 public class Game {
     private Set<Player> players = new HashSet<>();
-    private Map<Player, Integer> points = new HashMap<>();
+    private final Map<Player, Integer> points = new HashMap<>();
     private int pointsToWin = 2;
+
+    private final MainGameConfig config = new MainGameConfig();
+
+    public MainGameConfig getConfig() {
+        return config;
+    }
+
     public boolean isRunning() {
         return isRunning;
     }
@@ -100,7 +108,7 @@ public class Game {
         if (players.isEmpty()) {
             players.addAll(Bukkit.getServer().getOnlinePlayers());
         }
-
+        pointsToWin = config.getPointsToWin();
         isRunning = true;
         for (Player player : players) {
 
@@ -298,7 +306,7 @@ public class Game {
         for (Gamemode gamemode : gamemodes) {
             gamemode.tick();
         }
-        scoreboardContribututions.add("§dPoints:");
+        scoreboardContribututions.add("§dPoints: (First to " + pointsToWin + ")");
         List<Player> sortedPlayerPoints = new ArrayList<>(players);
         sortedPlayerPoints.sort(Comparator.comparingInt(this::getPointsFromPlayer).reversed());
         for (Player player : sortedPlayerPoints) {
