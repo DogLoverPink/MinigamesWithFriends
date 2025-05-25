@@ -127,4 +127,8 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         DimensionSwap.getGamePlugin().getLogger().info("Time event triggered!");
         shufflePlayers();
     }
+    @Override
+    public String toString() {
+        return "DimensionSwap";
+    }
 }

@@ -13,6 +13,7 @@ public class GamemodeConfig {
     Map<String, Class<?>> configValues = new HashMap<>();
     FileConfiguration config = DimensionSwap.getGamePlugin().getConfig();
 
+
     public String getPrefix() {
         return prefix;
     }

@@ -12,6 +12,10 @@ public abstract class Gamemode {
 
     public abstract void onGameStart();
 
+    public void onDeathMatchEnd() {
+
+    }
+
     private Game game;
 
     public Game getGame() {

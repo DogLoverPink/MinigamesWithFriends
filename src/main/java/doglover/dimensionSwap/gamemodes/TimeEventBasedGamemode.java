@@ -72,7 +72,7 @@ public abstract class TimeEventBasedGamemode extends Gamemode {
         int seconds = tickGoal / 20;
         int minutes = seconds / 60;
         seconds = seconds - (minutes * 60);
-        return minutes + ":" + String.format("%02d", seconds);
+        return minutes + ":" + String.format("%02d", seconds + 1);
     }
 
 

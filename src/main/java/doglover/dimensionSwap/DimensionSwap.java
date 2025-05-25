@@ -31,6 +31,7 @@ public final class DimensionSwap extends JavaPlugin {
         minigameCommand.setTabCompleter(new GameCommandTabCompleter());
         this.getServer().getPluginManager().registerEvents(new DeathListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandBlockRunEvent(), this);
+        this.getServer().getPluginManager().registerEvents(new BreakBlockEvent(), this);
         DimensionSwapGamemode.initialize();
         Game swapGame = new Game();
         game = swapGame;

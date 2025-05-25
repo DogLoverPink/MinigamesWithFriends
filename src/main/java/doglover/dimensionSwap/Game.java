@@ -4,6 +4,7 @@ import doglover.dimensionSwap.configs.MainGameConfig;
 import doglover.dimensionSwap.gamemodes.DeathSwapGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
 import doglover.dimensionSwap.utils.BlockUtils;
+import doglover.dimensionSwap.utils.PlayerUtils;
 import fr.mrmicky.fastboard.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -78,11 +79,40 @@ public class Game {
         gamemode.setGame(null);
     }
 
+    public void removeGamemode(Class<? extends Gamemode> gamemodeClazz) {
+        for (Gamemode gamemode : gamemodes) {
+            if (gamemode.getClass() == gamemodeClazz) {
+                this.gamemodes.remove(gamemode);
+                gamemode.setGame(null);
+                return;
+            }
+        }
+    }
+
     public void clearGamemodes() {
         for (Gamemode gamemode : gamemodes) {
             gamemode.setGame(null);
         }
         this.gamemodes.clear();
+    }
+
+    public boolean isGamemodeActive(Class<? extends Gamemode> gamemodeClass) {
+        for (Gamemode gamemode : gamemodes) {
+            if (gamemode.getClass() == gamemodeClass) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public <T extends Gamemode> T getGamemode(Class<T> gamemodeClass) {
+        for (Gamemode gamemode : gamemodes) {
+            if (gamemode.getClass() == gamemodeClass) {
+                return (T) gamemode;
+            }
+        }
+        return null;
     }
 
     public void addPointsToPlayer(Player player, int points) {
@@ -128,10 +158,10 @@ public class Game {
             board.updateTitle("§b§lEpic Minigames");
             board.updateLines(new ArrayList<>());
 
-            player.getInventory().clear();
+            PlayerUtils.resetPlayer(player);
             player.setGameMode(GameMode.SURVIVAL);
-            player.setFoodLevel(20);
-            player.setHealth(20.0);
+            player.sendMessage("§a§lGame Started!");
+            player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
 
         }
         for (Gamemode gamemode : gamemodes) {
@@ -259,6 +289,10 @@ public class Game {
                 }
             }, 59);
             plr.sendMessage("§c§lDeathmatch Ended!");
+        }
+
+        for (Gamemode gamemode : gamemodes) {
+            gamemode.onDeathMatchEnd();
         }
 
         Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
