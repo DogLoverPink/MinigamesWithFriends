@@ -1,8 +1,9 @@
-package doglover.dimensionSwap;
+package doglover.dimensionSwap.commands;
 
+import doglover.dimensionSwap.DimensionSwap;
+import doglover.dimensionSwap.Game;
 import doglover.dimensionSwap.configs.GamemodeConfig;
-import doglover.dimensionSwap.gamemodes.DimensionSwapGamemode;
-import org.bukkit.Bukkit;
+import doglover.dimensionSwap.gamemodes.Gamemode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,19 @@ public class DimensionSwapCommand implements CommandExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("addPlayer")) {
+        String minigameCommand = args[0];
+
+        if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
+            handleEnableGamemode(commandSender, args);
+        }
+        if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
+            handleDisableGamemode(commandSender, args);
+        }
+        if (minigameCommand.equalsIgnoreCase("ClearGamemodes")) {
+            DimensionSwap.getGame().clearGamemodes();
+        }
+
+        if (minigameCommand.equalsIgnoreCase("AddPlayer")) {
             if (args.length == 2) {
                 String playerName = args[1];
                 DimensionSwap.getGame().getPlayers().add(DimensionSwap.getGamePlugin().getServer().getPlayer(playerName));
@@ -34,22 +47,23 @@ public class DimensionSwapCommand implements CommandExecutor {
                 return true;
             }
         }
-        if (args[0].equalsIgnoreCase("start")) {
-            DimensionSwap.getGame().clearGamemodes();
-            DimensionSwapGamemode gamemode = new DimensionSwapGamemode();
-            DimensionSwap.getGame().addGamemode(gamemode);
+        if (minigameCommand.equalsIgnoreCase("start")) {
+            if (DimensionSwap.getGame().getGamemodes().isEmpty()) {
+                commandSender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
+                return true;
+            }
             DimensionSwap.getGame().startGame();
             commandSender.sendMessage("§aGame started.");
         }
-        if (args[0].equalsIgnoreCase("fling")) {
+        if (minigameCommand.equalsIgnoreCase("fling")) {
             Player plr = (Player) commandSender;
             Game.launchPlayerSideways(plr, 10);
         }
-        if (args[0].equalsIgnoreCase("stop")) {
+        if (minigameCommand.equalsIgnoreCase("stop")) {
             DimensionSwap.getGame().endGame();
             commandSender.sendMessage("§cGame stopped.");
         }
-        if (args[0].equalsIgnoreCase("config")) {
+        if (minigameCommand.equalsIgnoreCase("config")) {
             if (args.length == 1) {
                 commandSender.sendMessage("§cSpecify a gamemode and a config key.");
                 commandSender.sendMessage("§eEx.: /dimensionSwap config dimensionSwap canVisitSameWorldTwice true");
@@ -65,25 +79,42 @@ public class DimensionSwapCommand implements CommandExecutor {
                 return true;
             }
             if (args.length == 4) {
-                String key = args[1];
-                if (key.equalsIgnoreCase("save")) {
-                    ((DimensionSwapGamemode) DimensionSwap.getGame().getGamemodes().get(0)).getConfig().saveConfig();
-                    return true;
-                }
-
-                if (key.equalsIgnoreCase("list")) {
-                    commandSender.sendMessage("§aConfig list:\n§d" +
-                            "canVisitSameWorldTwice\n" +
-                            "minimumSecondsBeforeSwap\n" +
-                            "maximumSecondsBeforeSwap\n" +
-                            "numbersOfSwaps");
-                    return true;
-                }
-                String value = ((DimensionSwapGamemode) DimensionSwap.getGame().getGamemodes().get(0)).getConfig().getConfigValue(key);
-                commandSender.sendMessage("§aConfig: " + key + " = " + value);
+                handleSettingConfigValue(commandSender, args[1], args[2], args[3]);
             }
         }
-            return false;
+        return false;
+    }
+
+    private void handleDisableGamemode(CommandSender commandSender, String[] args) {
+        if (args.length == 2) {
+            String moduleName = args[1];
+            if (!Gamemode.isValidGamemode(moduleName)) {
+                commandSender.sendMessage("§cInvalid gamemode name.");
+                commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+                return;
+            }
+            DimensionSwap.getGame().removeGamemode(Gamemode.getGamemodeFromName(moduleName).getClass());
+            commandSender.sendMessage("§aGamemode " + moduleName + " disabled.");
+        } else {
+            commandSender.sendMessage("§cPlease specify a module name.");
+            commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+        }
+    }
+
+    private void handleEnableGamemode(CommandSender commandSender, String[] args) {
+        if (args.length == 2) {
+            String moduleName = args[1];
+            if (!Gamemode.isValidGamemode(moduleName)) {
+                commandSender.sendMessage("§cInvalid gamemode name.");
+                commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+                return;
+            }
+            DimensionSwap.getGame().addGamemode(Gamemode.getGamemodeFromName(moduleName));
+            commandSender.sendMessage("§aGamemode " + moduleName + " enabled.");
+        } else {
+            commandSender.sendMessage("§cPlease specify a module name.");
+            commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+        }
     }
 
     private void handleSettingConfigValue(CommandSender commandSender, String configName, String configKey, String value) {
@@ -97,13 +128,12 @@ public class DimensionSwapCommand implements CommandExecutor {
             commandSender.sendMessage("§cConfig key not found.");
             return;
         }
-        Object convertedValue = convertValue(value, type);
-        if (convertedValue == null) {
-            commandSender.sendMessage("§cInvalid value type.");
+        boolean wasValid = conf.validateAndSetValue(configKey, value);
+        if (!wasValid) {
+            commandSender.sendMessage("§cInvalid value type. Expected: " + type.getSimpleName());
             return;
         }
-        conf.set(configKey, convertedValue);
-        commandSender.sendMessage("§aConfig: " + configKey + " set to " + convertedValue);
+        commandSender.sendMessage("§aConfig: " + configKey + " set to " + value);
     }
 
     private void handleFetchingConfigValue(CommandSender commandSender, String configName, String configKey) {
@@ -112,7 +142,7 @@ public class DimensionSwapCommand implements CommandExecutor {
             sendValidGamemodeNames(commandSender);
             return;
         }
-        Object value = conf.getConfigValues().get(configKey);
+        String value = conf.getString(configKey);
         if (value == null) {
             commandSender.sendMessage("§cConfig key not found.");
             return;
@@ -123,8 +153,8 @@ public class DimensionSwapCommand implements CommandExecutor {
     private void sendValidGamemodeNames(CommandSender commandSender) {
         commandSender.sendMessage("""
                 §cGamemode not found,valid options are:
-                §ddimensionSwap
-                placeholder""");
+                §dmainGame
+                §ddimensionSwap""");
     }
 
     private void handleConfig2Args(CommandSender commandSender, String configName) {
@@ -136,7 +166,8 @@ public class DimensionSwapCommand implements CommandExecutor {
         commandSender.sendMessage("§eValid config values:");
         for (String configKey : conf.getConfigValues().keySet()) {
             String type = conf.getConfigValues().get(configKey).getSimpleName();
-            commandSender.sendMessage("§d" + configKey + "§e: " + type);
+            String value = conf.getString(configKey);
+            commandSender.sendMessage("§d" + configKey + " = " +value+ " §e: " + type);
         }
     }
 }

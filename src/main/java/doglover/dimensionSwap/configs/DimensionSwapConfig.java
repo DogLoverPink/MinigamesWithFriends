@@ -3,26 +3,26 @@ package doglover.dimensionSwap.configs;
 public class DimensionSwapConfig extends GamemodeConfig {
 
     public DimensionSwapConfig() {
-        super("dimensionSwap");
-        registerConfigValue("canVisitSameWorldTwice", Boolean.class, false);
-        registerConfigValue("minimumSecondsBeforeSwap", Integer.class, 60);
-        registerConfigValue("maximumSecondsBeforeSwap", Integer.class, 180);
-        registerConfigValue("numberOfSwaps", Integer.class, 2);
+        super("DimensionSwap");
+        registerConfigValue("CanVisitSameWorldTwice", Boolean.class, false);
+        registerConfigValue("MinimumSecondsBeforeSwap", Integer.class, 60);
+        registerConfigValue("MaximumSecondsBeforeSwap", Integer.class, 180);
+        registerConfigValue("NumberOfSwaps", Integer.class, 2);
     }
 
     public boolean isCanVisitSameWorldTwice() {
-        return getBoolean("canVisitSameWorldTwice");
+        return getBoolean("CanVisitSameWorldTwice");
     }
 
     public int getMinimumSecondsBeforeSwap() {
-       return getInt("minimumSecondsBeforeSwap");
+       return getInt("MinimumSecondsBeforeSwap");
     }
 
     public int getMaximumSecondsBeforeSwap() {
-        return getInt("maximumSecondsBeforeSwap");
+        return getInt("MaximumSecondsBeforeSwap");
     }
 
     public int getNumberOfSwaps() {
-        return getInt("numberOfSwaps");
+        return getInt("NumberOfSwaps");
     }
 }

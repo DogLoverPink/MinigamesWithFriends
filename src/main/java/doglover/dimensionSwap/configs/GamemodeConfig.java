@@ -1,13 +1,16 @@
 package doglover.dimensionSwap.configs;
 
 import doglover.dimensionSwap.DimensionSwap;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GamemodeConfig {
 
-    Map<String, Class<?>> configValues;
+    Map<String, Class<?>> configValues = new HashMap<>();
     FileConfiguration config = DimensionSwap.getGamePlugin().getConfig();
 
     public String getPrefix() {
@@ -35,7 +38,7 @@ public class GamemodeConfig {
         this.prefix = prefix;
     }
 
-    protected boolean validateAndSetValue(String key, String value) {
+    public boolean validateAndSetValue(String key, String value) {
         Class<?> type = configValues.get(key);
         if (type == null) {
             return false;
@@ -48,6 +51,9 @@ public class GamemodeConfig {
                 return false;
             }
         } else if (type == Boolean.class) {
+            if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
+                return false;
+            }
             boolean boolValue = Boolean.parseBoolean(value);
             set(key, boolValue);
         } else if (type == Double.class) {
@@ -57,6 +63,12 @@ public class GamemodeConfig {
             } catch (NumberFormatException e) {
                 return false;
             }
+        } else if (type == Material.class) {
+            Material material = Material.getMaterial(value.toUpperCase());
+            if (material == null) {
+                return false;
+            }
+            set(key, material);
         } else if (type == String.class) {
             set(key, value);
         } else {
@@ -71,7 +83,7 @@ public class GamemodeConfig {
         DimensionSwap.getGamePlugin().saveConfig();
     }
 
-    protected String getString(String key) {
+    public String getString(String key) {
         return config.getString(prefix + "." + key);
     }
     protected int getInt(String key) {

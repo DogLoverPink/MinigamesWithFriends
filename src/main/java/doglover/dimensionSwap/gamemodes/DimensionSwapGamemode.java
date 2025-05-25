@@ -78,7 +78,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
     @Override
     public void tick() {
         super.tick();
-        getGame().addScoreboardContributution("§bTime until Switch: §d" + getFormattedTimeRemaining());
+        getGame().addScoreboardContributution("§bDimension Switch in: §d" + getFormattedTimeRemaining());
         getGame().addScoreboardContributution("§bRound: §d" + currentRound + "§b/§d" + maxRounds);
     }
 

@@ -1,6 +1,7 @@
 package doglover.dimensionSwap;
 
 import doglover.dimensionSwap.configs.MainGameConfig;
+import doglover.dimensionSwap.gamemodes.DeathSwapGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
 import doglover.dimensionSwap.utils.BlockUtils;
 import fr.mrmicky.fastboard.FastBoard;
@@ -9,7 +10,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -66,7 +66,7 @@ public class Game {
     public List<Gamemode> getGamemodes() {
         return gamemodes;
     }
-    public void setGamemodes(List<Gamemode> gamemodes) {
+    protected void setGamemodes(List<Gamemode> gamemodes) {
         this.gamemodes = gamemodes;
     }
     public void addGamemode(Gamemode gamemode) {
@@ -101,6 +101,12 @@ public class Game {
 
     public int getPointsFromPlayer(Player player) {
         return this.points.getOrDefault(player, 0);
+    }
+
+    public void broadcast(String message) {
+        for (Player player : players) {
+            player.sendMessage(message);
+        }
     }
 
     public void startGame() {
@@ -147,6 +153,7 @@ public class Game {
         players.clear();
         boards.clear();
         points.clear();
+        gamemodes.clear();
 
     }
 
@@ -225,7 +232,7 @@ public class Game {
 
     private void endDeathMatch(Player winner) {
 
-        addPointsToPlayer(winner, 1);
+        addPointsToPlayer(winner, config.getPointsPerDeathmatchWin());
 
         if (!isRunning) {
             Location dmloc = winner.getWorld().getSpawnLocation();

@@ -25,10 +25,16 @@ public class DeathListener implements Listener {
         } else {
             Player player = event.getPlayer();
             Location respawnLocation = player.getWorld().getSpawnLocation();
+            if (player.getRespawnLocation() != null) {
+                if (player.getRespawnLocation().getWorld().equals(respawnLocation.getWorld())) {
+                    respawnLocation = player.getRespawnLocation();
+                }
+            }
+            Location finalRespawnLocation = respawnLocation;
             Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
                 event.getEntity().spigot().respawn();
                 if (!game.isInDeathMatch()) {
-                    event.getEntity().teleport(respawnLocation);
+                    event.getEntity().teleport(finalRespawnLocation);
                 }
             }, 1L);
         }

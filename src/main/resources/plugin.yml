@@ -4,7 +4,7 @@ main: doglover.dimensionSwap.DimensionSwap
 api-version: '1.21'
 
 commands:
-  dimensionswap:
-    description: Swap the dimensions of two players
+  minigames:
+    description: General command for all minigames related things
     aliases:
-      - ds
+      - mg
