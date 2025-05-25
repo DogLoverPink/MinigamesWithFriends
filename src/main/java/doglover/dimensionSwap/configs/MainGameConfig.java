@@ -30,7 +30,10 @@ public class MainGameConfig extends GamemodeConfig {
         super("MainGame");
         registerConfigValue("PointsToWin", Integer.class, 1);
         registerConfigValue("PointsPerDeathmatchWin", Integer.class, 1);
+        registerConfigValue("KeepInventoryOnDeath", Boolean.class, false);
+        registerConfigValue("SetToDayOnStart", Boolean.class, true);
     }
+
 
     public GamemodeConfig getGamemodeConfigFromName(String name) {
         return switch (name.toLowerCase()) {
@@ -43,8 +46,16 @@ public class MainGameConfig extends GamemodeConfig {
         };
     }
 
+    public boolean shouldSetToDayOnStart() {
+        return getBoolean("SetToDayOnStart");
+    }
+
     public int getPointsPerDeathmatchWin() {
         return getInt("PointsPerDeathmatchWin");
+    }
+
+    public boolean shouldKeepInventoryOnDeath() {
+        return getBoolean("KeepInventoryOnDeath");
     }
 
     public int getPointsToWin() {

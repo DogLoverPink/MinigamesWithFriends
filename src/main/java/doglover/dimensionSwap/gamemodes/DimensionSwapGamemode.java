@@ -47,7 +47,11 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameEnd() {
-        super.onGameEnd();
+        if (getGame().getConfig().getDimensionSwapConfig().shouldSendPlayersToMainWorldAfterGameEnds()) {
+            for (Player plr : this.getGame().getPlayers()) {
+                plr.teleport(Bukkit.getWorld("world").getSpawnLocation());
+            }
+        }
     }
 
     @Override
@@ -79,7 +83,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
     public void tick() {
         super.tick();
         getGame().addScoreboardContributution("§bDimension Switch in: §d" + getFormattedTimeRemaining());
-        getGame().addScoreboardContributution("§bRound: §d" + currentRound + "§b/§d" + maxRounds);
+        getGame().addScoreboardContributution("§bDimension Round: §d" + currentRound + "§b/§d" + maxRounds);
     }
 
     private void shufflePlayers() {

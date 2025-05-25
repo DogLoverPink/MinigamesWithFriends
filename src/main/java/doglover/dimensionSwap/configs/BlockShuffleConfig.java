@@ -11,8 +11,13 @@ public class BlockShuffleConfig extends GamemodeConfig {
         registerConfigValue("PointsPerSuccessfulBlockStep", Integer.class, 2);
         registerConfigValue("ShuffleBlocksPerPlayer", Boolean.class, false);
         registerConfigValue("GivePointsAtEndOfRound", Boolean.class, false);
+        registerConfigValue("AllowNetherBlocks", Boolean.class, false);
     }
 
+
+    public boolean shouldAllowNetherBlocks() {
+        return getBoolean("AllowNetherBlocks");
+    }
 
     public int getMinimumSecondsBeforeShuffle() {
        return getInt("MinimumSecondsBeforeShuffle");

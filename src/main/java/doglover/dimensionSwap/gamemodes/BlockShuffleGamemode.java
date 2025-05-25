@@ -1,6 +1,7 @@
 package doglover.dimensionSwap.gamemodes;
 
 import doglover.dimensionSwap.DimensionSwap;
+import doglover.dimensionSwap.utils.BlockUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,40 +16,99 @@ import java.util.Map;
 public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     @Override
     public void onGameEnd() {
-        super.onGameEnd();
+
     }
 
     static File bannedBlocksFile = new File(DimensionSwap.getGamePlugin().getDataFolder(), "banned-blockshuffle-blocks.yml");
     static FileConfiguration bannedBlocks = YamlConfiguration.loadConfiguration(bannedBlocksFile);
-    static List<Material> bannedBlocksList = (List<Material>) bannedBlocks.getList("banned-blocks", new ArrayList<Material>());
+    static List<String> bannedBlocksStringList = bannedBlocks.getStringList("banned-blocks");
+    /** Used purely for tab completion */
+    static List<Material> unbannedBlocksList = new ArrayList<>();
+    static List<String> unbannedBlocksStringList = new ArrayList<>();
 
     Map<Player, Material> playerBlocks = new HashMap<>();
     List<Player> playersWhoHaveSteppedOnBlock = new ArrayList<>();
 
+    public static List<Material> getUnbannedBlocksList() {
+        return unbannedBlocksList;
+    }
 
-    static void banBlock(Material block) {
-        if (!bannedBlocksList.contains(block)) {
-            bannedBlocksList.add(block);
-            bannedBlocks.set("banned-blocks", bannedBlocksList);
+
+    public static List<String> getUnbannedBlocksStringList() {
+        return unbannedBlocksStringList;
+    }
+
+    public static List<String> getBannedBlocksStringList() {
+        return bannedBlocksStringList;
+    }
+
+    static {
+        syncBannedBlocksList();
+    }
+
+    public static void banBlock(Material block) {
+        String name = block.name();
+        if (!bannedBlocksStringList.contains(name)) {
+            bannedBlocksStringList.add(name);
+            bannedBlocks.set("banned-blocks", bannedBlocksStringList);
             saveBannedBlocksFile();
         }
     }
 
-    static void unbanBlock(Material block) {
-        if (bannedBlocksList.contains(block)) {
-            bannedBlocksList.remove(block);
-            bannedBlocks.set("banned-blocks", bannedBlocksList);
+    public static void unbanBlock(Material block) {
+        String name = block.name();
+        if (bannedBlocksStringList.contains(name)) {
+            bannedBlocksStringList.remove(name);
+            bannedBlocks.set("banned-blocks", bannedBlocksStringList);
             saveBannedBlocksFile();
         }
     }
+
+    private static void syncBannedBlocksList() {
+        List<Material> bannedBlocks = new ArrayList<>();
+        for (String blockName : bannedBlocksStringList) {
+            Material material = Material.getMaterial(blockName);
+            if (material != null) {
+                bannedBlocks.add(material);
+            }
+        }
+        List<Material> mats = new ArrayList<>(List.of(Material.values()));
+        mats = mats.stream().filter(material -> {
+            if (material.isBlock()) {
+                return !bannedBlocks.contains(material);
+            }
+            return false;
+        }).toList();
+        unbannedBlocksList.clear();
+        unbannedBlocksList.addAll(mats);
+        unbannedBlocksStringList.clear();
+        for (Material material : unbannedBlocksList) {
+            unbannedBlocksStringList.add(material.name());
+        }
+    }
+
+
 
     static void saveBannedBlocksFile() {
         try {
-            bannedBlocks.set("banned-blocks", bannedBlocksList);
+            bannedBlocks.set("banned-blocks", bannedBlocksStringList);
+            syncBannedBlocksList();
             bannedBlocks.save(bannedBlocksFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void removeNetherBlocksIfApplicable() {
+        if (!getGame().getConfig().getBlockShuffleConfig().shouldAllowNetherBlocks()) {
+            unbannedBlocksList.removeIf(BlockUtils::isLikelyNetherBlock);
+        }
+    }
+
+    public void skip() {
+        getGame().broadcast("§aSkipping...");
+        onTimeEventTrigger();
+        this.setTickGoal(getNextComputedTime());
     }
 
     @Override
@@ -56,19 +116,14 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
         this.setMinTicks(getGame().getConfig().getBlockShuffleConfig().getMinimumSecondsBeforeShuffle() * 20);
         this.setMaxTicks(getGame().getConfig().getBlockShuffleConfig().getMaximumSecondsBeforeShuffle() * 20);
         saveBannedBlocksFile();
+        removeNetherBlocksIfApplicable();
         super.onGameStart();
-        bannedBlocksList = (List<Material>) bannedBlocks.getList("banned-blocks", new ArrayList<Material>());
         assignNewBlocks();
     }
 
 
     private Material getUnbannedBlock() {
-        List<Material> allBlocks = new ArrayList<>();
-        for (Material material : Material.values()) {
-            if (material.isBlock() && !bannedBlocksList.contains(material)) {
-                allBlocks.add(material);
-            }
-        }
+        List<Material> allBlocks = new ArrayList<>(getUnbannedBlocksList());
         java.util.Collections.shuffle(allBlocks);
         return allBlocks.getFirst();
     }

@@ -73,6 +73,10 @@ public class Game {
     public void addGamemode(Gamemode gamemode) {
         this.gamemodes.add(gamemode);
         gamemode.setGame(this);
+        if (isRunning) {
+            gamemode.onGameStart();
+            broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been enabled.");
+        }
     }
     public void removeGamemode(Gamemode gamemode) {
         this.gamemodes.remove(gamemode);
@@ -82,6 +86,10 @@ public class Game {
     public void removeGamemode(Class<? extends Gamemode> gamemodeClazz) {
         for (Gamemode gamemode : gamemodes) {
             if (gamemode.getClass() == gamemodeClazz) {
+                if (isRunning) {
+                    gamemode.onGameEnd();
+                    broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been disabled");
+                }
                 this.gamemodes.remove(gamemode);
                 gamemode.setGame(null);
                 return;
@@ -146,6 +154,13 @@ public class Game {
         }
         pointsToWin = config.getPointsToWin();
         isRunning = true;
+
+        if (getConfig().shouldSetToDayOnStart()) {
+            for (Player player : players) {
+                player.getWorld().setTime(1000);
+            }
+        }
+
         for (Player player : players) {
 
             player.spigot().respawn();

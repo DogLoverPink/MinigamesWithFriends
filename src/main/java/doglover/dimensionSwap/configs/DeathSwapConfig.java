@@ -8,6 +8,7 @@ public class DeathSwapConfig extends GamemodeConfig {
         registerConfigValue("MaximumSecondsBeforeSwap", Integer.class, 180);
         registerConfigValue("PointsPerImpressiveKill", Integer.class, 2);
         registerConfigValue("PointsPerLameKill", Integer.class, 1);
+        registerConfigValue("KeepInventoryOnSwapRelatedDeath", Boolean.class, true);
     }
 
 
@@ -21,6 +22,10 @@ public class DeathSwapConfig extends GamemodeConfig {
 
     public int getPointsPerImpressiveDeath() {
         return getInt("PointsPerImpressiveKill");
+    }
+
+    public boolean shouldKeepInventoryOnSwapRelatedDeath() {
+        return getBoolean("KeepInventoryOnSwapRelatedDeath");
     }
 
     public int getPointsPerLameDeath() {

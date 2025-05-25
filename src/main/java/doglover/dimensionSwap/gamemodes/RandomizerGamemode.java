@@ -18,8 +18,6 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameEnd() {
-        super.onGameEnd();
-
 
     }
 

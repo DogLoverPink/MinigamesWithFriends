@@ -3,7 +3,9 @@ package doglover.dimensionSwap.commands;
 import doglover.dimensionSwap.DimensionSwap;
 import doglover.dimensionSwap.Game;
 import doglover.dimensionSwap.configs.GamemodeConfig;
+import doglover.dimensionSwap.gamemodes.BlockShuffleGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,6 +36,7 @@ public class DimensionSwapCommand implements CommandExecutor {
         }
         if (minigameCommand.equalsIgnoreCase("ClearGamemodes")) {
             DimensionSwap.getGame().clearGamemodes();
+            commandSender.sendMessage("§aCleared all gamemodes.");
         }
 
         if (minigameCommand.equalsIgnoreCase("AddPlayer")) {
@@ -63,6 +66,9 @@ public class DimensionSwapCommand implements CommandExecutor {
             DimensionSwap.getGame().endGame();
             commandSender.sendMessage("§cGame stopped.");
         }
+        if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
+            handleBlockShuffleCommand(commandSender, args);
+        }
         if (minigameCommand.equalsIgnoreCase("config")) {
             if (args.length == 1) {
                 commandSender.sendMessage("§cSpecify a gamemode and a config key.");
@@ -83,6 +89,51 @@ public class DimensionSwapCommand implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    private static void handleBlockShuffleCommand(@NotNull CommandSender commandSender, @NotNull String @NotNull [] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("BanBlock")) {
+            if (args.length == 3) {
+                String blockName = args[2];
+                Material block = Material.getMaterial(blockName);
+                if (block == null) {
+                    commandSender.sendMessage("§cInvalid block name. Must be uppercase enum style");
+                    return;
+                }
+                BlockShuffleGamemode.banBlock(block);
+                commandSender.sendMessage("§aBlock " + blockName + " banned.");
+            } else {
+                commandSender.sendMessage("§cPlease specify a block name.");
+            }
+        } else if (args[1].equalsIgnoreCase("UnbanBlock")) {
+            if (args.length == 3) {
+                String blockName = args[2];
+                Material block = Material.getMaterial(blockName);
+                if (block == null) {
+                    commandSender.sendMessage("§cInvalid block name. Must be uppercase enum style");
+                    return;
+                }
+                BlockShuffleGamemode.unbanBlock(block);
+                commandSender.sendMessage("§aBlock " + blockName + " unbanned.");
+            } else {
+                commandSender.sendMessage("§cPlease specify a block name.");
+            }
+        } else if (args[1].equalsIgnoreCase("ListBannedBlocks")) {
+            commandSender.sendMessage("§eBanned blocks: §b");
+            for (String materialName : BlockShuffleGamemode.getBannedBlocksStringList()) {
+                commandSender.sendMessage("§b" + materialName);
+            }
+        }
+        else if (args[1].equalsIgnoreCase("skip")) {
+            if (!DimensionSwap.getGame().isRunning() || !DimensionSwap.getGame().isGamemodeActive(BlockShuffleGamemode.class)) {
+                return;
+            }
+            DimensionSwap.getGame().getGamemode(BlockShuffleGamemode.class).skip();
+        }
     }
 
     private void handleDisableGamemode(CommandSender commandSender, String[] args) {
@@ -107,6 +158,10 @@ public class DimensionSwapCommand implements CommandExecutor {
             if (!Gamemode.isValidGamemode(moduleName)) {
                 commandSender.sendMessage("§cInvalid gamemode name.");
                 commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+                return;
+            }
+            if (DimensionSwap.getGame().isGamemodeActive(Gamemode.getGamemodeFromName(moduleName).getClass())) {
+                commandSender.sendMessage("§cGamemode " + moduleName + " is already enabled.");
                 return;
             }
             DimensionSwap.getGame().addGamemode(Gamemode.getGamemodeFromName(moduleName));

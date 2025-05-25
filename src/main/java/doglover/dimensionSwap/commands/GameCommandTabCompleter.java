@@ -2,6 +2,7 @@ package doglover.dimensionSwap.commands;
 
 import doglover.dimensionSwap.DimensionSwap;
 import doglover.dimensionSwap.configs.GamemodeConfig;
+import doglover.dimensionSwap.gamemodes.BlockShuffleGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,22 +16,45 @@ public class GameCommandTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return List.of("AddPlayer", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "fling");
+            return filterByStartsWith(List.of("AddPlayer", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "fling", "blockshuffle"), args[0]);
         }
-        if (args[0].equalsIgnoreCase("config")) {
+        String minigameCommand = args[0];
+        if (minigameCommand.equalsIgnoreCase("config")) {
             return handleConfigTagComplete(args);
-        } else if (args[0].equalsIgnoreCase("EnableGamemode") || args[0].equalsIgnoreCase("DisableGamemode")) {
-            return Gamemode.getGamemodeList();
+        } else if (minigameCommand.equalsIgnoreCase("EnableGamemode") || args[0].equalsIgnoreCase("DisableGamemode")) {
+            return filterByStartsWith(Gamemode.getGamemodeList(), args[1]);
+        }
+        if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
+            if (args.length == 2) {
+                return filterByStartsWith(List.of("BanBlock", "UnbanBlock", "ListBannedBlocks", "Skip"), args[1]);
+            }
+            String blockshuffleCommand = args[1];
+            if (blockshuffleCommand.equalsIgnoreCase("UnbanBlock")) {
+                return filterByStartsWith(BlockShuffleGamemode.getBannedBlocksStringList(), args[2]);
+            } else if (blockshuffleCommand.equalsIgnoreCase("BanBlock")) {
+                return filterByStartsWith(BlockShuffleGamemode.getUnbannedBlocksStringList(), args[2]);
+            } else if (blockshuffleCommand.equalsIgnoreCase("ListBannedBlocks")) {
+                return BlockShuffleGamemode.getBannedBlocksStringList();
+            } else {
+                return List.of();
+            }
+
         }
 
         return null;
     }
 
-    private static @Nullable List<String> handleConfigTagComplete(String[] args) {
+    private List<String> filterByStartsWith(List<String> list, String filter) {
+        return list.stream().filter(s -> s.toLowerCase().startsWith(filter.toLowerCase())).toList();
+    }
+
+
+
+    private @Nullable List<String> handleConfigTagComplete(String[] args) {
         if (args.length == 2) {
             List<String> gamemodes = new ArrayList<>(Gamemode.getGamemodeList());
             gamemodes.add("mainGame");
-            return gamemodes;
+            return filterByStartsWith(gamemodes, args[1]);
         }
         if (args.length == 3) {
             String configName = args[1];
@@ -52,7 +76,7 @@ public class GameCommandTabCompleter implements TabCompleter {
                 return List.of();
             }
             if (type.equals(Boolean.class) ) {
-                return List.of("true", "false");
+                return filterByStartsWith(List.of("true", "false"), args[3]);
             } else {
                 return List.of();
             }

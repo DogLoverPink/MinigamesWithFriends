@@ -2,6 +2,8 @@ package doglover.dimensionSwap.events;
 
 import doglover.dimensionSwap.DimensionSwap;
 import doglover.dimensionSwap.Game;
+import doglover.dimensionSwap.configs.DeathSwapConfig;
+import doglover.dimensionSwap.configs.MainGameConfig;
 import doglover.dimensionSwap.gamemodes.DeathSwapGamemode;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,6 +20,10 @@ public class DeathListener implements Listener {
 
         if (!DimensionSwap.getGame().isRunning()) {
             return;
+        }
+
+        if (DimensionSwap.getGame().getConfig().shouldKeepInventoryOnDeath()) {
+            event.setKeepInventory(true);
         }
 
         Game game = DimensionSwap.getGame();
@@ -41,14 +47,22 @@ public class DeathListener implements Listener {
             }, 1L);
         }
         if (!game.isInDeathMatch() && game.isGamemodeActive(DeathSwapGamemode.class)) {
-            int pointsToGive = game.getConfig().getDeathSwapConfig().getPointsPerImpressiveDeath();
+            DeathSwapGamemode deathSwapGamemode = game.getGamemode(DeathSwapGamemode.class);
+            DeathSwapConfig config = game.getConfig().getDeathSwapConfig();
+
+            Player swapper = deathSwapGamemode.getSwapperFromSwapee(event.getPlayer());
+
+            if (config.shouldKeepInventoryOnSwapRelatedDeath() && swapper != null) {
+                event.setKeepInventory(true);
+            }
+            int pointsToGive = config.getPointsPerImpressiveDeath();
             if (event.getDamageSource().getDamageType() == DamageType.FALL
                     || event.getDamageSource().getDamageType() == DamageType.LAVA
                     || event.getDamageSource().getDamageType() == DamageType.OUT_OF_WORLD) {
-                pointsToGive = game.getConfig().getDeathSwapConfig().getPointsPerLameDeath();
+                pointsToGive = config.getPointsPerLameDeath();
             }
-            game.addPointsToPlayer(game.getGamemode(DeathSwapGamemode.class).getSwapperFromSwapee(event.getPlayer()), pointsToGive);
-            game.getGamemode(DeathSwapGamemode.class).nullifySwapper(event.getPlayer());
+            game.addPointsToPlayer(swapper, pointsToGive);
+            deathSwapGamemode.nullifySwapper(event.getPlayer());
         }
     }
 

@@ -8,6 +8,11 @@ public class DimensionSwapConfig extends GamemodeConfig {
         registerConfigValue("MinimumSecondsBeforeSwap", Integer.class, 60);
         registerConfigValue("MaximumSecondsBeforeSwap", Integer.class, 180);
         registerConfigValue("NumberOfSwaps", Integer.class, 2);
+        registerConfigValue("SendPlayersToMainWorldAfterGameEnds", Boolean.class, false);
+    }
+
+    public boolean shouldSendPlayersToMainWorldAfterGameEnds() {
+        return getBoolean("SendPlayersToMainWorldAfterGameEnds");
     }
 
     public boolean isCanVisitSameWorldTwice() {

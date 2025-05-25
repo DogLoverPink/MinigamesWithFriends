@@ -24,7 +24,6 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
 
     @Override
     public void onGameEnd() {
-        super.onGameEnd();
     }
 
     @Override

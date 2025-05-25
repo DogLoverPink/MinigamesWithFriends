@@ -22,10 +22,7 @@ public abstract class TimeEventBasedGamemode extends Gamemode {
         this.tickGoal = tickGoal;
     }
 
-    @Override
-    public void onGameEnd() {
-
-    }
+    public abstract void onGameEnd();
 
     @Override
     public void onGameStart() {

@@ -11,6 +11,13 @@ import java.util.List;
 
 public class BlockUtils {
 
+    //Credit to matistan05 on github for this, thanks mate! https://github.com/Matistan/MinecraftBlockShuffle/blob/be5edd528efd75d0ef30492f068121c5e5c19214/src/main/java/me/matistan05/minecraftblockshuffle/commands/BlockShuffleCommand.java#L460
+    public static boolean isLikelyNetherBlock(Material block) {
+        String matName = block.name();
+        return matName.contains("NETHER") || matName.contains("CRIMSON") || matName.contains("WARPED") || matName.contains("TWISTING") ||
+                matName.contains("WEEPING") || matName.equals("SHROOMLIGHT") || matName.contains("BLACKSTONE") || matName.contains("QUARTZ") ||
+                matName.contains("SOUL") || matName.contains("BASALT") || matName.equals("GLOWSTONE") || matName.equals("REDSTONE_LAMP");
+    }
 
     public static void createHollowBoxAroundLocation(Location loc) {
         Location loc1 = loc.clone().add(2, 2, 2);
