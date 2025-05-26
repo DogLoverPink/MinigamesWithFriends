@@ -67,6 +67,14 @@ public class Game {
     public List<Gamemode> getGamemodes() {
         return gamemodes;
     }
+
+    public List<String> getGamemodesAsString() {
+        List<String> gamemodeNames = new ArrayList<>();
+        for (Gamemode gamemode : gamemodes) {
+            gamemodeNames.add(gamemode.getClass().getSimpleName().replace("Gamemode", ""));
+        }
+        return gamemodeNames;
+    }
     protected void setGamemodes(List<Gamemode> gamemodes) {
         this.gamemodes = gamemodes;
     }
@@ -77,10 +85,6 @@ public class Game {
             gamemode.onGameStart();
             broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been enabled.");
         }
-    }
-    public void removeGamemode(Gamemode gamemode) {
-        this.gamemodes.remove(gamemode);
-        gamemode.setGame(null);
     }
 
     public void removeGamemode(Class<? extends Gamemode> gamemodeClazz) {
@@ -98,10 +102,13 @@ public class Game {
     }
 
     public void clearGamemodes() {
-        for (Gamemode gamemode : gamemodes) {
-            gamemode.setGame(null);
+        List<Class<? extends Gamemode>> gamemodes = new ArrayList<>();
+        for (Gamemode gamemode : this.gamemodes) {
+            gamemodes.add(gamemode.getClass());
         }
-        this.gamemodes.clear();
+        for (Class<? extends Gamemode> gamemode : gamemodes) {
+            removeGamemode(gamemode);
+        }
     }
 
     public boolean isGamemodeActive(Class<? extends Gamemode> gamemodeClass) {

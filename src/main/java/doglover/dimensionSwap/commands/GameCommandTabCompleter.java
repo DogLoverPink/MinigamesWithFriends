@@ -16,13 +16,15 @@ public class GameCommandTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return filterByStartsWith(List.of("AddPlayer", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "fling", "blockshuffle"), args[0]);
+            return filterByStartsWith(List.of("start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle"), args[0]);
         }
         String minigameCommand = args[0];
         if (minigameCommand.equalsIgnoreCase("config")) {
             return handleConfigTagComplete(args);
-        } else if (minigameCommand.equalsIgnoreCase("EnableGamemode") || args[0].equalsIgnoreCase("DisableGamemode")) {
+        } else if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
             return filterByStartsWith(Gamemode.getGamemodeList(), args[1]);
+        } else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
+            return filterByStartsWith(DimensionSwap.getGame().getGamemodesAsString(), args[1]);
         }
         if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
             if (args.length == 2) {

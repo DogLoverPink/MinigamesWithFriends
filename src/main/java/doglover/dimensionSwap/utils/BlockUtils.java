@@ -43,10 +43,10 @@ public class BlockUtils {
 
     public static void createWallsAroundLocation(Location loc) {
         //Get the 4 corner locations of the wall, 35 blocks away from the center
-        Location loc1 = loc.clone().add(35, 12, 35);
-        Location loc2 = loc.clone().add(35, -12, -35);
-        Location loc3 = loc.clone().add(-35, 12, -35);
-        Location loc4 = loc.clone().add(-35, -12, 35);
+        Location loc1 = loc.clone().add(35, 35, 35);
+        Location loc2 = loc.clone().add(35, -35, -35);
+        Location loc3 = loc.clone().add(-35, 35, -35);
+        Location loc4 = loc.clone().add(-35, -35, 35);
         //Set the blocks between the 4 corner locations to wool
         replaceBlocksBetween(loc1, loc2, Material.RED_WOOL, Material.AIR);
         replaceBlocksBetween(loc2, loc3, Material.RED_WOOL, Material.AIR);
@@ -56,10 +56,10 @@ public class BlockUtils {
 
     public static void removeWallsAroundLocation(Location loc) {
         //Get the 4 corner locations of the wall, 35 blocks away from the center
-        Location loc1 = loc.clone().add(35, 12, 35);
-        Location loc2 = loc.clone().add(35, -12, -35);
-        Location loc3 = loc.clone().add(-35, 12, -35);
-        Location loc4 = loc.clone().add(-35, -12, 35);
+        Location loc1 = loc.clone().add(35, 35, 35);
+        Location loc2 = loc.clone().add(35, -35, -35);
+        Location loc3 = loc.clone().add(-35, 35, -35);
+        Location loc4 = loc.clone().add(-35, -35, 35);
         //Set the blocks between the 4 corner locations to wool
         replaceBlocksBetween(loc1, loc2, Material.AIR, Material.RED_WOOL);
         replaceBlocksBetween(loc2, loc3, Material.AIR, Material.RED_WOOL);

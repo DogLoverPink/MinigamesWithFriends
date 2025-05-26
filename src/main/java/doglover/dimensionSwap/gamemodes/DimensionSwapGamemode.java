@@ -1,6 +1,7 @@
 package doglover.dimensionSwap.gamemodes;
 
 import doglover.dimensionSwap.DimensionSwap;
+import doglover.dimensionSwap.utils.WorldFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -9,7 +10,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
@@ -21,15 +24,15 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
 
     public static void initialize() {
-        savedWorldsFolder = new File( DimensionSwap.getGamePlugin().getDataFolder() + "/" + "savedDimensionTPWorlds" );
-        activeWorldsFolder = new File( DimensionSwap.getGamePlugin().getDataFolder() + "/" + "activeDimensionTPWorlds" );
+        savedWorldsFolder = new File(DimensionSwap.getGamePlugin().getDataFolder() + "/" + "savedDimensionTPWorlds");
+        activeWorldsFolder = new File(DimensionSwap.getGamePlugin().getDataFolder() + "/" + "activeDimensionTPWorlds");
         if (!savedWorldsFolder.exists() || !activeWorldsFolder.exists()) {
             savedWorldsFolder.mkdirs();
             activeWorldsFolder.mkdirs();
         }
-
-
+        WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
     }
+
 
     public void refreshWorldFolders() {
         yetToBeUsedWorlds.clear();
@@ -40,9 +43,6 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         }
         Collections.shuffle(yetToBeUsedWorlds);
     }
-
-
-
 
 
     @Override
@@ -56,6 +56,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameStart() {
+        WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
         this.setMinTicks(getGame().getConfig().getDimensionSwapConfig().getMinimumSecondsBeforeSwap() * 20);
         this.setMaxTicks(getGame().getConfig().getDimensionSwapConfig().getMaximumSecondsBeforeSwap() * 20);
         super.onGameStart();
@@ -63,9 +64,9 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         this.currentRound = 0;
         refreshWorldFolders();
         try {
-            for (World world : Bukkit.getWorlds() ) {
+            for (World world : Bukkit.getWorlds()) {
                 if (world.getName().contains("activeDimensionTPWorlds")) {
-                    for (Player plr: world.getPlayers()) {
+                    for (Player plr : world.getPlayers()) {
                         plr.teleport(Bukkit.getWorld("world").getSpawnLocation());
                     }
                     Bukkit.unloadWorld(world, false);
@@ -111,13 +112,14 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             try {
                 FileUtils.copyDirectory(originalWorld, newWorldFolder);
             } catch (IOException e) {
-                plr.sendMessage("§cError: IOException trying to copy world: "+newWorld+"!");
+                plr.sendMessage("§cError: IOException trying to copy world: " + newWorld + "!");
                 e.printStackTrace();
             }
             DimensionSwap.getGamePlugin().getLogger().info("name: " + newWorldFolder.getPath().replace("\\", "/"));
             World world = Bukkit.createWorld(new WorldCreator(newWorldFolder.getPath().replace("\\", "/")));
             world.setDifficulty(Difficulty.NORMAL);
             world.setGameRule(GameRule.DO_TILE_DROPS, true);
+            world.setGameRule(GameRule.FALL_DAMAGE, true);
             plr.teleport(world.getSpawnLocation());
         }
         for (Player plr : this.getGame().getPlayers()) {
@@ -131,6 +133,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         DimensionSwap.getGamePlugin().getLogger().info("Time event triggered!");
         shufflePlayers();
     }
+
     @Override
     public String toString() {
         return "DimensionSwap";

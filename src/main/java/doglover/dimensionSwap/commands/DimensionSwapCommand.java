@@ -19,10 +19,8 @@ public class DimensionSwapCommand implements CommandExecutor {
         if (args.length == 0) {
             commandSender.sendMessage("§cPlease specify a subcommand.");
             commandSender.sendMessage("The options are:\n" +
-                    "§b addPlayer <player>\n" +
                     "§b start\n" +
-                    "§b config <key> <value>\n" +
-                    "§b config list");
+                    "§b config <config> <key> <value>\n");
             return true;
         }
 
@@ -39,17 +37,6 @@ public class DimensionSwapCommand implements CommandExecutor {
             commandSender.sendMessage("§aCleared all gamemodes.");
         }
 
-        if (minigameCommand.equalsIgnoreCase("AddPlayer")) {
-            if (args.length == 2) {
-                String playerName = args[1];
-                DimensionSwap.getGame().getPlayers().add(DimensionSwap.getGamePlugin().getServer().getPlayer(playerName));
-                commandSender.sendMessage("§aPlayer " + playerName + " added to the game.");
-                return true;
-            } else {
-                commandSender.sendMessage("§cPlease specify a player name.");
-                return true;
-            }
-        }
         if (minigameCommand.equalsIgnoreCase("start")) {
             if (DimensionSwap.getGame().getGamemodes().isEmpty()) {
                 commandSender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
