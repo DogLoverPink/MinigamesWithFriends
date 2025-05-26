@@ -1,6 +1,7 @@
 package doglover.dimensionSwap.gamemodes;
 
 import doglover.dimensionSwap.DimensionSwap;
+import doglover.dimensionSwap.utils.BlockUtils;
 import doglover.dimensionSwap.utils.WorldFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
@@ -10,9 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
@@ -31,6 +30,11 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             activeWorldsFolder.mkdirs();
         }
         WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
+    }
+
+    public static void preLoadSavedWorlds(Player player) {
+        WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
+        WorldFileUtils.loadAllWorldsInFolder(savedWorldsFolder, player);
     }
 
 
@@ -91,16 +95,14 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         DimensionSwap.getGamePlugin().getLogger().info("Shuffling players...");
         if (currentRound >= maxRounds) {
             currentRound = 0;
-            Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
-                this.setTickGoal(1);
-            }, 2);
+            this.setTickGoal(2);
             getGame().startDeathMatch();
             return;
         }
         currentRound++;
         for (Player plr : this.getGame().getPlayers()) {
 
-            plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 5, true, false));
+            plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 4, true, false));
         }
         for (Player plr : this.getGame().getPlayers()) {
             String newWorld = yetToBeUsedWorlds.removeFirst();
@@ -120,10 +122,10 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             world.setDifficulty(Difficulty.NORMAL);
             world.setGameRule(GameRule.DO_TILE_DROPS, true);
             world.setGameRule(GameRule.FALL_DAMAGE, true);
-            plr.teleport(world.getSpawnLocation());
+            plr.setFallDistance(0);
+            plr.teleport(BlockUtils.findSafeBlock(world.getSpawnLocation()));
         }
         for (Player plr : this.getGame().getPlayers()) {
-
             plr.removePotionEffect(PotionEffectType.RESISTANCE);
         }
     }

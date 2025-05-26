@@ -4,7 +4,10 @@ import doglover.dimensionSwap.DimensionSwap;
 import doglover.dimensionSwap.Game;
 import doglover.dimensionSwap.configs.GamemodeConfig;
 import doglover.dimensionSwap.gamemodes.BlockShuffleGamemode;
+import doglover.dimensionSwap.gamemodes.DimensionSwapGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
+import doglover.dimensionSwap.utils.BlockUtils;
+import doglover.dimensionSwap.utils.WorldFileUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,6 +31,14 @@ public class DimensionSwapCommand implements CommandExecutor {
 
         if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
             handleEnableGamemode(commandSender, args);
+        }
+        if (minigameCommand.equalsIgnoreCase("SafeLoc")) {
+            Player plr = (Player) commandSender;
+            plr.setFallDistance(0);
+            plr.teleport(BlockUtils.findSafeBlock(plr.getLocation()));
+        }
+        if (minigameCommand.equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
+            DimensionSwapGamemode.preLoadSavedWorlds((Player) commandSender);
         }
         if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
             handleDisableGamemode(commandSender, args);

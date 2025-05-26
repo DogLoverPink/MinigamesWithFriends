@@ -67,6 +67,23 @@ public class BlockUtils {
         replaceBlocksBetween(loc4, loc1, Material.AIR, Material.RED_WOOL);
     }
 
+    public static Location findSafeBlock(Location loc) {
+        if (loc.clone().subtract(0, 1, 0).getBlock().getType().isSolid()
+            && !loc.clone().add(0, 1, 0).getBlock().isSuffocating()
+            && !loc.clone().add(0, 2, 0).getBlock().isSuffocating()) {
+            return loc;
+        }
+        for (int i = 0; i <= 200; i++) {
+            Location footBlock = loc.clone().add(0, i, 0);
+            Location blockAbove = loc.clone().add(0, i + 1, 0);
+            Location block2Above = loc.clone().add(0, i + 2, 0);
+            if (footBlock.getBlock().getType().isSolid() && !blockAbove.getBlock().isSuffocating() && !block2Above.getBlock().isSuffocating()) {
+                return blockAbove;
+            }
+        }
+        return loc;
+    }
+
     public static void replaceBlocksBetween(Location loc1, Location loc2, Material replaceWith, Material... find) {
         if (!loc1.getWorld().equals(loc2.getWorld())) {
             throw new IllegalArgumentException("Locations must be in the same world.");

@@ -5,6 +5,7 @@ import doglover.dimensionSwap.commands.GameCommandTabCompleter;
 import doglover.dimensionSwap.events.BreakBlockEvent;
 import doglover.dimensionSwap.events.CommandBlockRunEvent;
 import doglover.dimensionSwap.events.DeathListener;
+import doglover.dimensionSwap.events.JoinLeaveEvent;
 import doglover.dimensionSwap.gamemodes.DimensionSwapGamemode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -32,6 +33,7 @@ public final class DimensionSwap extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new DeathListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandBlockRunEvent(), this);
         this.getServer().getPluginManager().registerEvents(new BreakBlockEvent(), this);
+        this.getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
         DimensionSwapGamemode.initialize();
         Game swapGame = new Game();
         game = swapGame;

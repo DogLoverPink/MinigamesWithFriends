@@ -2,9 +2,14 @@ package doglover.dimensionSwap.utils;
 
 import doglover.dimensionSwap.DimensionSwap;
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -36,6 +41,33 @@ public class WorldFileUtils {
         while (innerSanitizeWorldSaveFolder(directoryWithTheWorlds)) {
             continue;
         }
+    }
+
+    public static void loadAllWorldsInFolder(File worldsFolder, Player playerToNotify) {
+        final List<File> worlds = new ArrayList<>();
+        for (File file : worldsFolder.listFiles()) {
+            if (!file.isDirectory() || file.list() == null && !Arrays.asList(file.list()).contains("level.dat")) {
+                continue;
+            }
+            File worldToLoad = new File(worldsFolder.getPath() + "/" + file.getName());
+            worlds.add(worldToLoad);
+        }
+        int worldsCount = worlds.size();
+        Bukkit.getScheduler().runTaskTimer(DimensionSwap.getGamePlugin(), (task) -> {
+            if (worlds.isEmpty()) {
+                playerToNotify.sendMessage("§a§lPreloading complete!.");
+                playerToNotify.sendMessage("§aIt is highly recomended that you restart your server!");
+                task.cancel();
+                return;
+            }
+            File file = worlds.removeFirst();
+            playerToNotify.sendMessage("§eLoading world: §a" + file.getName());
+            DimensionSwap.getGamePlugin().getLogger().info("Loading world: " + file.getName());
+            World world = Bukkit.createWorld(new WorldCreator(file.getPath().replace("\\", "/")));
+            playerToNotify.sendMessage("§aComplete. §eUnloading §a" + world.getName());
+            Bukkit.unloadWorld(world, true);
+            playerToNotify.sendMessage("§aCompleted (" + (worldsCount - worlds.size()) + "/" + worldsCount + ")");
+        }, 0, 20);
     }
 
     private static boolean innerSanitizeWorldSaveFolder(File directoryWithTheWorlds) {

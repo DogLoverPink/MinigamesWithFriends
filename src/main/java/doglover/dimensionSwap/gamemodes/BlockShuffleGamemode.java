@@ -2,16 +2,14 @@ package doglover.dimensionSwap.gamemodes;
 
 import doglover.dimensionSwap.DimensionSwap;
 import doglover.dimensionSwap.utils.BlockUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     @Override
@@ -26,8 +24,8 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     static List<Material> unbannedBlocksList = new ArrayList<>();
     static List<String> unbannedBlocksStringList = new ArrayList<>();
 
-    Map<Player, Material> playerBlocks = new HashMap<>();
-    List<Player> playersWhoHaveSteppedOnBlock = new ArrayList<>();
+    Map<UUID, Material> playerBlocks = new HashMap<>();
+    List<UUID> playersWhoHaveSteppedOnBlock = new ArrayList<>();
 
     public static List<Material> getUnbannedBlocksList() {
         return unbannedBlocksList;
@@ -129,16 +127,16 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     }
 
     public void notifyBlockSteppedOn(Player player) {
-        Material block = playerBlocks.get(player);
+        Material block = playerBlocks.get(player.getUniqueId());
         if (block != null) {
             if (getGame().getConfig().getBlockShuffleConfig().shouldGivePointsAtEndOfRound()) {
-                playersWhoHaveSteppedOnBlock.add(player);
-                playerBlocks.remove(player);
+                playersWhoHaveSteppedOnBlock.add(player.getUniqueId());
+                playerBlocks.remove(player.getUniqueId());
                 getGame().broadcast("§b" + player.getName() + "§a has found their block!");
             } else {
                 getGame().addPointsToPlayer(player, getGame().getConfig().getBlockShuffleConfig().getPointsPerSuccessfulBlockStep());
                 getGame().broadcast("§b" + player.getName() + "§a has found their block!");
-                playerBlocks.remove(player);
+                playerBlocks.remove(player.getUniqueId());
             }
             if (playerBlocks.isEmpty()) {
                 onTimeEventTrigger();
@@ -152,18 +150,18 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
         if (getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
             for (Player player : getGame().getPlayers()) {
                 Material newBlock = getUnbannedBlock();
-                playerBlocks.put(player, newBlock);
+                playerBlocks.put(player.getUniqueId(), newBlock);
             }
         } else {
             Material newBlock = getUnbannedBlock();
             for (Player player : getGame().getPlayers()) {
-                playerBlocks.put(player, newBlock);
+                playerBlocks.put(player.getUniqueId(), newBlock);
             }
         }
         getGame().broadcast("§aBlocks have been shuffled");
         getGame().broadcast("§e----------------------------");
         for (Player player : getGame().getPlayers()) {
-            getGame().broadcast("§e" + player.getName() + ": §b" + playerBlocks.get(player).name());
+            getGame().broadcast("§e" + player.getName() + ": §b" + playerBlocks.get(player.getUniqueId()).name());
         }
         getGame().broadcast("§e----------------------------");
     }
@@ -172,10 +170,10 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     public void tick() {
         super.tick();
         for (Player player : getGame().getPlayers()) {
-            if (!playerBlocks.containsKey(player)) {
+            if (!playerBlocks.containsKey(player.getUniqueId())) {
                 continue;
             }
-            Material block = playerBlocks.get(player);
+            Material block = playerBlocks.get(player.getUniqueId());
             if (player.getLocation().clone().subtract(0, 1, 0).getBlock().getType() == block) {
                 notifyBlockSteppedOn(player);
             }
@@ -190,7 +188,8 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onTimeEventTrigger() {
-        for (Player plr : playersWhoHaveSteppedOnBlock) {
+        for (UUID uuid : playersWhoHaveSteppedOnBlock) {
+            Player plr = Bukkit.getPlayer(uuid);
             getGame().addPointsToPlayer(plr, getGame().getConfig().getBlockShuffleConfig().getPointsPerSuccessfulBlockStep());
         }
         playersWhoHaveSteppedOnBlock.clear();

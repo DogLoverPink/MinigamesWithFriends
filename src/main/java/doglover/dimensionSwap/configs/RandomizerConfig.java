@@ -8,6 +8,7 @@ public class RandomizerConfig extends GamemodeConfig{
         registerConfigValue("EnableDeathMatches", Boolean.class, true);
         registerConfigValue("MinimumSecondsBeforeDeathMatch", Integer.class, 180);
         registerConfigValue("MaximumSecondsBeforeDeathMatch", Integer.class, 180);
+        registerConfigValue("RandomlyEnchantGear", Boolean.class, false);
     }
 
     public boolean isRerandomizeAfterDeathMatch() {
@@ -24,6 +25,10 @@ public class RandomizerConfig extends GamemodeConfig{
 
     public int getMaximumSecondsBeforeDeathMatch() {
         return getInt("MaximumSecondsBeforeDeathMatch");
+    }
+
+    public boolean isRandomlyEnchantingGear() {
+        return getBoolean("RandomlyEnchantGear");
     }
 
 

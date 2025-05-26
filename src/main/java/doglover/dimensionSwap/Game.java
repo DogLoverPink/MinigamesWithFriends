@@ -1,7 +1,6 @@
 package doglover.dimensionSwap;
 
 import doglover.dimensionSwap.configs.MainGameConfig;
-import doglover.dimensionSwap.gamemodes.DeathSwapGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
 import doglover.dimensionSwap.utils.BlockUtils;
 import doglover.dimensionSwap.utils.PlayerUtils;
@@ -20,7 +19,7 @@ import java.util.*;
 
 
 public class Game {
-    private Set<Player> players = new HashSet<>();
+    private final Set<UUID> players = new HashSet<>();
     private final Map<Player, Integer> points = new HashMap<>();
     private int pointsToWin = 2;
 
@@ -43,24 +42,28 @@ public class Game {
     private List<Gamemode> gamemodes = new ArrayList<>();
     private boolean isRunning;
 
-    private final Map<Player, FastBoard> boards = new HashMap<>();
+    private final Map<UUID, FastBoard> boards = new HashMap<>();
 
     public Set<Player> getPlayers() {
-        return players;
+        Set<Player> onlinePlayers = new HashSet<>();
+        for (UUID uuid : players) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null && player.isOnline()) {
+                onlinePlayers.add(player);
+            }
+        }
+        return onlinePlayers;
     }
 
-    public void setPlayers(Set<Player> players) {
-        this.players = players;
-    }
     public void addPlayer(Player player) {
-        this.players.add(player);
+        this.players.add(player.getUniqueId());
     }
     public void removePlayer(Player player) {
-        this.players.remove(player);
-        FastBoard board = boards.get(player);
+        this.players.remove(player.getUniqueId());
+        FastBoard board = boards.get(player.getUniqueId());
         if (board != null) {
             board.delete();
-            boards.remove(player);
+            boards.remove(player.getUniqueId());
         }
     }
 
@@ -137,7 +140,7 @@ public class Game {
             this.points.put(player, points);
         }
         if (this.points.get(player) >= pointsToWin) {
-            for (Player p : players) {
+            for (Player p : getPlayers()) {
                 p.sendMessage("§a§l" + player.getName() + " has won the game!");
             }
             endGame();
@@ -149,26 +152,43 @@ public class Game {
     }
 
     public void broadcast(String message) {
-        for (Player player : players) {
+        for (Player player : getPlayers()) {
             player.sendMessage(message);
+        }
+    }
+
+    public void reportPlayerQuit(Player player) {
+        if (isRunning) {
+            boards.remove(player.getUniqueId());
+        }
+    }
+
+    public void reportPlayerJoin(Player player) {
+        if (isRunning && players.contains(player.getUniqueId())) {
+            FastBoard board = new FastBoard(player);
+            boards.put(player.getUniqueId(), board);
+            board.updateTitle("§b§lEpic Minigames");
+            board.updateLines(new ArrayList<>());
+            player.sendMessage("§aContinued game in progress!");
+            player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
         }
     }
 
     public void startGame() {
 
         if (players.isEmpty()) {
-            players.addAll(Bukkit.getServer().getOnlinePlayers());
+            players.addAll(Bukkit.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).toList());
         }
         pointsToWin = config.getPointsToWin();
         isRunning = true;
 
         if (getConfig().shouldSetToDayOnStart()) {
-            for (Player player : players) {
+            for (Player player : getPlayers()) {
                 player.getWorld().setTime(1000);
             }
         }
 
-        for (Player player : players) {
+        for (Player player : getPlayers()) {
 
             player.spigot().respawn();
 
@@ -176,7 +196,7 @@ public class Game {
             FastBoard board = new FastBoard(player);
 
 
-            boards.put(player, board);
+            boards.put(player.getUniqueId(), board);
             board.updateTitle("§b§lEpic Minigames");
             board.updateLines(new ArrayList<>());
 
@@ -196,8 +216,8 @@ public class Game {
         for (Gamemode gamemode : gamemodes) {
             gamemode.onGameEnd();
         }
-        for (Player player : players) {
-            FastBoard board = boards.get(player);
+        for (Player player : getPlayers()) {
+            FastBoard board = boards.get(player.getUniqueId());
             if (board != null) {
                 board.delete();
             }
@@ -209,7 +229,7 @@ public class Game {
 
     }
 
-    private List<String> scoreboardContribututions = new ArrayList<>();
+    private final List<String> scoreboardContribututions = new ArrayList<>();
 
     public void addScoreboardContributution(String contributution) {
         this.scoreboardContribututions.add(contributution);
@@ -225,9 +245,9 @@ public class Game {
 
     private boolean inDeathMatch = false;
 
-    List<Player> aliveDeathMatchPlayers = new ArrayList<>();
-    List<Player> deadDeathMatchPlayers = new ArrayList<>();
-    Map<Player, Location> previousLocations = new HashMap<>();
+    List<UUID> aliveDeathMatchPlayers = new ArrayList<>();
+    List<UUID> deadDeathMatchPlayers = new ArrayList<>();
+    Map<UUID, Location> previousLocations = new HashMap<>();
 
 
     public void startDeathMatch() {
@@ -237,13 +257,13 @@ public class Game {
         deadDeathMatchPlayers.clear();
 
 
-        List<Player> playersList = new ArrayList<>(players);
+        List<Player> playersList = new ArrayList<>(getPlayers());
         Player randomPlayer = playersList.get(new Random().nextInt(playersList.size()));
-        Location loc = randomPlayer.getWorld().getSpawnLocation();
+        Location loc = BlockUtils.findSafeBlock(randomPlayer.getWorld().getSpawnLocation());
         BlockUtils.createWallsAroundLocation(loc);
         BlockUtils.createHollowBoxAroundLocation(loc);
-        for (Player player : players) {
-            previousLocations.put(player, player.getLocation());
+        for (Player player : getPlayers()) {
+            previousLocations.put(player.getUniqueId(), player.getLocation());
             player.teleport(loc);
             player.setHealth(20.0);
             player.setFoodLevel(20);
@@ -299,11 +319,11 @@ public class Game {
         BlockUtils.removeWallsAroundLocation(dmloc);
 
 
-        for (Player plr: players) {
-            plr.sendMessage("§a§l" + winner.getName() + " is the winner!");
+        for (Player plr: getPlayers()) {
+            plr.sendMessage("§a" + winner.getName() + " won deathmatch! ");
             plr.setHealth(20.0);
             Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
-                Location loc = previousLocations.get(plr);
+                Location loc = previousLocations.get(plr.getUniqueId());
                 plr.setGameMode(GameMode.SURVIVAL);
                 if (loc != null) {
                     plr.teleport(loc);
@@ -325,13 +345,13 @@ public class Game {
     }
 
     public void reportDeathmatchDeath(Player player) {
-        aliveDeathMatchPlayers.remove(player);
-        deadDeathMatchPlayers.add(player);
-        for (Player p : players) {
+        aliveDeathMatchPlayers.remove(player.getUniqueId());
+        deadDeathMatchPlayers.add(player.getUniqueId());
+        for (Player p : getPlayers()) {
             p.sendMessage("§4☠§c" + player.getName() + " has died!");
         }
         if (aliveDeathMatchPlayers.size() == 1) {
-            Player winner = aliveDeathMatchPlayers.getFirst();
+            Player winner = Bukkit.getPlayer(aliveDeathMatchPlayers.getFirst());
             endDeathMatch(winner);
         }
         player.setGameMode(GameMode.SPECTATOR);
@@ -339,10 +359,18 @@ public class Game {
 
     public void tickDeathMatch() {
         addScoreboardContributution("§c§lDeathmatch");
-        for (Player player : aliveDeathMatchPlayers) {
+        for (UUID uuid : aliveDeathMatchPlayers) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null || !player.isOnline()) {
+                continue;
+            }
             addScoreboardContributution("§c♡§a" + player.getName());
         }
-        for (Player player : deadDeathMatchPlayers) {
+        for (UUID uuid : deadDeathMatchPlayers) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null || !player.isOnline()) {
+                continue;
+            }
             addScoreboardContributution("§4☠§c" + player.getName());
         }
         displayOnBoard(scoreboardContribututions);
@@ -351,8 +379,8 @@ public class Game {
 
 
     private void displayOnBoard(List<String> lines) {
-        for (Player player : players) {
-            FastBoard board = boards.get(player);
+        for (UUID uuid : players) {
+            FastBoard board = boards.get(uuid);
             if (board != null) {
                 board.updateLines(lines);
             }
@@ -370,7 +398,7 @@ public class Game {
             gamemode.tick();
         }
         scoreboardContribututions.add("§dPoints: (First to " + pointsToWin + ")");
-        List<Player> sortedPlayerPoints = new ArrayList<>(players);
+        List<Player> sortedPlayerPoints = new ArrayList<>(getPlayers());
         sortedPlayerPoints.sort(Comparator.comparingInt(this::getPointsFromPlayer).reversed());
         for (Player player : sortedPlayerPoints) {
             scoreboardContribututions.add("§b" + player.getName() + ": §d" + getPointsFromPlayer(player));

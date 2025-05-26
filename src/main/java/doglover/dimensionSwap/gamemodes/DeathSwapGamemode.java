@@ -6,7 +6,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
         }
     }
 
-    private Map<Player, Player> swapMap = new HashMap<>();
+    private final Map<Player, Player> swapMap = new HashMap<>();
 
     /**
      * Gives the player who most recently swapped with the swapee.

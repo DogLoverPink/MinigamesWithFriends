@@ -57,8 +57,8 @@ public abstract class TimeEventBasedGamemode extends Gamemode {
     public void tick() {
         tickGoal--;
         if (tickGoal <= 0) {
-            onTimeEventTrigger();
             tickGoal = getNextComputedTime();
+            onTimeEventTrigger();
         }
 
     }
