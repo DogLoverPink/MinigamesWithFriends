@@ -1,10 +1,13 @@
-name: DimensionSwap
+name: MinigamesWithFriends
 version: '0.5'
 main: doglover.dimensionSwap.DimensionSwap
 api-version: '1.21'
+author: Dogloverpink
+authors: [Dogloverpink, dogloverblue]
 
 commands:
   minigames:
     description: General command for all minigames related things
     aliases:
       - mg
+      - mgwf
