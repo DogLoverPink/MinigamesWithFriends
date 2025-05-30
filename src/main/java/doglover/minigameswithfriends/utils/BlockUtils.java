@@ -75,7 +75,6 @@ public class BlockUtils {
                 }
             }
         }
-        // Restore the removed blocks after a delay
         Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
             for (Map.Entry<Location, Material> entry : removedBlocks.entrySet()) {
                 entry.getKey().getBlock().setType(entry.getValue());

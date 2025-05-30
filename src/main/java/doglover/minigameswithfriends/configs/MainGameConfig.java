@@ -20,10 +20,16 @@ public class MainGameConfig extends GamemodeConfig {
         return blockShuffleConfig;
     }
 
-    public final RandomizerConfig randomizerConfig = new RandomizerConfig();
+    private final RandomizerConfig randomizerConfig = new RandomizerConfig();
 
     public RandomizerConfig getRandomizerConfig() {
         return randomizerConfig;
+    }
+
+    private final WouldYouRatherConfig wouldYouRatherConfig = new WouldYouRatherConfig();
+
+    public WouldYouRatherConfig getWouldYouRatherConfig() {
+        return wouldYouRatherConfig;
     }
 
     public MainGameConfig() {
@@ -42,6 +48,7 @@ public class MainGameConfig extends GamemodeConfig {
             case "deathswap" -> getDeathSwapConfig();
             case "randomizer" -> getRandomizerConfig();
             case "blockshuffle" -> getBlockShuffleConfig();
+            case "wouldyourather" -> getWouldYouRatherConfig();
             case "maingame" -> this;
             default -> null;
         };

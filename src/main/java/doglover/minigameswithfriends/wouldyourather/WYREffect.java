@@ -9,17 +9,16 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public abstract class WYREffect {
 
-    private boolean isBeneficial;
 
     private final Player player;
 
-    public void setIsBeneficial(boolean beneficial) {
-        isBeneficial = beneficial;
+    public static void test() {
+
     }
 
-    public boolean isBeneficial() {
-        return isBeneficial;
-    }
+
+    /**Should a player be able to get this effect twice in the same round */
+    private boolean isRepeatable;
 
     public Player getPlayer() {
         return player;

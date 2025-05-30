@@ -158,6 +158,12 @@ public class Game {
         }
     }
 
+    public void broadcast(Component messageComponent) {
+        for (Player player : getPlayers()) {
+            player.sendMessage(messageComponent);
+        }
+    }
+
     public void reportPlayerQuit(Player player) {
         if (isRunning) {
             boards.remove(player.getUniqueId());

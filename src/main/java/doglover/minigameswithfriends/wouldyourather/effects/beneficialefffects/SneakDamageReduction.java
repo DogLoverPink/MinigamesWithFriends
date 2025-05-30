@@ -1,12 +1,17 @@
-package doglover.minigameswithfriends.wouldyourather.effects.beneficialEfffects;
+package doglover.minigameswithfriends.wouldyourather.effects.beneficialefffects;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
+import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class SneakDamageReduction extends WYREffect {
+
+    static {
+        WYREffectHandler.registerBeneficialWYREffect(SneakDamageReduction.class);
+    }
 
     public SneakDamageReduction(Player player) {
         super(player);
