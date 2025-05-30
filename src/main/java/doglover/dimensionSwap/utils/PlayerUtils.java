@@ -1,6 +1,8 @@
 package doglover.dimensionSwap.utils;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class PlayerUtils {
 
@@ -13,6 +15,14 @@ public class PlayerUtils {
         plr.setHealth(20);
         plr.setFoodLevel(20);
         plr.clearActivePotionEffects();
+    }
 
+
+    public static void launchPlayerToLoc(Player plr, Location to) {
+        Location from = plr.getLocation();
+        Vector vector = to.toVector().subtract(from.toVector()).normalize();
+        vector = vector.add(new Vector(0, 0.05, 0));
+        vector = vector.multiply(new Vector(3, 6, 3));
+        plr.setVelocity(vector);
     }
 }

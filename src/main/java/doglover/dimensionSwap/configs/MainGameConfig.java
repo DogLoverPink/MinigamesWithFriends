@@ -32,6 +32,7 @@ public class MainGameConfig extends GamemodeConfig {
         registerConfigValue("PointsPerDeathmatchWin", Integer.class, 1);
         registerConfigValue("KeepInventoryOnDeath", Boolean.class, false);
         registerConfigValue("SetToDayOnStart", Boolean.class, true);
+        registerConfigValue("ResetAdvancementsOnGameStart", Boolean.class, false);
     }
 
 
@@ -60,5 +61,9 @@ public class MainGameConfig extends GamemodeConfig {
 
     public int getPointsToWin() {
         return getInt("PointsToWin");
+    }
+
+    public boolean shouldResetAdvancementsOnGameStart() {
+        return getBoolean("ResetAdvancementsOnGameStart");
     }
 }

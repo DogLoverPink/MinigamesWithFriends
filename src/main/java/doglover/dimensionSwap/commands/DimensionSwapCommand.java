@@ -7,6 +7,7 @@ import doglover.dimensionSwap.gamemodes.BlockShuffleGamemode;
 import doglover.dimensionSwap.gamemodes.DimensionSwapGamemode;
 import doglover.dimensionSwap.gamemodes.Gamemode;
 import doglover.dimensionSwap.utils.BlockUtils;
+import doglover.dimensionSwap.utils.PlayerUtils;
 import doglover.dimensionSwap.utils.WorldFileUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -39,6 +40,10 @@ public class DimensionSwapCommand implements CommandExecutor {
         }
         if (minigameCommand.equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
             DimensionSwapGamemode.preLoadSavedWorlds((Player) commandSender);
+        }
+        if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
+            Player plr = (Player) commandSender;
+            PlayerUtils.launchPlayerToLoc(plr, plr.getWorld().getSpawnLocation());
         }
         if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
             handleDisableGamemode(commandSender, args);
@@ -87,6 +92,27 @@ public class DimensionSwapCommand implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    private static void handleDevCommand(CommandSender commandSender, String [] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
+            DimensionSwapGamemode.preLoadSavedWorlds((Player) commandSender);
+            commandSender.sendMessage("§aPreloaded saved worlds.");
+        } else if (args[1].equalsIgnoreCase("launchToSpawn")) {
+            Player plr = (Player) commandSender;
+            PlayerUtils.launchPlayerToLoc(plr, plr.getWorld().getSpawnLocation());
+        } else if (args[1].equalsIgnoreCase("SafeLoc")) {
+            Player plr = (Player) commandSender;
+            plr.setFallDistance(0);
+            plr.teleport(BlockUtils.findSafeBlock(plr.getLocation()));
+        } else if (args[1].equalsIgnoreCase("fling")) {
+            Player plr = (Player) commandSender;
+            Game.launchPlayerSideways(plr, 10);
+        }
     }
 
     private static void handleBlockShuffleCommand(@NotNull CommandSender commandSender, @NotNull String @NotNull [] args) {

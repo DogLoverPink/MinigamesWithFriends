@@ -1,13 +1,13 @@
 package doglover.dimensionSwap.utils;
 
+import doglover.dimensionSwap.DimensionSwap;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class BlockUtils {
 
@@ -52,6 +52,35 @@ public class BlockUtils {
         replaceBlocksBetween(loc2, loc3, Material.RED_WOOL, Material.AIR);
         replaceBlocksBetween(loc3, loc4, Material.RED_WOOL, Material.AIR);
         replaceBlocksBetween(loc4, loc1, Material.RED_WOOL, Material.AIR);
+    }
+
+    public static void removeBlockOfTypeNearThenReplace(Location loc, Material replaceWith, Material... find) {
+        List<Material> findList = new ArrayList<>(Arrays.asList(find));
+        if (findList.contains(Material.AIR)) {
+            findList.add(Material.CAVE_AIR);
+            findList.add(Material.VOID_AIR);
+        }
+        Map<Location, Material>  removedBlocks = new HashMap<>();
+        int radius = 2;
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    Location newLoc = loc.clone().add(x, y, z);
+                    Block newBlock = newLoc.getBlock();
+                    if (findList.contains(newBlock.getType())) {
+                        removedBlocks.put(newLoc, newBlock.getType());
+                        newBlock.setType(replaceWith);
+                    }
+                }
+            }
+        }
+        // Restore the removed blocks after a delay
+        Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
+            for (Map.Entry<Location, Material> entry : removedBlocks.entrySet()) {
+                entry.getKey().getBlock().setType(entry.getValue());
+            }
+        }, 20L);
     }
 
     public static void removeWallsAroundLocation(Location loc) {

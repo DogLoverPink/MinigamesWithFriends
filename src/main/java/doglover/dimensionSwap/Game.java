@@ -7,9 +7,8 @@ import doglover.dimensionSwap.utils.PlayerUtils;
 import fr.mrmicky.fastboard.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -58,6 +57,7 @@ public class Game {
     public void addPlayer(Player player) {
         this.players.add(player.getUniqueId());
     }
+
     public void removePlayer(Player player) {
         this.players.remove(player.getUniqueId());
         FastBoard board = boards.get(player.getUniqueId());
@@ -78,9 +78,11 @@ public class Game {
         }
         return gamemodeNames;
     }
+
     protected void setGamemodes(List<Gamemode> gamemodes) {
         this.gamemodes = gamemodes;
     }
+
     public void addGamemode(Gamemode gamemode) {
         this.gamemodes.add(gamemode);
         gamemode.setGame(this);
@@ -192,6 +194,14 @@ public class Game {
 
             player.spigot().respawn();
 
+            if (config.shouldResetAdvancementsOnGameStart()) {
+                Bukkit.getServer().advancementIterator().forEachRemaining(advancement -> {
+                   for (String criteria : player.getAdvancementProgress(advancement).getAwardedCriteria()) {
+                       player.getAdvancementProgress(advancement).revokeCriteria(criteria);
+                   }
+                });
+            }
+
             points.put(player, 0);
             FastBoard board = new FastBoard(player);
 
@@ -272,6 +282,7 @@ public class Game {
             player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 5 * 20, 5, true, false));
             BukkitRunnable runnable = new BukkitRunnable() {
                 int i = 5;
+
                 @Override
                 public void run() {
                     if (i == 0) {
@@ -282,12 +293,14 @@ public class Game {
                     }
                     player.showTitle(Title.title(Component.text("§a" + i), Component.text("§eGet Ready!")));
                     i--;
-                };
-                };
+                }
+
+                ;
+            };
             runnable.runTaskTimer(DimensionSwap.getGamePlugin(), 0, 20);
             Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
-                    DimensionSwap.getGamePlugin().getLogger().info("Removing walls around location: " + loc.toString());
-                    BlockUtils.removeHollowBoxAroundLocation(loc);
+                DimensionSwap.getGamePlugin().getLogger().info("Removing walls around location: " + loc.toString());
+                BlockUtils.removeHollowBoxAroundLocation(loc);
             }, 98);
         }
     }
@@ -319,7 +332,7 @@ public class Game {
         BlockUtils.removeWallsAroundLocation(dmloc);
 
 
-        for (Player plr: getPlayers()) {
+        for (Player plr : getPlayers()) {
             plr.sendMessage("§a" + winner.getName() + " won deathmatch! ");
             plr.setHealth(20.0);
             Bukkit.getScheduler().runTaskLater(DimensionSwap.getGamePlugin(), () -> {
@@ -357,6 +370,8 @@ public class Game {
         player.setGameMode(GameMode.SPECTATOR);
     }
 
+    private int heavyTickCounter = 0;
+
     public void tickDeathMatch() {
         addScoreboardContributution("§c§lDeathmatch");
         for (UUID uuid : aliveDeathMatchPlayers) {
@@ -365,6 +380,15 @@ public class Game {
                 continue;
             }
             addScoreboardContributution("§c♡§a" + player.getName());
+            Location worldSpawn = player.getWorld().getSpawnLocation();
+            double xDistance = Math.abs(player.getLocation().getX() - worldSpawn.getX());
+            double zDistance = Math.abs(player.getLocation().getZ() - worldSpawn.getZ());
+            if (xDistance >= 35 || zDistance >= 35) {
+                BlockUtils.removeBlockOfTypeNearThenReplace(player.getLocation(), Material.AIR, Material.RED_WOOL);
+                PlayerUtils.launchPlayerToLoc(player, worldSpawn);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * 3, 1, true, false));
+                player.sendMessage("§cnuh uh uh");
+            }
         }
         for (UUID uuid : deadDeathMatchPlayers) {
             Player player = Bukkit.getPlayer(uuid);
@@ -375,7 +399,6 @@ public class Game {
         }
         displayOnBoard(scoreboardContribututions);
     }
-
 
 
     private void displayOnBoard(List<String> lines) {
