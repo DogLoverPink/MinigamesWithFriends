@@ -1,6 +1,6 @@
 name: MinigamesWithFriends
-version: '0.5'
-main: doglover.dimensionSwap.DimensionSwap
+version: '1.1.0'
+main: doglover.minigameswithfriends.MinigamesWithFriends
 api-version: '1.21'
 author: Dogloverpink
 authors: [Dogloverpink, dogloverblue]
