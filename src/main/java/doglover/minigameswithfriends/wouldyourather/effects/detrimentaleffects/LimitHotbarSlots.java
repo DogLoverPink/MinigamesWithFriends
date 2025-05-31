@@ -29,6 +29,9 @@ public class LimitHotbarSlots extends WYREffect {
 
     @Override
     public void onPlayerAttemptPickupItem(PlayerAttemptPickupItemEvent event) {
+        if (!event.getPlayer().equals(getPlayer())) {
+            return;
+        }
         if (!playerHasRoom(event.getItem().getItemStack())) {
             event.setCancelled(true);
         }
@@ -59,12 +62,12 @@ public class LimitHotbarSlots extends WYREffect {
                 if (otherItem == null) {
                     getPlayer().getInventory().setItem(j, item);
                     getPlayer().getInventory().setItem(i, null);
-                    return;
+                    break;
                 }
                 if (item.isSimilar(otherItem) && item.getAmount() + otherItem.getAmount() <= otherItem.getMaxStackSize()) {
                     getPlayer().getInventory().getItem(j).setAmount(item.getAmount() + otherItem.getAmount());
                     getPlayer().getInventory().setItem(i, null);
-                    return;
+                    break;
                 }
             }
             player.getWorld().dropItemNaturally(player.getLocation(), item);

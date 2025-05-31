@@ -20,7 +20,7 @@ public class HigherStepHeight extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "Increase vertical step height while not sneaking";
+        return "Increase your vertical step height while not sneaking";
     }
 
     public HigherStepHeight(Player player) {

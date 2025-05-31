@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 
 import java.util.Iterator;
+import java.util.Map;
 
 public class SmeltInventory extends WYREffect {
 
@@ -22,10 +23,12 @@ public class SmeltInventory extends WYREffect {
             public String getDescriptionBlurb() {
                 return "EVERYTHING is in your inventory is smelted";
             }
+
             @Override
             public void onEffectInitiate() {
-                smeltAllInInventoryBeneficial(this.getPlayer(), false);
-            }}.getClass());
+                smeltAllInInventory(this.getPlayer(), false);
+            }
+        }.getClass());
     }
 
     @Override
@@ -39,10 +42,21 @@ public class SmeltInventory extends WYREffect {
 
     @Override
     public void onEffectInitiate() {
-        smeltAllInInventoryBeneficial(this.getPlayer(), true);
+        smeltAllInInventory(this.getPlayer(), true);
     }
 
-    public static void smeltAllInInventoryBeneficial(Player player, boolean beneficial) {
+    private static final Map<String, Material> smeltMap = Map.of(
+            "IRON", Material.IRON_NUGGET,
+            "GOLD", Material.GOLD_NUGGET,
+            "DIAMOND", Material.DIAMOND,
+            "CHAIN", Material.IRON_NUGGET,
+            "STONE", Material.STONE,
+            "LOG", Material.CHARCOAL,
+            "WOOD", Material.CHARCOAL,
+            "BREAD", Material.CHARCOAL
+    );
+
+    public static void smeltAllInInventory(Player player, boolean beneficial) {
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContents().length; i++) {
             ItemStack item = inv.getContents()[i];
@@ -58,22 +72,14 @@ public class SmeltInventory extends WYREffect {
                 smelted.setAmount(item.getAmount());
                 player.getInventory().setItem(i, smelted);
             } else if (!beneficial) {
-                if (itemName.contains("IRON")) {
-                    ItemStack smelted = new ItemStack(Material.IRON_NUGGET);
-                    smelted.setAmount(item.getAmount());
-                    player.getInventory().setItem(i, smelted);
-                } else if (itemName.contains("GOLD")) {
-                    ItemStack smelted = new ItemStack(Material.GOLD_NUGGET);
-                    smelted.setAmount(item.getAmount());
-                    player.getInventory().setItem(i, smelted);
-                } else if (itemName.contains("DIAMOND")) {
-                    ItemStack smelted = new ItemStack(Material.DIAMOND);
-                    smelted.setAmount(item.getAmount());
-                    player.getInventory().setItem(i, smelted);
-                } else if (itemName.contains("LOG") || itemName.contains("_WOOD")) {
-                    ItemStack smelted = new ItemStack(Material.CHARCOAL);
-                    smelted.setAmount(item.getAmount());
-                    player.getInventory().setItem(i, smelted);
+                for (String key : smeltMap.keySet()) {
+                    if (itemName.contains(key)) {
+                        Material smeltedMaterial = smeltMap.get(key);
+                        ItemStack smelted = new ItemStack(smeltedMaterial);
+                        smelted.setAmount(item.getAmount());
+                        player.getInventory().setItem(i, smelted);
+                        break;
+                    }
                 }
             }
         }

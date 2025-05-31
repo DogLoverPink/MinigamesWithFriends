@@ -1,4 +1,4 @@
-package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
+package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
@@ -8,28 +8,28 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 
-public class StubbyArms extends WYREffect {
+public class BlockRangeIncrease extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerDetrimentalWYREffect(StubbyArms.class);
+        WYREffectHandler.registerBeneficialWYREffect(BlockRangeIncrease.class);
     }
 
     @Override
     public String getDescriptionBlurb() {
-        return "Your block interaction range is reduced";
+        return "Have your block range massively increased";
     }
 
-    public StubbyArms(Player player) {
+    public BlockRangeIncrease(Player player) {
         super(player);
         setRepeatable(true);
     }
 
-    NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "stubby_arms"+getUniqueNumber());
+    NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "long_arms"+getUniqueNumber());
 
 
     private void addModifier() {
-        AttributeModifier mod = new AttributeModifier(key, -2, AttributeModifier.Operation.ADD_NUMBER);
+        AttributeModifier mod = new AttributeModifier(key, 5, AttributeModifier.Operation.ADD_NUMBER);
         getPlayer().getAttribute(Attribute.BLOCK_INTERACTION_RANGE).addModifier(mod);
     }
 
