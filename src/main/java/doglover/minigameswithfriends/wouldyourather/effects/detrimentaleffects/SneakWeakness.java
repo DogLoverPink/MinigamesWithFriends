@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.entity.Player;
@@ -11,11 +12,23 @@ public class SneakWeakness extends WYREffect {
 
     static {
         WYREffectHandler.registerDetrimentalWYREffect(SneakWeakness.class);
+        MinigamesWithFriends.getGamePlugin().getLogger().info("SneakWeakness registered");
     }
 
     public SneakWeakness(Player player) {
         super(player);
         subscribeToEvent(PlayerToggleSneakEvent.class);
+    }
+
+    @Override
+    public void onEffectInitiate() {
+        super.onEffectInitiate();
+
+    }
+
+    @Override
+    public void onEffectDecompose() {
+        super.onEffectDecompose();
     }
 
     @Override

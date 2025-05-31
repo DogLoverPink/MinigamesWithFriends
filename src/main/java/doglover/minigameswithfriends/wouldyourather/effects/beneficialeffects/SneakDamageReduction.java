@@ -1,5 +1,6 @@
-package doglover.minigameswithfriends.wouldyourather.effects.beneficialefffects;
+package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ public class SneakDamageReduction extends WYREffect {
 
     static {
         WYREffectHandler.registerBeneficialWYREffect(SneakDamageReduction.class);
+        MinigamesWithFriends.getGamePlugin().getLogger().info("SneakDamageRes registered");
     }
 
     public SneakDamageReduction(Player player) {
@@ -19,8 +21,18 @@ public class SneakDamageReduction extends WYREffect {
     }
 
     @Override
+    public void onEffectInitiate() {
+        super.onEffectInitiate();
+    }
+
+    @Override
+    public void onEffectDecompose() {
+        super.onEffectDecompose();
+    }
+
+    @Override
     public String getDescriptionBlurb() {
-        return "You take less damage while sneaking";
+        return "Take less damage while sneaking";
     }
 
 

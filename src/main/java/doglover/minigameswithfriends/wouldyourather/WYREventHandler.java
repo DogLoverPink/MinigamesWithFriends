@@ -17,7 +17,7 @@ public class WYREventHandler {
     private static Map<Class<? extends Event>, List<WYREffect>> eventMappings = new HashMap<>();
 
     public static List<WYREffect> getEffectsForEvent(Event event) {
-        return eventMappings.get(event.getClass());
+        return eventMappings.getOrDefault(event.getClass(), new ArrayList<>());
     }
 
     public static void registerEvents(JavaPlugin plugin) {
@@ -38,6 +38,10 @@ public class WYREventHandler {
     }
 
     private static boolean isActive = false;
+
+    public static void setActive(boolean isActive) {
+        WYREventHandler.isActive = isActive;
+    }
 
     public static boolean isActive() {
         return isActive;

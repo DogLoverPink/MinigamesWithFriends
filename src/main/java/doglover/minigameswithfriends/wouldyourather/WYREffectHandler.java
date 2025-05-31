@@ -1,10 +1,13 @@
 package doglover.minigameswithfriends.wouldyourather;
 
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class WYREffectHandler {
 
@@ -30,6 +33,17 @@ public class WYREffectHandler {
 
     private static WYREffect constructWYREffectFromClass(Class<? extends WYREffect> effectClass, Player player) {
         try {
+            if (effectClass.isAnonymousClass()) {
+                MinigamesWithFriends.getGamePlugin().getLogger().warning("Class: " + effectClass.getSimpleName());
+                for  (Constructor<?> con : effectClass.getDeclaredConstructors()) {
+                    MinigamesWithFriends.getGamePlugin().getLogger().warning("Constructor: " + con.toString());
+                }
+                Constructor<? extends WYREffect> con = effectClass.getDeclaredConstructor();
+                con.setAccessible(true);
+                WYREffect eff = con.newInstance();
+                eff.setPlayer(player);
+                return eff;
+            }
             return effectClass.getDeclaredConstructor(Player.class).newInstance(player);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,4 +59,6 @@ public class WYREffectHandler {
     public static void registerDetrimentalWYREffect(Class<? extends WYREffect> effectClass) {
         detrimentialEffects.add(effectClass);
     }
+
+
 }

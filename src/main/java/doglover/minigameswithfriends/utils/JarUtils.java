@@ -15,7 +15,12 @@ public class JarUtils {
     public static void initalizeWouldYouRatherClasses(String packageName) {
         String packagePath = packageName.replace(".", "/");
         try {
-            JarFile jarFile = new JarFile(MinigamesWithFriends.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            String jarName = new java.io.File(MinigamesWithFriends.class.getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .getPath())
+                    .getName();
+            JarFile jarFile = new JarFile("plugins/" + jarName);
             Enumeration<JarEntry> entries = jarFile.entries();
 
             while (entries.hasMoreElements()) {
@@ -26,6 +31,7 @@ public class JarUtils {
                     try {
                         //will run the static methods in that file
                         Class<?> clazz = Class.forName(className);
+                        MinigamesWithFriends.getGamePlugin().getLogger().info("Loaded class: " + clazz.getName());
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
