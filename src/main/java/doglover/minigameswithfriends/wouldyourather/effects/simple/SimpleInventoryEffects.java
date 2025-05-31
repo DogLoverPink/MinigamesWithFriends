@@ -8,10 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class SimpleInventoryEffects {
     static {
@@ -20,40 +17,98 @@ public class SimpleInventoryEffects {
             public String getDescriptionBlurb() {
                 return "Have all of your gear randomly enchanted";
             }
+
             @Override
             public void onEffectInitiate() {
                 enchantAtRandom(this.getPlayer());
-            }}.getClass());
+            }
+        }.getClass());
 
         WYREffectHandler.registerDetrimentalWYREffect(new WYREffect() {
             @Override
             public String getDescriptionBlurb() {
                 return "You forgot how you sorted your inventory";
             }
+
             @Override
             public void onEffectInitiate() {
                 shufflePlayerInventory(this.getPlayer());
-            }}.getClass());
+            }
+        }.getClass());
 
         WYREffectHandler.registerBeneficialWYREffect(new WYREffect() {
             @Override
             public String getDescriptionBlurb() {
-                return "Everything is in your inventory is smelted";
+                return "All of your gear gets upgraded";
             }
+
             @Override
             public void onEffectInitiate() {
-                smeltAllInInventory(this.getPlayer());
-            }}.getClass());
+                upgradeGear(this.getPlayer());
+            }
+        }.getClass());
 
-        WYREffectHandler.registerDetrimentalWYREffect(new WYREffect() {
+        WYREffectHandler.registerBeneficialWYREffect(new WYREffect() {
             @Override
             public String getDescriptionBlurb() {
-                return "Everything is in your inventory is smelted";
+                return "Fill your inventory with random items";
             }
+
             @Override
             public void onEffectInitiate() {
-                smeltAllInInventory(this.getPlayer());
-            }}.getClass());
+                fillInventoryWithRandomItems(getPlayer());
+            }
+        }.getClass());
+
+    }
+
+
+    private static void fillInventoryWithRandomItems(Player player) {
+        PlayerInventory inv = player.getInventory();
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack item = inv.getItem(i);
+            if (item == null || item.getType() == Material.AIR) {
+                Material randomMaterial = Material.values()[new Random().nextInt(Material.values().length)];
+                int amount = (int) (Math.random() * 5) + 1;
+                if (randomMaterial.isItem()) {
+                    inv.setItem(i, new ItemStack(randomMaterial, amount));
+                }
+            }
+        }
+        player.updateInventory();
+    }
+
+    private static final Map<String, String> upgradePath = Map.of(
+            "WOODEN", "STONE",
+            "STONE", "IRON",
+            "GOLDEN", "IRON",
+            "IRON", "DIAMOND",
+            "CHAINMAIL", "DIAMOND",
+            "LEATHER", "GOLDEN",
+            "DIAMOND", "NETHERITE");
+
+    public static void upgradeGear(Player player) {
+        for (int i = 0; i < player.getInventory().getContents().length; i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (item == null || item.getType() == Material.AIR) {
+                continue;
+            }
+            String materialName = item.getType().name();
+            String[] splitName = materialName.split("_");
+            String nextMaterialName = upgradePath.get(splitName[0]);
+            if (nextMaterialName == null || splitName.length < 2) {
+                continue;
+            }
+            Material nextMaterial = Material.getMaterial(nextMaterialName + "_" + splitName[1]);
+
+            if (nextMaterial == null) {
+                continue;
+            }
+            ItemStack upgradedItem = new ItemStack(nextMaterial, item.getAmount());
+            upgradedItem.setItemMeta(item.getItemMeta());
+            player.getInventory().setItem(i, upgradedItem);
+        }
+
     }
 
     public static void shufflePlayerInventory(Player player) {
@@ -83,34 +138,4 @@ public class SimpleInventoryEffects {
         }
     }
 
-
-    public static void smeltAllInInventory(Player player) {
-        player.sendMessage(player.getInventory().getContents().length + " items in inventory");
-        Inventory inv = player.getInventory();
-        for (int i = 0; i < inv.getContents().length; i++) {
-            ItemStack item = inv.getContents()[i];
-            if (item == null || item.getType() == Material.AIR) continue;
-
-            ItemStack result = getSmeltResult(item.getType());
-            if (result != null) {
-                ItemStack smelted = result.clone();
-                smelted.setAmount(item.getAmount());
-                player.getInventory().setItem(i, smelted);
-            }
-        }
-        player.updateInventory();
-    }
-
-    private static ItemStack getSmeltResult(Material input) {
-        Iterator<Recipe> recipes = Bukkit.recipeIterator();
-        while (recipes.hasNext()) {
-            Recipe recipe = recipes.next();
-            if (recipe instanceof FurnaceRecipe furnace) {
-                if (furnace.getInput().getType() == input) {
-                    return furnace.getResult();
-                }
-            }
-        }
-        return null;
-    }
 }

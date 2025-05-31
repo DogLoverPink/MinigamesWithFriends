@@ -21,7 +21,7 @@ import java.util.*;
 
 public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
-    private Map<UUID, List<Class<? extends WYREffect>>> currentlyAppliedBenefitsAndDetriments = new HashMap<>();
+    private final Map<UUID, List<Class<? extends WYREffect>>> currentlyAppliedBenefitsAndDetriments = new HashMap<>();
 
 
     public static void initialize() {
@@ -37,6 +37,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         if (!effectsToChooseFrom.isEmpty()) {
             getGame().addScoreboardContributution("§bTime to make choice: §d" + getFormattedTimeRemaining());
         }
+        WYREffectHandler.tick();
 
     }
 
@@ -76,10 +77,17 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     }
 
+    boolean isCurrentChoosing = false;
+
+    public boolean isCurrentChoosing() {
+        return isCurrentChoosing;
+    }
+
     Map<UUID, List<WYREffect>> effectsToChooseFrom = new HashMap<>();
 
     @Override
     public void onTimeEventTrigger() {
+        isCurrentChoosing = true;
         for (Player plr : getGame().getPlayers()) {
             plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, -1, 4));
             List<Class<? extends WYREffect>> current = currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
@@ -117,12 +125,14 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         setTickGoal(getNextComputedTime());
         for (UUID uuid : effectsToChooseFrom.keySet()) {
             Player plr = Bukkit.getPlayer(uuid);
+            plr.closeInventory();
             plr.sendMessage(Component.text("You ran out of time! Automatically choosing first option... ").color(NamedTextColor.RED));
             chooseOptionOne(plr);
         }
         for (Player plr: getGame().getPlayers()) {
             plr.removePotionEffect(PotionEffectType.RESISTANCE);
         }
+        isCurrentChoosing = false;
     }
 
     private void sendWYRIntro(Player plr) {
@@ -153,6 +163,8 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     @Override
     public void onGameEnd() {
         WYREventHandler.setActive(false);
+        currentlyAppliedBenefitsAndDetriments.clear();
+        WYREffectHandler.clearAndDecomposeManagedEffects();
 
     }
 

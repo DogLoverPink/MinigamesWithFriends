@@ -2,10 +2,7 @@ package doglover.minigameswithfriends;
 
 import doglover.minigameswithfriends.commands.DimensionSwapCommand;
 import doglover.minigameswithfriends.commands.GameCommandTabCompleter;
-import doglover.minigameswithfriends.events.BreakBlockEvent;
-import doglover.minigameswithfriends.events.CommandBlockRunEvent;
-import doglover.minigameswithfriends.events.DeathListener;
-import doglover.minigameswithfriends.events.JoinLeaveEvent;
+import doglover.minigameswithfriends.events.*;
 import doglover.minigameswithfriends.gamemodes.DimensionSwapGamemode;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
@@ -36,6 +33,7 @@ public final class MinigamesWithFriends extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new CommandBlockRunEvent(), this);
         this.getServer().getPluginManager().registerEvents(new BreakBlockEvent(), this);
         this.getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerInventoryDropItemEvent(), this);
         DimensionSwapGamemode.initialize();
         WouldYouRatherGamemode.initialize();
 

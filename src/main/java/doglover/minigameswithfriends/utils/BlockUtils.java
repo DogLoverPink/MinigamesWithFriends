@@ -41,6 +41,22 @@ public class BlockUtils {
 
     }
 
+    public static Location findLocationOfBlockType(List<Material> types, Location startLoc, int radius) {
+        World world = startLoc.getWorld();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    Location loc = startLoc.clone().add(x, y, z);
+                    Block block = loc.getBlock();
+                    if (types.contains(block.getType())) {
+                        return loc;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public static void createWallsAroundLocation(Location loc) {
         //Get the 4 corner locations of the wall, 35 blocks away from the center
         Location loc1 = loc.clone().add(35, 35, 35);

@@ -1,9 +1,7 @@
 package doglover.minigameswithfriends.wouldyourather;
 
 import doglover.minigameswithfriends.events.DeathListener;
-import doglover.minigameswithfriends.wouldyourather.events.WYRDeathEvents;
-import doglover.minigameswithfriends.wouldyourather.events.WYRInteractionEvents;
-import doglover.minigameswithfriends.wouldyourather.events.WYRPlayerSneakEvent;
+import doglover.minigameswithfriends.wouldyourather.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +22,8 @@ public class WYREventHandler {
         Bukkit.getServer().getPluginManager().registerEvents(new WYRDeathEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRInteractionEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRPlayerSneakEvent(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new WYRDamageEvents(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new WYRBlockEvents(), plugin);
     }
 
     public static void subscribe(Class<? extends Event> eventClass, WYREffect effect) {

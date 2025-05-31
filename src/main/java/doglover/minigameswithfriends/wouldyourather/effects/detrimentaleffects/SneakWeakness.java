@@ -12,11 +12,11 @@ public class SneakWeakness extends WYREffect {
 
     static {
         WYREffectHandler.registerDetrimentalWYREffect(SneakWeakness.class);
-        MinigamesWithFriends.getGamePlugin().getLogger().info("SneakWeakness registered");
     }
 
     public SneakWeakness(Player player) {
         super(player);
+        setRepeatable(false);
         subscribeToEvent(PlayerToggleSneakEvent.class);
     }
 

@@ -12,11 +12,11 @@ public class SneakDamageReduction extends WYREffect {
 
     static {
         WYREffectHandler.registerBeneficialWYREffect(SneakDamageReduction.class);
-        MinigamesWithFriends.getGamePlugin().getLogger().info("SneakDamageRes registered");
     }
 
     public SneakDamageReduction(Player player) {
         super(player);
+        setRepeatable(false);
         subscribeToEvent(PlayerToggleSneakEvent.class);
     }
 

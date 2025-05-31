@@ -2,6 +2,9 @@ package doglover.minigameswithfriends.wouldyourather;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -13,7 +16,7 @@ import java.util.List;
 public abstract class WYREffect {
 
 
-    private Player player;
+    protected Player player;
 
     public static void test() {
 
@@ -61,10 +64,20 @@ public abstract class WYREffect {
             WYREventHandler.subscribe(eventClass, this);
         }
         eventsToSubscribeTo.clear();
+        WYREffectHandler.manageEffect(this);
     }
 
     public void onEffectDecompose() {
         WYREventHandler.unsubscribe(this);
+        WYREffectHandler.unmanageEffect(this);
+    }
+
+    public void onTick() {
+
+    }
+
+    public void on4HertzTick() {
+
     }
 
 
@@ -81,6 +94,18 @@ public abstract class WYREffect {
     }
 
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+
+    }
+
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+
+    }
+
+    public void onEntityDamage(EntityDamageEvent event) {
+
+    }
+
+    public void onBlockBreak(BlockBreakEvent event) {
 
     }
 

@@ -1,13 +1,18 @@
 package doglover.minigameswithfriends.wouldyourather;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.FasterMiningWhenStandingStill;
+import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.InverseFallDamage;
+import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.NoKnockback;
+import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.ScaleSpeedBasedOnHealth;
+import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.CalciumDeficiency;
+import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.MagneticBody;
+import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.RandomTeleport;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class WYREffectHandler {
 
@@ -26,7 +31,12 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(NoKnockback.class));
+
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
+        if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
+            return constructWYREffectFromClass(TESTING_EFFECTS_TO_GET_FIRST.removeFirst(), player);
+        }
         Class<? extends WYREffect> effectClass = classes.get((int) (Math.random() * classes.size()));
         return constructWYREffectFromClass(effectClass, player);
     }
@@ -48,6 +58,41 @@ public class WYREffectHandler {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static List<WYREffect> managedEffects = new ArrayList<>();
+
+    public static void manageEffect(WYREffect effect) {
+        managedEffects.add(effect);
+    }
+
+    public static void unmanageEffect(WYREffect effect) {
+        managedEffects.remove(effect);
+    }
+
+    public static void clearAndDecomposeManagedEffects() {
+        for (WYREffect effect : new ArrayList<>(managedEffects)) {
+            effect.onEffectDecompose();
+        }
+        managedEffects.clear();
+    }
+
+    static int tick4HertzCounter = 0;
+
+    public static void tick() {
+        tick4HertzCounter++;
+
+        boolean do4Hz = tick4HertzCounter >= 5;
+
+        for (WYREffect effect : managedEffects) {
+            effect.onTick();
+            if (do4Hz) {
+                effect.on4HertzTick();
+            }
+        }
+        if (do4Hz) {
+            tick4HertzCounter = 0;
         }
     }
 
