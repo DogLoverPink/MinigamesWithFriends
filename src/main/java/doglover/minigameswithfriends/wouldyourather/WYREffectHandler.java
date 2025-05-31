@@ -1,13 +1,8 @@
 package doglover.minigameswithfriends.wouldyourather;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
-import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.FasterMiningWhenStandingStill;
-import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.InverseFallDamage;
-import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.NoKnockback;
-import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.ScaleSpeedBasedOnHealth;
-import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.CalciumDeficiency;
-import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.MagneticBody;
-import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.RandomTeleport;
+import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.*;
+import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.*;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
@@ -31,7 +26,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(NoKnockback.class));
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(Butterfinger.class));
 
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
@@ -44,9 +39,7 @@ public class WYREffectHandler {
     private static WYREffect constructWYREffectFromClass(Class<? extends WYREffect> effectClass, Player player) {
         try {
             if (effectClass.isAnonymousClass()) {
-                MinigamesWithFriends.getGamePlugin().getLogger().warning("Class: " + effectClass.getSimpleName());
                 for  (Constructor<?> con : effectClass.getDeclaredConstructors()) {
-                    MinigamesWithFriends.getGamePlugin().getLogger().warning("Constructor: " + con.toString());
                 }
                 Constructor<? extends WYREffect> con = effectClass.getDeclaredConstructor();
                 con.setAccessible(true);
@@ -59,6 +52,11 @@ public class WYREffectHandler {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void sendEffectCounts() {
+        MinigamesWithFriends.getGamePlugin().getLogger().info("Registered "+ beneficialEffects.size() +" beneficial effects!");
+        MinigamesWithFriends.getGamePlugin().getLogger().info("Registered "+ detrimentialEffects.size() +" detrimental effects!");
     }
 
     public static List<WYREffect> managedEffects = new ArrayList<>();

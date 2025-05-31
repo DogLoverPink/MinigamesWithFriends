@@ -39,14 +39,14 @@ public class FasterMiningWhenStandingStill extends WYREffect {
         if (!player.getLocation().toVector().equals(lastLocationVector)) {
             hasteStacks = 0;
             if (mod != null) {
-                player.getAttribute(Attribute.MINING_EFFICIENCY).removeModifier(mod);
+                player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(mod);
             }
         }
         lastLocation = player.getLocation();
     }
 
     Location lastLocation;
-    int hasteStacks = 0;
+    double hasteStacks = 0;
     AttributeModifier mod;
 
     @Override
@@ -55,10 +55,10 @@ public class FasterMiningWhenStandingStill extends WYREffect {
         if (!player.equals(getPlayer())) {
             return;
         }
-        hasteStacks += 2;
+        hasteStacks += 0.2;
         mod = new AttributeModifier(new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "stand-still-haste-stacks"), hasteStacks, AttributeModifier.Operation.ADD_NUMBER);
-        player.getAttribute(Attribute.MINING_EFFICIENCY).removeModifier(mod);
-        player.getAttribute(Attribute.MINING_EFFICIENCY).addModifier(mod);
+        player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(mod);
+        player.getAttribute(Attribute.BLOCK_BREAK_SPEED).addModifier(mod);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class FasterMiningWhenStandingStill extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.MINING_EFFICIENCY).removeModifier(mod);
+        player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(mod);
     }
 }

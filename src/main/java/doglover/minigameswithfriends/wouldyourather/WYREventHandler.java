@@ -24,6 +24,7 @@ public class WYREventHandler {
         Bukkit.getServer().getPluginManager().registerEvents(new WYRPlayerSneakEvent(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRDamageEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRBlockEvents(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new WYRItemEvents(), plugin);
     }
 
     public static void subscribe(Class<? extends Event> eventClass, WYREffect effect) {

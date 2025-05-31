@@ -28,7 +28,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         JarUtils.initalizeWouldYouRatherClasses("doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects");
         JarUtils.initalizeWouldYouRatherClasses("doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects");
         JarUtils.initalizeWouldYouRatherClasses("doglover.minigameswithfriends.wouldyourather.effects.simple");
-
+        WYREffectHandler.sendEffectCounts();
     }
 
     @Override

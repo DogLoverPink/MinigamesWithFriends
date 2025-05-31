@@ -31,7 +31,6 @@ public class JarUtils {
                     try {
                         //will run the static methods in that file
                         Class<?> clazz = Class.forName(className);
-                        MinigamesWithFriends.getGamePlugin().getLogger().info("Loaded class: " + clazz.getName());
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }

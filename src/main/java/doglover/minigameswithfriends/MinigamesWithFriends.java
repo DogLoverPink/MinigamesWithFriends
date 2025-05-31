@@ -52,6 +52,7 @@ public final class MinigamesWithFriends extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getGame().endGame();
         // Plugin shutdown logic
     }
 }

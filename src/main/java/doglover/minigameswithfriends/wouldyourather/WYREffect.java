@@ -7,11 +7,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class WYREffect {
 
@@ -80,6 +82,11 @@ public abstract class WYREffect {
 
     }
 
+    private static int effectIdCounter = 0;
+    public int getUniqueNumber() {
+        return effectIdCounter++;
+    }
+
 
     public void onPlayerDeath(PlayerDeathEvent event) {
 
@@ -108,5 +115,11 @@ public abstract class WYREffect {
     public void onBlockBreak(BlockBreakEvent event) {
 
     }
+
+    public void onPlayerAttemptPickupItem(PlayerAttemptPickupItemEvent event) {
+
+    }
+
+
 
 }

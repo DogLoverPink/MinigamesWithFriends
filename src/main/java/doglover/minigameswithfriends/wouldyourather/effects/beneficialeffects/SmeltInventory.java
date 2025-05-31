@@ -49,21 +49,29 @@ public class SmeltInventory extends WYREffect {
             if (item == null || item.getType() == Material.AIR) continue;
 
             ItemStack result = getSmeltResult(item.getType());
+            String itemName = item.getType().name();
             if (result != null) {
                 ItemStack smelted = result.clone();
+                if (beneficial && smelted.getType().equals(Material.IRON_NUGGET)) {
+                    continue;
+                }
                 smelted.setAmount(item.getAmount());
                 player.getInventory().setItem(i, smelted);
             } else if (!beneficial) {
-                if (item.getType().name().contains("IRON")) {
+                if (itemName.contains("IRON")) {
                     ItemStack smelted = new ItemStack(Material.IRON_NUGGET);
                     smelted.setAmount(item.getAmount());
                     player.getInventory().setItem(i, smelted);
-                } else if (item.getType().name().contains("GOLD")) {
+                } else if (itemName.contains("GOLD")) {
                     ItemStack smelted = new ItemStack(Material.GOLD_NUGGET);
                     smelted.setAmount(item.getAmount());
                     player.getInventory().setItem(i, smelted);
-                } else if (item.getType().name().contains("DIAMOND")) {
+                } else if (itemName.contains("DIAMOND")) {
                     ItemStack smelted = new ItemStack(Material.DIAMOND);
+                    smelted.setAmount(item.getAmount());
+                    player.getInventory().setItem(i, smelted);
+                } else if (itemName.contains("LOG") || itemName.contains("_WOOD")) {
+                    ItemStack smelted = new ItemStack(Material.CHARCOAL);
                     smelted.setAmount(item.getAmount());
                     player.getInventory().setItem(i, smelted);
                 }
