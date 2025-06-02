@@ -3,13 +3,11 @@ package doglover.minigameswithfriends.wouldyourather;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,9 @@ public abstract class WYREffect {
     }
 
 
-    /**Should a player be able to get this effect twice in the same round */
+    /**
+     * Should a player be able to get this effect twice in the same round
+     */
     private boolean isRepeatable = true;
 
     public boolean isRepeatable() {
@@ -54,7 +54,9 @@ public abstract class WYREffect {
 
     private final List<Class<? extends Event>> eventsToSubscribeTo = new ArrayList<>();
 
-    /**Will allow the appropriate event to function, assuming onEffectInitiate is called on this instance*/
+    /**
+     * Will allow the appropriate event to function, assuming onEffectInitiate is called on this instance
+     */
     public void subscribeToEvent(Class<? extends Event> eventClass) {
         eventsToSubscribeTo.add(eventClass);
     }
@@ -83,6 +85,7 @@ public abstract class WYREffect {
     }
 
     private static int effectIdCounter = 0;
+
     public int getUniqueNumber() {
         return effectIdCounter++;
     }
@@ -120,6 +123,28 @@ public abstract class WYREffect {
 
     }
 
+    public void onCraftItem(CraftItemEvent event) {
+
+    }
 
 
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+
+    }
+
+    public void onProjectileHit(ProjectileHitEvent event) {
+
+    }
+
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+
+    }
+
+    public void onInventoryClose(InventoryCloseEvent event) {
+
+    }
+
+    public void onInventoryClick(InventoryClickEvent event) {
+
+    }
 }

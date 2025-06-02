@@ -82,5 +82,6 @@ public class InverseFallDamage extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
+        getPlayer().setAbsorptionAmount(0.0);
     }
 }

@@ -29,11 +29,12 @@ public class SneakWeakness extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
+        getPlayer().removePotionEffect(PotionEffectType.WEAKNESS);
     }
 
     @Override
     public String getDescriptionBlurb() {
-        return "You are weak when sneaking (test purposes)";
+        return "You can't attack while sneaking";
     }
 
 
@@ -44,7 +45,7 @@ public class SneakWeakness extends WYREffect {
             return;
         }
         if (event.isSneaking()) {
-            plr.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, -1, 1));
+            plr.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, -1, 9, false, false, false));
         } else {
             plr.removePotionEffect(PotionEffectType.WEAKNESS);
         }

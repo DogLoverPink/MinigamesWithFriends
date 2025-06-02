@@ -4,35 +4,35 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
-public class WYRDamageEvents implements Listener {
+public class WYRInventoryEvents implements Listener {
 
     @EventHandler
-    public void onEntityDamage(EntityDamageEvent event) {
+    public void onPlayerCraft(CraftItemEvent event) {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
-                effect.onEntityDamage(event);
+                effect.onCraftItem(event);
             }
         }
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onInventoryClick(InventoryClickEvent event) {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
-                effect.onEntityDamageByEntity(event);
+                effect.onInventoryClick(event);
             }
         }
     }
 
     @EventHandler
-    public void onProjectileHit(ProjectileHitEvent event) {
+    public void onInventoryClose(InventoryCloseEvent event) {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
-                effect.onProjectileHit(event);
+                effect.onInventoryClose(event);
             }
         }
     }

@@ -26,7 +26,7 @@ public class FasterMiningWhenStandingStill extends WYREffect {
 
     public FasterMiningWhenStandingStill(Player player) {
         super(player);
-        setRepeatable(false);
+        setRepeatable(true);
         subscribeToEvent(BlockBreakEvent.class);
     }
 
@@ -38,16 +38,14 @@ public class FasterMiningWhenStandingStill extends WYREffect {
         Vector lastLocationVector = lastLocation != null ? lastLocation.toVector() : new Vector(0, 0, 0);
         if (!player.getLocation().toVector().equals(lastLocationVector)) {
             hasteStacks = 0;
-            if (mod != null) {
-                player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(mod);
-            }
+            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(key);
         }
         lastLocation = player.getLocation();
     }
 
     Location lastLocation;
     double hasteStacks = 0;
-    AttributeModifier mod;
+    NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "stand-still-haste-stacks"+getUniqueNumber());
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
@@ -56,7 +54,7 @@ public class FasterMiningWhenStandingStill extends WYREffect {
             return;
         }
         hasteStacks += 0.2;
-        mod = new AttributeModifier(new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "stand-still-haste-stacks"), hasteStacks, AttributeModifier.Operation.ADD_NUMBER);
+        AttributeModifier mod = new AttributeModifier(key, hasteStacks, AttributeModifier.Operation.ADD_NUMBER);
         player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(mod);
         player.getAttribute(Attribute.BLOCK_BREAK_SPEED).addModifier(mod);
     }
@@ -69,6 +67,6 @@ public class FasterMiningWhenStandingStill extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(mod);
+        player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(key);
     }
 }

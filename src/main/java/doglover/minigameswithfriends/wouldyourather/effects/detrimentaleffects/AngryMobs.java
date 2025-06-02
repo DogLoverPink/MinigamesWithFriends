@@ -24,7 +24,7 @@ public class AngryMobs extends WYREffect {
 
     public AngryMobs(Player player) {
         super(player);
-        setRepeatable(true);
+        setRepeatable(false);
         subscribeToEvent(PlayerDeathEvent.class);
     }
 

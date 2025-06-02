@@ -5,6 +5,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 public class WYRInteractionEvents implements Listener {

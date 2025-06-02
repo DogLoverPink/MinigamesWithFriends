@@ -1,27 +1,31 @@
 package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
+import doglover.minigameswithfriends.utils.NumberUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-public class BuilderOfBabylonCurse extends WYREffect {
+public class BuilderOfBableCurse extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerDetrimentalWYREffect(BuilderOfBabylonCurse.class);
+        WYREffectHandler.registerDetrimentalWYREffect(BuilderOfBableCurse.class);
 
     }
 
     List<String> randomCharSets = List.of(
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ  ",
-            "10 ",
+            "1111111100000000 ",
             "АБВГДЕЖЗИЙКЛМНОПРУФЦЧШЪЫЮЯ  ",
             "  אבגדהוזחטיכלמנסעפצקרשת",
             "अआइईउऊएऐओऔअंअःकखगघचछजझटठडढतथदधनप  ",
@@ -47,39 +51,43 @@ public class BuilderOfBabylonCurse extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You are cursed with the builder of babylon curse FINISH THIS EVENT";
+        return "You are cursed with the builder of bable curse";
     }
 
     @Override
     public void on4HertzTick() {
         for (ItemStack item : getPlayer().getInventory().getContents()) {
-            if (item == null || item.getItemMeta().hasCustomName()) {
-                continue;
-
-            }
-            item.editMeta(meta -> meta.customName(Component.text(getRandomCharString())));
+            renameItem(item);
+        }
+        if (NumberUtils.chanceOf(0.005)) {
+            sendCurseMessage();
+            itemMappings.clear();
         }
     }
+
+    private void renameItem(ItemStack item) {
+        if (item == null || item.getItemMeta().hasCustomName()) {
+            return;
+        }
+        itemMappings.putIfAbsent(item.getType(), getRandomCharString());
+        item.editMeta(meta -> meta.customName(Component.text(itemMappings.get(item.getType()))));
+    }
+
+    private void sendCurseMessage() {
+        getPlayer().sendMessage(Component.text("rawr :3 :3 XD >w<").decoration(TextDecoration.OBFUSCATED, true));
+    }
+
+    Map<Material, String> itemMappings = new HashMap<>();
 
     @Override
     public void onPlayerAttemptPickupItem(PlayerAttemptPickupItemEvent event) {
         if (event.getPlayer() != getPlayer()) {
             return;
         }
-        ItemStack eventItem = event.getItem().getItemStack();
-        for (ItemStack item : getPlayer().getInventory().getContents()) {
-            if (item == null || eventItem.getType() != item.getType() || item.getAmount() == item.getMaxStackSize()) {
-                continue;
-            }
-            int amountToAdd = Math.min(eventItem.getAmount(), item.getMaxStackSize() - item.getAmount());
-            item.setAmount(item.getAmount() + amountToAdd);
-            eventItem.setAmount(eventItem.getAmount() - amountToAdd);
-            event.setCancelled(true);
-        }
-
+        renameItem(event.getItem().getItemStack());
     }
 
-    public BuilderOfBabylonCurse(Player player) {
+    public BuilderOfBableCurse(Player player) {
         super(player);
         setRepeatable(false);
         subscribeToEvent(PlayerAttemptPickupItemEvent.class);
@@ -88,6 +96,7 @@ public class BuilderOfBabylonCurse extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
+        sendCurseMessage();
     }
 
     @Override

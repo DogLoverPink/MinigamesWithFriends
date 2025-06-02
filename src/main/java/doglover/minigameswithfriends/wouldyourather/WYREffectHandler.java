@@ -26,7 +26,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(BuilderOfBabylonCurse.class));
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(Hallucinate.class));
 
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
@@ -39,8 +39,6 @@ public class WYREffectHandler {
     private static WYREffect constructWYREffectFromClass(Class<? extends WYREffect> effectClass, Player player) {
         try {
             if (effectClass.isAnonymousClass()) {
-                for  (Constructor<?> con : effectClass.getDeclaredConstructors()) {
-                }
                 Constructor<? extends WYREffect> con = effectClass.getDeclaredConstructor();
                 con.setAccessible(true);
                 WYREffect eff = con.newInstance();

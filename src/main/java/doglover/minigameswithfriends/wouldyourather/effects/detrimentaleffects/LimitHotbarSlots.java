@@ -52,6 +52,7 @@ public class LimitHotbarSlots extends WYREffect {
 
 
     private void clearOutSlots() {
+        outerLoop:
         for (int i = 4; i < 9; i++) {
             ItemStack item = getPlayer().getInventory().getItem(i);
             if (item == null) {
@@ -62,12 +63,12 @@ public class LimitHotbarSlots extends WYREffect {
                 if (otherItem == null) {
                     getPlayer().getInventory().setItem(j, item);
                     getPlayer().getInventory().setItem(i, null);
-                    break;
+                    continue outerLoop;
                 }
                 if (item.isSimilar(otherItem) && item.getAmount() + otherItem.getAmount() <= otherItem.getMaxStackSize()) {
                     getPlayer().getInventory().getItem(j).setAmount(item.getAmount() + otherItem.getAmount());
                     getPlayer().getInventory().setItem(i, null);
-                    break;
+                    continue outerLoop;
                 }
             }
             player.getWorld().dropItemNaturally(player.getLocation(), item);

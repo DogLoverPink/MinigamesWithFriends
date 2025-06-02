@@ -165,6 +165,9 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         WYREventHandler.setActive(false);
         currentlyAppliedBenefitsAndDetriments.clear();
         WYREffectHandler.clearAndDecomposeManagedEffects();
+        for (Player plr : getGame().getPlayers()) {
+            plr.removePotionEffect(PotionEffectType.RESISTANCE);
+        }
 
     }
 
