@@ -118,7 +118,7 @@ public class Gambling extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
-        inv = Bukkit.createInventory(getPlayer(),  InventoryType.HOPPER);
+        inv = Bukkit.createInventory(getPlayer(),  InventoryType.HOPPER, Component.text("Gambling!!!").color(NamedTextColor.GREEN) );
         getPlayer().openInventory(inv);
         isGambling = true;
     }

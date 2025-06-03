@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
+import doglover.minigameswithfriends.utils.NumberUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.entity.Player;
@@ -31,7 +32,9 @@ public class DaylightAllergy extends WYREffect {
             if (player.getInventory().getHelmet() == null || player.getInventory().getHelmet().isEmpty()) {
                 player.setFireTicks(20);
             } else {
-                player.getInventory().getHelmet().damage(1, player);
+                if (NumberUtils.chanceOf(0.25)) {
+                    player.getInventory().getHelmet().damage(1, player);
+                }
             }
         }
     }

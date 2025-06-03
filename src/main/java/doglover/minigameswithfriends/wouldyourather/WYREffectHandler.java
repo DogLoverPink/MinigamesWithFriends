@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class WYREffectHandler {
 
@@ -26,7 +27,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(Hallucinate.class));
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(Phoenix.class));
 
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
@@ -53,8 +54,9 @@ public class WYREffectHandler {
     }
 
     public static void sendEffectCounts() {
-        MinigamesWithFriends.getGamePlugin().getLogger().info("Registered "+ beneficialEffects.size() +" beneficial effects!");
-        MinigamesWithFriends.getGamePlugin().getLogger().info("Registered "+ detrimentialEffects.size() +" detrimental effects!");
+        Logger logger = MinigamesWithFriends.getGamePlugin().getLogger();
+        logger.info("Registered "+ beneficialEffects.size() +" beneficial effects!");
+        logger.info("Registered "+ detrimentialEffects.size() +" detrimental effects!");
     }
 
     public static List<WYREffect> managedEffects = new ArrayList<>();

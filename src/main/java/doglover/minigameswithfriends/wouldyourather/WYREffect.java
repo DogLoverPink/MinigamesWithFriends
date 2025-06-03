@@ -1,8 +1,11 @@
 package doglover.minigameswithfriends.wouldyourather;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -52,20 +55,29 @@ public abstract class WYREffect {
 
     }
 
+
     private final List<Class<? extends Event>> eventsToSubscribeTo = new ArrayList<>();
+    private final List<EventPriority> eventsToSubscribeToPriority = new ArrayList<>();
 
     /**
      * Will allow the appropriate event to function, assuming onEffectInitiate is called on this instance
      */
     public void subscribeToEvent(Class<? extends Event> eventClass) {
+        subscribeToEvent(eventClass, EventPriority.NORMAL);
+    }
+
+    public void subscribeToEvent(Class<? extends Event> eventClass, EventPriority priority) {
         eventsToSubscribeTo.add(eventClass);
+        eventsToSubscribeToPriority.add(priority);
     }
 
     public abstract String getDescriptionBlurb();
 
     public void onEffectInitiate() {
-        for (Class<? extends Event> eventClass : eventsToSubscribeTo) {
-            WYREventHandler.subscribe(eventClass, this);
+        for (int i = 0; i < eventsToSubscribeTo.size(); i++) {
+            Class<? extends Event> eventClass = eventsToSubscribeTo.get(i);
+            EventPriority priority = eventsToSubscribeToPriority.get(i);
+            WYREventHandler.subscribe(eventClass, this, priority);
         }
         eventsToSubscribeTo.clear();
         WYREffectHandler.manageEffect(this);
@@ -119,6 +131,10 @@ public abstract class WYREffect {
 
     }
 
+    public void onBlockDropItem(BlockDropItemEvent event) {
+
+    }
+
     public void onPlayerAttemptPickupItem(PlayerAttemptPickupItemEvent event) {
 
     }
@@ -145,6 +161,10 @@ public abstract class WYREffect {
     }
 
     public void onInventoryClick(InventoryClickEvent event) {
+
+    }
+
+    public void onPlayerJump(PlayerJumpEvent event) {
 
     }
 }

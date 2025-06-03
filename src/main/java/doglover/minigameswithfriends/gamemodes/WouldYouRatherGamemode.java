@@ -31,6 +31,10 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         WYREffectHandler.sendEffectCounts();
     }
 
+    public boolean playerHasEffect(Player plr, Class<? extends WYREffect> effectClass) {
+        return currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).contains(effectClass);
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -123,7 +127,8 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     private void endChoiceChooseTimer() {
         setTickGoal(getNextComputedTime());
-        for (UUID uuid : effectsToChooseFrom.keySet()) {
+        List<UUID> uuids = new ArrayList<>(effectsToChooseFrom.keySet());
+        for (UUID uuid : uuids) {
             Player plr = Bukkit.getPlayer(uuid);
             plr.closeInventory();
             plr.sendMessage(Component.text("You ran out of time! Automatically choosing first option... ").color(NamedTextColor.RED));

@@ -20,8 +20,8 @@ import java.util.*;
 
 public class Hallucinate extends WYREffect {
 
-    private int minTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMinimumSecondsBeforeNewChoice() * 5;
-    private int maxTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 5;
+    private final int minTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMinimumSecondsBeforeNewChoice() * 5;
+    private final int maxTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 5;
     private int goal = -1;
     private int ticker = 0;
     static final Random random = new Random();
@@ -34,7 +34,12 @@ public class Hallucinate extends WYREffect {
             "The bonds of thyself fall asunder",
             "The rites of the prophet beckon you",
             "The words of the ancient one overpower you",
-            "The crucible of the damned topples once more"
+            "The crucible of the damned topples once more",
+            "The tongues of the forgotten chant your fate",
+            "The sanctum of flesh withers beneath the moon",
+            "The veil of truth burns in silence",
+            "The chained star descends once more",
+            "The covenant of the holy is sealed in blood"
 
     };
 
@@ -95,7 +100,7 @@ public class Hallucinate extends WYREffect {
         }
         getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 15 * 20, 1));
         getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 5 * 20, 1));
-        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 7 * 20, 2));
+        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 8 * 20, 1));
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, 1);
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, .8f);
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, .9f);

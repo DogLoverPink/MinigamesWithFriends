@@ -1,9 +1,10 @@
 package doglover.minigameswithfriends.wouldyourather;
 
-import doglover.minigameswithfriends.events.DeathListener;
 import doglover.minigameswithfriends.wouldyourather.events.*;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -12,30 +13,49 @@ import java.util.List;
 import java.util.Map;
 
 public class WYREventHandler {
-    private static Map<Class<? extends Event>, List<WYREffect>> eventMappings = new HashMap<>();
+    private static final Map<Class<? extends Event>, List<WYREffectWithPriority>> eventMappings = new HashMap<>();
 
     public static List<WYREffect> getEffectsForEvent(Event event) {
-        return eventMappings.getOrDefault(event.getClass(), new ArrayList<>());
+        return eventMappings.getOrDefault(event.getClass(), new ArrayList<>()).stream().map(WYREffectWithPriority::getEffect).toList();
     }
 
     public static void registerEvents(JavaPlugin plugin) {
         Bukkit.getServer().getPluginManager().registerEvents(new WYRDeathEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRInteractionEvents(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new WYRPlayerSneakEvent(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new WYRPlayerMovementEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRDamageEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRBlockEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRItemEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRInventoryEvents(), plugin);
     }
 
-    public static void subscribe(Class<? extends Event> eventClass, WYREffect effect) {
+    public static void subscribe(Class<? extends Event> eventClass, WYREffect effect, EventPriority priority) {
         eventMappings.putIfAbsent(eventClass, new ArrayList<>());
-        eventMappings.get(eventClass).add(effect);
+        addEventClassInCorrectOrder(eventClass, new WYREffectWithPriority(effect, priority));
     }
 
+    private static void addEventClassInCorrectOrder(Class<? extends Event> eventClass, WYREffectWithPriority effectWithPriority) {
+        List<WYREffectWithPriority> effects = eventMappings.computeIfAbsent(eventClass, k -> new ArrayList<>());
+        int index = 0;
+        while (index < effects.size() && effects.get(index).getPriority().ordinal() >= effectWithPriority.getPriority().ordinal()) {
+            index++;
+        }
+        effects.add(index, effectWithPriority);
+        System.out.println("Order:");
+        for (WYREffectWithPriority e : effects) {
+            System.out.println("Effect: " + e.getEffect().getClass().getSimpleName());
+        }
+    }
+
+    public static void subscribe(Class<? extends Event> eventClass, WYREffect effect) {
+        subscribe(eventClass, effect, EventPriority.NORMAL);
+    }
+
+
+
     public static void unsubscribe(WYREffect effect) {
-        for (List<WYREffect> effects : eventMappings.values()) {
-            effects.remove(effect);
+        for (List<WYREffectWithPriority> effects : eventMappings.values()) {
+            effects.removeIf(e -> e.getEffect().equals(effect));
         }
     }
 
@@ -50,6 +70,25 @@ public class WYREventHandler {
     }
 
     public static void unsubscribe(Class<? extends Event> eventClass, WYREffect effect) {
-        eventMappings.get(eventClass).remove(effect);
+        eventMappings.get(eventClass).removeIf(e -> e.getEffect().equals(effect));
     }
+
+    static class WYREffectWithPriority {
+        private final EventPriority priority;
+        private final WYREffect effect;
+
+        public WYREffectWithPriority(WYREffect effect, EventPriority priority) {
+            this.priority = priority;
+            this.effect = effect;
+        }
+
+        public EventPriority getPriority() {
+            return priority;
+        }
+
+        public WYREffect getEffect() {
+            return effect;
+        }
+    }
+
 }

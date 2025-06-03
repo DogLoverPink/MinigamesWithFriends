@@ -65,7 +65,7 @@ public class My600PoundLife extends WYREffect {
     private List<Location> getNonAirLocations(Location loc) {
         List<Location> locations = new ArrayList<>();
         double totalHardness = 0.0;
-        for (int i = 1; totalHardness <= 2; i++) {
+        for (int i = 1; totalHardness <= 4; i++) {
             Block below = loc.clone().subtract(0, i, 0).getBlock();
             if (below.getType().getHardness() < 0.0f || below.getType().isAir()) {
                 break;
@@ -78,7 +78,7 @@ public class My600PoundLife extends WYREffect {
 
     private boolean hasAirBelow(Location loc) {
         double totalHardness = 0.0;
-        for (int i = 1; totalHardness <= 2; i++) {
+        for (int i = 1; totalHardness <= 4; i++) {
             Block block = loc.clone().subtract(0, i, 0).getBlock();
             totalHardness += block.getType().getHardness();
             if (block.getType().getHardness() < 0.0f) {
