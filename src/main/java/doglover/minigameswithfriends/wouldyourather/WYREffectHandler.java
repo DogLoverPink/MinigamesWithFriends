@@ -27,7 +27,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(Phoenix.class));
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(SlipperyFloor.class));
 
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
@@ -78,6 +78,11 @@ public class WYREffectHandler {
 
     static int tick4HertzCounter = 0;
 
+    private static final List<WYREffect> effectsToDecompose = new ArrayList<>();
+    public static void decomposeEffectWhenSafe(WYREffect effect) {
+        effectsToDecompose.add(effect);
+    }
+
     public static void tick() {
         tick4HertzCounter++;
 
@@ -89,6 +94,10 @@ public class WYREffectHandler {
                 effect.on4HertzTick();
             }
         }
+        for (WYREffect effect : effectsToDecompose) {
+            effect.onEffectDecompose();
+        }
+        effectsToDecompose.clear();
         if (do4Hz) {
             tick4HertzCounter = 0;
         }

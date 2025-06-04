@@ -29,7 +29,7 @@ public class ScaleSpeedBasedOnHealth extends WYREffect {
         if (player == null || !player.isOnline()) {
             return;
         }
-        double speedToAdd = getHealthPercentage() * 0.1 - 0.05;
+        double speedToAdd = getHealthPercentage() * 0.1 - 0.06;
         mod = new AttributeModifier(new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "scale_speed_based_on_health"),
                 speedToAdd, AttributeModifier.Operation.ADD_NUMBER);
         player.getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(mod);

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 
 public class WYRInventoryEvents implements Listener {
 
@@ -15,6 +16,16 @@ public class WYRInventoryEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onCraftItem(event);
+
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onPlayerItemHeld(event);
             }
         }
     }

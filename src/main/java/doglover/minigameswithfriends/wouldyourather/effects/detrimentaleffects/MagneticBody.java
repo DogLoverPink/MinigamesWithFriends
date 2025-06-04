@@ -52,7 +52,7 @@ public class MagneticBody extends WYREffect {
 
     @Override
     public void on4HertzTick() {
-        if (NumberUtils.chanceOf(0.06)) {
+        if (NumberUtils.chanceOf(0.04)) {
             Location metalLoc = BlockUtils.findLocationOfBlockType(metal, player.getLocation(), 10);
             if (metalLoc == null) {
                 return;

@@ -96,6 +96,10 @@ public abstract class WYREffect {
 
     }
 
+    public void selfDestruct() {
+        WYREffectHandler.decomposeEffectWhenSafe(this);
+    }
+
     private static int effectIdCounter = 0;
 
     public int getUniqueNumber() {
@@ -165,6 +169,10 @@ public abstract class WYREffect {
     }
 
     public void onPlayerJump(PlayerJumpEvent event) {
+
+    }
+
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
 
     }
 }

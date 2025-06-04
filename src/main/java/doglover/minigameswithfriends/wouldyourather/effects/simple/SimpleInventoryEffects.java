@@ -21,6 +21,7 @@ public class SimpleInventoryEffects {
             @Override
             public void onEffectInitiate() {
                 enchantAtRandom(this.getPlayer());
+                this.selfDestruct();
             }
         }.getClass());
 
@@ -33,6 +34,7 @@ public class SimpleInventoryEffects {
             @Override
             public void onEffectInitiate() {
                 shufflePlayerInventory(this.getPlayer());
+                this.selfDestruct();
             }
         }.getClass());
 
@@ -45,6 +47,7 @@ public class SimpleInventoryEffects {
             @Override
             public void onEffectInitiate() {
                 upgradeGear(this.getPlayer());
+                this.selfDestruct();
             }
         }.getClass());
 
@@ -57,6 +60,7 @@ public class SimpleInventoryEffects {
             @Override
             public void onEffectInitiate() {
                 fillInventoryWithRandomItems(getPlayer());
+                this.selfDestruct();
             }
         }.getClass());
 

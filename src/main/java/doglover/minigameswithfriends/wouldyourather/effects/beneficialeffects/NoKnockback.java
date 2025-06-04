@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.NamespacedKey;
@@ -25,13 +26,12 @@ public class NoKnockback extends WYREffect {
         setRepeatable(false);
     }
 
-    NamespacedKey key = new NamespacedKey("minigameswithfriends", "no_knockback");
+    NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "no_knockback");
 
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
-        player.sendMessage("the clown");
-       player.getAttribute(Attribute.KNOCKBACK_RESISTANCE).addModifier(new AttributeModifier(key, 3, AttributeModifier.Operation.ADD_NUMBER));
+        player.getAttribute(Attribute.KNOCKBACK_RESISTANCE).addModifier(new AttributeModifier(key, 3, AttributeModifier.Operation.ADD_NUMBER));
 
     }
 

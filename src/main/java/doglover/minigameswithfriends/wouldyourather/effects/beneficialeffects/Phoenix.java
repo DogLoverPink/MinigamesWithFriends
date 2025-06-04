@@ -92,7 +92,6 @@ public class Phoenix extends WYREffect {
         getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60 * 20, 0, false, false));
         getPlayer().setHealth(10.0);
         isInPhoenixMode = true;
-        // Might have to add #clone()
         inventoryBackup = getPlayer().getInventory().getContents().clone();
         getPlayer().getInventory().clear();
         BukkitRunnable run = new BukkitRunnable() {

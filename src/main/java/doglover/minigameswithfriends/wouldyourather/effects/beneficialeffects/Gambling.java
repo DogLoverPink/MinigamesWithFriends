@@ -126,5 +126,8 @@ public class Gambling extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
+        if (inv.getViewers().contains(getPlayer())) {
+            getPlayer().closeInventory();
+        }
     }
 }
