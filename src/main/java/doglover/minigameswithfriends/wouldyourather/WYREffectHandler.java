@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.wouldyourather;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects.*;
 import doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects.*;
 import org.bukkit.entity.Player;
@@ -9,6 +10,8 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static doglover.minigameswithfriends.wouldyourather.effects.simple.RemoveGoodOrBadEffect.removeRandomEffect;
 
 public class WYREffectHandler {
 
@@ -27,8 +30,8 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(SlipperyFloor.class));
-
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of());
+    static int test =0;
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
             return constructWYREffectFromClass(TESTING_EFFECTS_TO_GET_FIRST.removeFirst(), player);
@@ -36,6 +39,7 @@ public class WYREffectHandler {
         Class<? extends WYREffect> effectClass = classes.get((int) (Math.random() * classes.size()));
         return constructWYREffectFromClass(effectClass, player);
     }
+
 
     private static WYREffect constructWYREffectFromClass(Class<? extends WYREffect> effectClass, Player player) {
         try {
@@ -59,7 +63,19 @@ public class WYREffectHandler {
         logger.info("Registered "+ detrimentialEffects.size() +" detrimental effects!");
     }
 
-    public static List<WYREffect> managedEffects = new ArrayList<>();
+    public static boolean isEffectBeneficial(WYREffect effect) {
+        return beneficialEffects.contains(effect.getClass());
+    }
+
+    public static boolean isEffectDetrimential(WYREffect effect) {
+        return detrimentialEffects.contains(effect.getClass());
+    }
+
+    private static final List<WYREffect> managedEffects = new ArrayList<>();
+
+    public static List<WYREffect> getManagedEffects() {
+        return managedEffects;
+    }
 
     public static void manageEffect(WYREffect effect) {
         managedEffects.add(effect);
@@ -95,6 +111,8 @@ public class WYREffectHandler {
             }
         }
         for (WYREffect effect : effectsToDecompose) {
+            System.out.println("TICK LOOOP DECOMPOSING: "+effect.getDescriptionBlurb()+" effect:" +effect.getClass().getName());
+            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).removeEffectFromPlayer(effect.getPlayer(), effect.getClass());
             effect.onEffectDecompose();
         }
         effectsToDecompose.clear();

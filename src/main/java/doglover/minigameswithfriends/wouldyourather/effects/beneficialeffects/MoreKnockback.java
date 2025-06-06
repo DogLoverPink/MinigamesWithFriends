@@ -7,37 +7,41 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 
-public class NoKnockback extends WYREffect {
+public class MoreKnockback extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerBeneficialWYREffect(NoKnockback.class);
+        WYREffectHandler.registerBeneficialWYREffect(MoreKnockback.class);
     }
 
     @Override
     public String getDescriptionBlurb() {
-        return "Not take any knockback";
+        return "Deal significantly more knockback";
     }
 
-    public NoKnockback(Player player) {
+    public MoreKnockback(Player player) {
         super(player);
-        setRepeatable(false);
+        setRepeatable(true);
     }
 
-    NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "no_knockback"+getUniqueNumber());
+    NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "more_knockback"+getUniqueNumber());
+
+
+    private void addModifier() {
+        AttributeModifier mod = new AttributeModifier(key, 1.6, AttributeModifier.Operation.ADD_NUMBER);
+        getPlayer().getAttribute(Attribute.ATTACK_KNOCKBACK).addModifier(mod);
+    }
 
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
-        player.getAttribute(Attribute.KNOCKBACK_RESISTANCE).addModifier(new AttributeModifier(key, 3, AttributeModifier.Operation.ADD_NUMBER));
-
+        addModifier();
     }
 
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.KNOCKBACK_RESISTANCE).removeModifier(key);
+        getPlayer().getAttribute(Attribute.ATTACK_KNOCKBACK).removeModifier(key);
     }
 }

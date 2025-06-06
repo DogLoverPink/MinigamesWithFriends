@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BlockUtils {
 
@@ -57,6 +58,29 @@ public class BlockUtils {
         return null;
     }
 
+    public static List<Location> getNearbyNonAirBlocksOfType(Location loc, Material material, double radius) {
+        World world = loc.getWorld();
+        return getNearbyNonAirBlocks(loc, radius).stream().filter(
+                (blockLoc) -> world.getBlockAt(blockLoc).getType().equals(material)
+        ).collect(Collectors.toList());
+    }
+
+    public static List<Location> getNearbyNonAirBlocks(Location loc, double radius) {
+        List<Location> found = new java.util.ArrayList<>();
+        for (double x = -radius; x <= radius; x++) {
+            for (double y = -radius; y <= radius; y++) {
+                for (double z = -radius; z <= radius; z++) {
+                    Location checkLoc = loc.clone().add(x, y, z);
+                    Block block = checkLoc.getBlock();
+                    if (!block.getType().isAir()) {
+                        found.add(checkLoc);
+                    }
+                }
+            }
+        }
+        return found;
+    }
+
     public static void createWallsAroundLocation(Location loc) {
         //Get the 4 corner locations of the wall, 35 blocks away from the center
         Location loc1 = loc.clone().add(35, 35, 35);
@@ -76,7 +100,7 @@ public class BlockUtils {
             findList.add(Material.CAVE_AIR);
             findList.add(Material.VOID_AIR);
         }
-        Map<Location, Material>  removedBlocks = new HashMap<>();
+        Map<Location, Material> removedBlocks = new HashMap<>();
         int radius = 2;
 
         for (int x = -radius; x <= radius; x++) {
@@ -113,8 +137,8 @@ public class BlockUtils {
 
     public static Location findSafeBlock(Location loc) {
         if (loc.clone().subtract(0, 1, 0).getBlock().getType().isSolid()
-            && !loc.clone().add(0, 1, 0).getBlock().isSuffocating()
-            && !loc.clone().add(0, 2, 0).getBlock().isSuffocating()) {
+                && !loc.clone().add(0, 1, 0).getBlock().isSuffocating()
+                && !loc.clone().add(0, 2, 0).getBlock().isSuffocating()) {
             return loc;
         }
         for (int i = 0; i <= 200; i++) {

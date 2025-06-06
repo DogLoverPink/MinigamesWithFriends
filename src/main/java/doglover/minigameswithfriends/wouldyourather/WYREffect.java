@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageAbortEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -97,6 +99,7 @@ public abstract class WYREffect {
     }
 
     public void selfDestruct() {
+        System.out.println("Players is :"+player+"s when destructing "+getClass().getSimpleName());
         WYREffectHandler.decomposeEffectWhenSafe(this);
     }
 
@@ -119,6 +122,10 @@ public abstract class WYREffect {
 
     }
 
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+
+    }
+
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 
     }
@@ -134,6 +141,8 @@ public abstract class WYREffect {
     public void onBlockBreak(BlockBreakEvent event) {
 
     }
+    
+    
 
     public void onBlockDropItem(BlockDropItemEvent event) {
 
@@ -173,6 +182,14 @@ public abstract class WYREffect {
     }
 
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+
+    }
+
+    public void onBlockDamageAbort(BlockDamageAbortEvent event) {
+
+    }
+
+    public void onBlockDamage(BlockDamageEvent event) {
 
     }
 }

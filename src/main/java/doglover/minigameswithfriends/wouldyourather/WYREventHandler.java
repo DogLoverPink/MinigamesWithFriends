@@ -41,10 +41,6 @@ public class WYREventHandler {
             index++;
         }
         effects.add(index, effectWithPriority);
-        System.out.println("Order:");
-        for (WYREffectWithPriority e : effects) {
-            System.out.println("Effect: " + e.getEffect().getClass().getSimpleName());
-        }
     }
 
     public static void subscribe(Class<? extends Event> eventClass, WYREffect effect) {

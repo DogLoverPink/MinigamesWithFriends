@@ -35,6 +35,12 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         return currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).contains(effectClass);
     }
 
+
+
+    public void removeEffectFromPlayer(Player plr, Class<? extends WYREffect> effectClass) {
+        currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).remove(effectClass);
+    }
+
     @Override
     public void tick() {
         super.tick();
