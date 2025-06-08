@@ -51,7 +51,7 @@ public class RodOfDiscord extends WYREffect {
         }
         long timeLeft = event.getItem().getPersistentDataContainer().get(key, PersistentDataType.LONG).longValue() - System.currentTimeMillis();
         if (timeLeft > 0) {
-            getPlayer().sendActionBar(Component.text("Rod Cooldown:" + timeLeft / 1000 + "s").color(NamedTextColor.RED));
+            getPlayer().sendActionBar(Component.text("Rod Cooldown: " + timeLeft / 1000 + "s").color(NamedTextColor.RED));
             return;
         }
         getPlayer().setFallDistance(0);

@@ -30,8 +30,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of());
-    static int test =0;
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(IncreaseDamage.class));
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
             return constructWYREffectFromClass(TESTING_EFFECTS_TO_GET_FIRST.removeFirst(), player);
@@ -111,7 +110,6 @@ public class WYREffectHandler {
             }
         }
         for (WYREffect effect : effectsToDecompose) {
-            System.out.println("TICK LOOOP DECOMPOSING: "+effect.getDescriptionBlurb()+" effect:" +effect.getClass().getName());
             MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).removeEffectFromPlayer(effect.getPlayer(), effect.getClass());
             effect.onEffectDecompose();
         }

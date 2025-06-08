@@ -99,7 +99,6 @@ public abstract class WYREffect {
     }
 
     public void selfDestruct() {
-        System.out.println("Players is :"+player+"s when destructing "+getClass().getSimpleName());
         WYREffectHandler.decomposeEffectWhenSafe(this);
     }
 
@@ -190,6 +189,10 @@ public abstract class WYREffect {
     }
 
     public void onBlockDamage(BlockDamageEvent event) {
+
+    }
+
+    public void onEntityDamageByBlock(EntityDamageByBlockEvent event) {
 
     }
 }

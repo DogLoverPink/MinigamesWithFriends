@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
 public class PlayerUtils {
 
     /**
@@ -24,5 +26,17 @@ public class PlayerUtils {
         vector = vector.add(new Vector(0, 0.05, 0));
         vector = vector.multiply(new Vector(3, 6, 3));
         plr.setVelocity(vector);
+    }
+
+    static final Random random = new Random();
+
+    public static void launchPlayerRandomly(Player player, double strength) {
+        double angle = random.nextDouble() * 2 * Math.PI;
+
+        double x = Math.cos(angle);
+        double z = Math.sin(angle);
+        Vector direction = new Vector(x, 1, z).normalize().multiply(strength);
+
+        player.setVelocity(direction);
     }
 }

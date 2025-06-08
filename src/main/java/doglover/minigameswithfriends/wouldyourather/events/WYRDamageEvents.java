@@ -4,6 +4,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -24,6 +25,15 @@ public class WYRDamageEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onEntityDamageByEntity(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByBlock(EntityDamageByBlockEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onEntityDamageByBlock(event);
             }
         }
     }

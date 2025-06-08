@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 import doglover.minigameswithfriends.utils.ItemUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,14 +41,16 @@ public class MLG extends WYREffect {
         getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.WATER_BUCKET));
         double yLoc = getPlayer().getLocation().getY() + random.nextInt(20, 25);
         World world = getPlayer().getWorld();
-        for (double i = getPlayer().getLocation().getY(); i < yLoc; i++) {
-            Block block = world.getBlockAt(getPlayer().getLocation().clone().add(0, i, 0));
+        for (double i = getPlayer().getLocation().getY(); i < yLoc + 2; i++) {
+            Block block = world.getBlockAt(getPlayer().getLocation().clone().add(0, i- getPlayer().getLocation().getY(), 0));
             if (block.getType().getHardness() > 0) {
                 block.setType(Material.AIR);
             }
         }
         Location locToTeleport = getPlayer().getLocation().clone();
         locToTeleport.setY(yLoc);
+        locToTeleport.setX(locToTeleport.getBlockX() + 0.5);
+        locToTeleport.setZ(locToTeleport.getBlockZ() + 0.5);
         getPlayer().teleport(locToTeleport);
         this.selfDestruct();
     }
