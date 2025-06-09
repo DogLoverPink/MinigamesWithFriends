@@ -70,6 +70,7 @@ public class RodOfDiscord extends WYREffect {
         item.editMeta(meta ->
                 meta.getPersistentDataContainer().set(key, PersistentDataType.LONG, System.currentTimeMillis() + 5000L)
         );
+        getPlayer().setCooldown(item.getType(), 100);
     }
 
     @Override

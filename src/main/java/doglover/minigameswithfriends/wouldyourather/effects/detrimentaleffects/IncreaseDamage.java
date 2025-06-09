@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.boat.OakBoat;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
