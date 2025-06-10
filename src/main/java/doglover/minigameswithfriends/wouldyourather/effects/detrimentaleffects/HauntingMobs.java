@@ -55,6 +55,10 @@ public class HauntingMobs extends WYREffect {
             Location mobLoc = mob.getLocation();
             Vector direction = playerLoc.toVector().subtract(mobLoc.toVector()).normalize().multiply(0.25);
             mobLoc.add(direction);
+            if (!mobLoc.getWorld().equals(world)) {
+                mob.markForRemoval();
+                continue;
+            }
             if (mobLoc.distanceSquared(playerLoc) < 1) {
                 doHauntAttack(mob);
             }

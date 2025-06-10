@@ -45,9 +45,8 @@ public class Schizophrenia extends WYREffect {
 
     @Override
     public void on4HertzTick() {
-        if (NumberUtils.chanceOf(0.0004)) {
+        if (NumberUtils.chanceOf(0.0025)) {
             playFakeEntitySound();
-            getPlayer().sendMessage("test schizo");
         }
         if (NumberUtils.chanceOf(0.000325)) {
             doFakeJoinMessage();
@@ -60,6 +59,9 @@ public class Schizophrenia extends WYREffect {
             if (target.getLocation().distanceSquared(getPlayer().getLocation()) > 37) {
                 sendFakeDiamonds(target);
             }
+        }
+        if (fakeOreLocation != null && !getPlayer().getWorld().equals(fakeOreLocation.getWorld())) {
+            clearFakeDiamonds();
         }
         if (fakeOreLocation != null && fakeOreLocation.distanceSquared(getPlayer().getLocation()) < 36) {
             clearFakeDiamonds();
@@ -74,6 +76,7 @@ public class Schizophrenia extends WYREffect {
             BlockData data = loc.getWorld().getBlockData(loc);
             getPlayer().sendBlockChange(loc, data);
         }
+        fakeOreLocation = null;
     }
 
     private void sendFakeDiamonds(Block target) {

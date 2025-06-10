@@ -1,13 +1,12 @@
 package doglover.minigameswithfriends.wouldyourather;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageAbortEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -193,6 +192,18 @@ public abstract class WYREffect {
     }
 
     public void onEntityDamageByBlock(EntityDamageByBlockEvent event) {
+
+    }
+
+    public void onBlockPlace(BlockPlaceEvent event) {
+
+    }
+
+    public void onEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
+
+    }
+
+    public void onEntityKnockback(EntityKnockbackEvent event) {
 
     }
 }

@@ -52,6 +52,7 @@ public class SkillChecks extends WYREffect {
     private void giveSkillCheckWarning() {
         skillCheckProgress = -20;
         player.playSound(getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1.5f);
+        player.sendActionBar(Component.text("Press SPACE at the correct time"));
     }
 
     static final Random random = new Random();

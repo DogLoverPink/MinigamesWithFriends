@@ -1,7 +1,9 @@
 package doglover.minigameswithfriends.wouldyourather.events;
 
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -34,6 +36,24 @@ public class WYRDamageEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onEntityDamageByBlock(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityKnockback(EntityKnockbackEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onEntityKnockback(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityKnockbackByEntity(EntityKnockbackByEntityEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onEntityKnockbackByEntity(event);
             }
         }
     }

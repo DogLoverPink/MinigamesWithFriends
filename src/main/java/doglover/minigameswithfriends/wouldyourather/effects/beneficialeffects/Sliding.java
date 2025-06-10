@@ -75,6 +75,10 @@ public class Sliding extends WYREffect {
         } else {
             countWithoutMoreSpeed--;
         }
+        if (fish.getLocation().getWorld() != getPlayer().getWorld()) {
+            killFish();
+            return;
+        }
         if (fish.getLocation().distanceSquared(lastPos) < 0.001) {
             if (noMovementTicks++ >= 4) {
                 killFish();

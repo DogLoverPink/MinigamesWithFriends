@@ -51,7 +51,7 @@ public class Hallucinate extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You hallucinate the present of a forsaken inquisitor";
+        return "You hallucinate the presence of a forsaken inquisitor";
     }
 
     public Hallucinate(Player player) {
