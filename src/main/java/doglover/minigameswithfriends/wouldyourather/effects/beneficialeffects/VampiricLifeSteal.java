@@ -37,7 +37,7 @@ public class VampiricLifeSteal extends WYREffect {
         }
         double damage = event.getFinalDamage();
         double healthToRestore = Math.min(damage, target.getHealth()) * 0.25;
-        player.heal(healthToRestore);
+        getPlayer().heal(healthToRestore);
     }
 
     @Override

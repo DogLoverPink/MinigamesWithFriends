@@ -15,7 +15,7 @@ public class Annoyance extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerBeneficialWYREffect(Annoyance.class);
+        WYREffectHandler.registerDetrimentalWYREffect(Annoyance.class);
     }
 
     @Override

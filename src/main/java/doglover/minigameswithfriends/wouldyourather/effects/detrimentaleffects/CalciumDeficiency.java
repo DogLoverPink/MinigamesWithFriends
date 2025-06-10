@@ -32,12 +32,12 @@ public class CalciumDeficiency extends WYREffect {
     public void onEffectInitiate() {
         super.onEffectInitiate();
         AttributeModifier mod = new AttributeModifier(key, 2.5, AttributeModifier.Operation.ADD_NUMBER);
-        player.getAttribute(Attribute.SAFE_FALL_DISTANCE).addModifier(mod);
+        getPlayer().getAttribute(Attribute.SAFE_FALL_DISTANCE).addModifier(mod);
     }
 
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.SAFE_FALL_DISTANCE).removeModifier(key);
+        getPlayer().getAttribute(Attribute.SAFE_FALL_DISTANCE).removeModifier(key);
     }
 }

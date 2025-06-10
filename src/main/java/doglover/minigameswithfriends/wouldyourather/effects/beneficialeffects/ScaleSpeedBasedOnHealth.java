@@ -57,6 +57,6 @@ public class ScaleSpeedBasedOnHealth extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(mod);
+        getPlayer().getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(mod);
     }
 }

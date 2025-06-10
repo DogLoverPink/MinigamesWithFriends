@@ -31,7 +31,7 @@ public class SkillChecks extends WYREffect {
     @Override
     public void onTick() {
         if (!isInSkillCheck) {
-            if (NumberUtils.chanceOf(0.0015) && skillCheckProgress >= 0) {
+            if (NumberUtils.chanceOf(0.00125) && skillCheckProgress >= 0) {
                 giveSkillCheckWarning();
             }
             if (skillCheckProgress < 0) {
@@ -51,8 +51,8 @@ public class SkillChecks extends WYREffect {
 
     private void giveSkillCheckWarning() {
         skillCheckProgress = -20;
-        player.playSound(getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1.5f);
-        player.sendActionBar(Component.text("Press SPACE at the correct time"));
+        getPlayer().playSound(getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1.5f);
+        getPlayer().sendActionBar(Component.text("Press SPACE at the correct time"));
     }
 
     static final Random random = new Random();
@@ -71,13 +71,13 @@ public class SkillChecks extends WYREffect {
     }
 
     private void onSkillCheckFail() {
-        player.damage(8);
-        player.playSound(getPlayer(), Sound.BLOCK_ANVIL_LAND, 1f, 0.1f);
+        getPlayer().damage(8);
+        getPlayer().playSound(getPlayer(), Sound.BLOCK_ANVIL_LAND, 1f, 0.1f);
         isInSkillCheck = false;
     }
 
     private void onSkillCheckSuccess() {
-        player.playSound(getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        getPlayer().playSound(getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         isInSkillCheck = false;
     }
 

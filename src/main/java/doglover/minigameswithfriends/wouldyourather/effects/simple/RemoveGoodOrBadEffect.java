@@ -50,6 +50,7 @@ public class RemoveGoodOrBadEffect {
         Predicate<WYREffect> goodOrBadChecker = removeBeneficial ? WYREffectHandler::isEffectDetrimential : WYREffectHandler::isEffectBeneficial;
         effects.removeIf(goodOrBadChecker);
         effects.removeIf(effect -> effect.getClass().isAnonymousClass());
+        effects.removeIf(effect -> !effect.getPlayer().equals(player));
         if (effects.isEmpty()) {
             return;
         }

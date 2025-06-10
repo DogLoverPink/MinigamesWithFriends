@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.wouldyourather;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -16,11 +17,11 @@ import org.bukkit.event.player.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public abstract class WYREffect {
 
 
-    protected Player player;
 
     public static void test() {
 
@@ -41,15 +42,17 @@ public abstract class WYREffect {
     }
 
     public Player getPlayer() {
-        return player;
+        return Bukkit.getPlayer(playerUUID);
     }
 
+    private UUID playerUUID;
+
     public void setPlayer(Player plr) {
-        this.player = plr;
+        this.playerUUID = plr.getUniqueId();
     }
 
     public WYREffect(Player player) {
-        this.player = player;
+        this.playerUUID = player.getUniqueId();
     }
 
     public WYREffect() {

@@ -34,9 +34,9 @@ public class RandomTeleport extends WYREffect {
             double y = getPlayer().getLocation().getY();
             double z = getPlayer().getLocation().getZ() + (Math.random() * 20 - 10);
             Location safeLoc = BlockUtils.findSafeBlock(new Location(getPlayer().getWorld(), x, y, z));
-            if (player.getLocation().distanceSquared(safeLoc) < 100) {
-                player.teleport(safeLoc);
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+            if (getPlayer().getLocation().distanceSquared(safeLoc) < 100) {
+                getPlayer().teleport(safeLoc);
+                getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
             }
         }
     }

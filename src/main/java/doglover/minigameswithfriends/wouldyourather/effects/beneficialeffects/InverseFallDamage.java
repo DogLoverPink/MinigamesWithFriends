@@ -29,13 +29,13 @@ public class InverseFallDamage extends WYREffect {
 
     @Override
     public void onTick() {
-        if (mod == null || player == null || !player.isOnline()) {
+        if (mod == null || getPlayer() == null || !getPlayer().isOnline()) {
             return;
         }
-        if (System.currentTimeMillis() - lastFallTime > 3000 && player.getAbsorptionAmount() > 4) {
-            player.setAbsorptionAmount(player.getAbsorptionAmount() - 0.1);
-            if (player.getAbsorptionAmount() <= 0) {
-                player.getAttribute(Attribute.MAX_ABSORPTION).removeModifier(mod);
+        if (System.currentTimeMillis() - lastFallTime > 3000 && getPlayer().getAbsorptionAmount() > 4) {
+            getPlayer().setAbsorptionAmount(getPlayer().getAbsorptionAmount() - 0.1);
+            if (getPlayer().getAbsorptionAmount() <= 0) {
+                getPlayer().getAttribute(Attribute.MAX_ABSORPTION).removeModifier(mod);
             }
         }
 
@@ -51,25 +51,25 @@ public class InverseFallDamage extends WYREffect {
         double damage = event.getDamage();
         event.setCancelled(true);
         double overhealAmount = damage - getMaxHealthDifference();
-        player.heal(damage);
+        getPlayer().heal(damage);
         if (overhealAmount <= 0) {
             return;
         }
-        overhealAmount += player.getAbsorptionAmount();
+        overhealAmount += getPlayer().getAbsorptionAmount();
         overhealAmount = Math.min(20, overhealAmount); // Cap at 20 (max absorption)
         lastFallTime = System.currentTimeMillis();
 
         mod = new AttributeModifier(new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "assorption"), overhealAmount, AttributeModifier.Operation.ADD_NUMBER);
-        player.getAttribute(Attribute.MAX_ABSORPTION).removeModifier(mod);
-        player.getAttribute(Attribute.MAX_ABSORPTION).addModifier(mod);
-        player.setAbsorptionAmount(overhealAmount);
+        getPlayer().getAttribute(Attribute.MAX_ABSORPTION).removeModifier(mod);
+        getPlayer().getAttribute(Attribute.MAX_ABSORPTION).addModifier(mod);
+        getPlayer().setAbsorptionAmount(overhealAmount);
     }
 
     AttributeModifier mod;
 
     private double getMaxHealthDifference() {
-        double maxHealth = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
-        double currentHealth = player.getHealth();
+        double maxHealth = getPlayer().getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
+        double currentHealth = getPlayer().getHealth();
         double difference = maxHealth - currentHealth;
         return difference > 0 ? difference : 0;
     }

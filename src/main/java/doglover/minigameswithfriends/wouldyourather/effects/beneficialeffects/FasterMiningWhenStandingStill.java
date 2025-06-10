@@ -36,11 +36,11 @@ public class FasterMiningWhenStandingStill extends WYREffect {
             return;
         }
         Vector lastLocationVector = lastLocation != null ? lastLocation.toVector() : new Vector(0, 0, 0);
-        if (!player.getLocation().toVector().equals(lastLocationVector)) {
+        if (!getPlayer().getLocation().toVector().equals(lastLocationVector)) {
             hasteStacks = 0;
-            player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(key);
+            getPlayer().getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(key);
         }
-        lastLocation = player.getLocation();
+        lastLocation = getPlayer().getLocation();
     }
 
     Location lastLocation;
@@ -67,6 +67,6 @@ public class FasterMiningWhenStandingStill extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(key);
+        getPlayer().getAttribute(Attribute.BLOCK_BREAK_SPEED).removeModifier(key);
     }
 }

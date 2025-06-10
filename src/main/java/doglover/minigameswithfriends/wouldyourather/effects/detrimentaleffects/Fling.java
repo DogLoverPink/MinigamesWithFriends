@@ -76,6 +76,6 @@ public class Fling extends WYREffect {
         if (arrow != null) {
             arrow.remove();
         }
-        player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER).removeModifier(noFallKey);
+        getPlayer().getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER).removeModifier(noFallKey);
     }
 }

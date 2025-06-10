@@ -2,6 +2,7 @@ package doglover.minigameswithfriends;
 
 import doglover.minigameswithfriends.configs.MainGameConfig;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.PlayerUtils;
 import fr.mrmicky.fastboard.FastBoard;
@@ -417,6 +418,9 @@ public class Game {
 
     public void tick() {
         if (inDeathMatch) {
+            if (isGamemodeActive(WouldYouRatherGamemode.class)) {
+                getGamemode(WouldYouRatherGamemode.class).tick();
+            }
             scoreboardContribututions.clear();
             tickDeathMatch();
             return;

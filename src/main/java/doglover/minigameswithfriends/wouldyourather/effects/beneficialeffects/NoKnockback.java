@@ -31,13 +31,13 @@ public class NoKnockback extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
-        player.getAttribute(Attribute.KNOCKBACK_RESISTANCE).addModifier(new AttributeModifier(key, 3, AttributeModifier.Operation.ADD_NUMBER));
+        getPlayer().getAttribute(Attribute.KNOCKBACK_RESISTANCE).addModifier(new AttributeModifier(key, 3, AttributeModifier.Operation.ADD_NUMBER));
 
     }
 
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.KNOCKBACK_RESISTANCE).removeModifier(key);
+        getPlayer().getAttribute(Attribute.KNOCKBACK_RESISTANCE).removeModifier(key);
     }
 }

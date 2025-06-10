@@ -42,7 +42,7 @@ public class MoreHealthForEachHoe extends WYREffect {
 
     @Override
     public void on4HertzTick() {
-        int hoeCount = player.getInventory().all(targetMaterial).size();
+        int hoeCount = getPlayer().getInventory().all(targetMaterial).size();
         removeModifier();
         addModifier(hoeCount * HEALTH_GAIN.getOrDefault(targetMaterial, 0.0));
     }

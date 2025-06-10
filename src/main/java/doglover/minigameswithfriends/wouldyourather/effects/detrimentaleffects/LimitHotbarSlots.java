@@ -71,7 +71,7 @@ public class LimitHotbarSlots extends WYREffect {
                     continue outerLoop;
                 }
             }
-            player.getWorld().dropItemNaturally(player.getLocation(), item);
+            getPlayer().getWorld().dropItemNaturally(getPlayer().getLocation(), item);
             getPlayer().getInventory().setItem(i, null);
         }
     }

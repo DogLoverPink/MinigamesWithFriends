@@ -36,7 +36,7 @@ public class Butterfinger extends WYREffect {
         Item item = getPlayer().getWorld().dropItem(getPlayer().getLocation().clone().add(0, 1, 0), getPlayer().getInventory().getItemInMainHand());
         item.setVelocity(dropVector);
         item.setPickupDelay(20);
-        player.getInventory().setItemInMainHand(null);
+        getPlayer().getInventory().setItemInMainHand(null);
 
     }
 

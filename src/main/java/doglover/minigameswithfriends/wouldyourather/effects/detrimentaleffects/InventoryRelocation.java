@@ -36,7 +36,7 @@ public class InventoryRelocation extends WYREffect {
         double offsetX = getPlayer().getLocation().getX() + random.nextInt(24) - 12;
         double offsetY = getPlayer().getLocation().getY() + random.nextInt(24) - 12;
         double offsetZ = getPlayer().getLocation().getZ() + random.nextInt(24) - 12;
-        return new Location(player.getWorld(), offsetX, offsetY, offsetZ);
+        return new Location(getPlayer().getWorld(), offsetX, offsetY, offsetZ);
     }
 
     @Override

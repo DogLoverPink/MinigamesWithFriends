@@ -46,10 +46,10 @@ public class BrokenShiftKey extends WYREffect {
 
         if (doesPlayerThinkTheyreSneaking && getPlayer().getLocation().clone().subtract(0, 0.1, 0).getBlock().getType().isAir()) {
             AttributeModifier mod = new AttributeModifier(stepHeightKey, 10, AttributeModifier.Operation.ADD_NUMBER);
-            player.getAttribute(Attribute.STEP_HEIGHT).removeModifier(mod);
-            player.getAttribute(Attribute.STEP_HEIGHT).addModifier(mod);
+            getPlayer().getAttribute(Attribute.STEP_HEIGHT).removeModifier(mod);
+            getPlayer().getAttribute(Attribute.STEP_HEIGHT).addModifier(mod);
             fakeBlockLocation = getPlayer().getLocation().clone().subtract(0, 9, 0);
-            player.sendBlockChange(fakeBlockLocation, Material.BARRIER.createBlockData());
+            getPlayer().sendBlockChange(fakeBlockLocation, Material.BARRIER.createBlockData());
         } else {
             getPlayer().getAttribute(Attribute.STEP_HEIGHT).removeModifier(stepHeightKey);
         }
@@ -75,14 +75,14 @@ public class BrokenShiftKey extends WYREffect {
     public void onEffectInitiate() {
         super.onEffectInitiate();
         AttributeModifier mod = new AttributeModifier(speedKey, 1, AttributeModifier.Operation.ADD_NUMBER);
-        player.getAttribute(Attribute.SNEAKING_SPEED).removeModifier(mod);
-        player.getAttribute(Attribute.SNEAKING_SPEED).addModifier(mod);
+        getPlayer().getAttribute(Attribute.SNEAKING_SPEED).removeModifier(mod);
+        getPlayer().getAttribute(Attribute.SNEAKING_SPEED).addModifier(mod);
     }
 
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        player.getAttribute(Attribute.STEP_HEIGHT).removeModifier(stepHeightKey);
-        player.getAttribute(Attribute.SNEAKING_SPEED).removeModifier(speedKey);
+        getPlayer().getAttribute(Attribute.STEP_HEIGHT).removeModifier(stepHeightKey);
+        getPlayer().getAttribute(Attribute.SNEAKING_SPEED).removeModifier(speedKey);
     }
 }

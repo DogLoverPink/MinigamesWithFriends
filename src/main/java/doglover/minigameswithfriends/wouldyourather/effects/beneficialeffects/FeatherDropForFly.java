@@ -25,7 +25,7 @@ public class FeatherDropForFly extends WYREffect {
 
     public FeatherDropForFly(Player player) {
         super(player);
-        setRepeatable(true);
+        setRepeatable(false);
         subscribeToEvent(PlayerDropItemEvent.class);
     }
 
@@ -37,9 +37,9 @@ public class FeatherDropForFly extends WYREffect {
             flightTime--;
             getPlayer().sendActionBar(Component.text("\uD83E\uDEB6"+getFlightTimeString()));
             if (flightTime <= 0) {
-                player.setAllowFlight(false);
-                player.setFlying(false);
-                player.sendActionBar(Component.text(""));
+                getPlayer().setAllowFlight(false);
+                getPlayer().setFlying(false);
+                getPlayer().sendActionBar(Component.text(""));
             }
         }
     }
