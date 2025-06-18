@@ -54,6 +54,8 @@ public class WitherAway extends WYREffect {
         replacementMap.put(Material.GRASS_BLOCK, Material.MYCELIUM);
         replacementMap.put(Material.WILDFLOWERS, Material.WITHER_ROSE);
         replacementMap.remove(Material.WITHER_ROSE);
+        replacementMap.remove(Material.WATER);
+        replacementMap.remove(Material.LAVA);
     }
 
 

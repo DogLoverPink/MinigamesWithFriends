@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.wouldyourather;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
+import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -57,6 +58,10 @@ public abstract class WYREffect {
 
     public WYREffect() {
 
+    }
+
+    public boolean isPlayerValid() {
+        return (getPlayer() != null && getPlayer().isOnline());
     }
 
 
@@ -207,6 +212,10 @@ public abstract class WYREffect {
     }
 
     public void onEntityKnockback(EntityKnockbackEvent event) {
+
+    }
+
+    public void onPlayerStopUsingItem(PlayerStopUsingItemEvent event) {
 
     }
 }

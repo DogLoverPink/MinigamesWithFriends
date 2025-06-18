@@ -2,6 +2,7 @@ package doglover.minigameswithfriends.wouldyourather.events;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
+import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
@@ -24,6 +25,15 @@ public class WYRItemEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onPlayerDropItem(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerStopUsingItem(PlayerStopUsingItemEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onPlayerStopUsingItem(event);
             }
         }
     }

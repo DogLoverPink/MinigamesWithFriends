@@ -18,7 +18,7 @@ public class RideAnything extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You ride anyone by right clicking with an empty hand";
+        return "You ride anything by right clicking with an empty hand";
     }
 
     public RideAnything(Player player) {

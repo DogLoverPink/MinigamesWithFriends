@@ -8,9 +8,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -56,7 +58,13 @@ public class RodOfDiscord extends WYREffect {
         }
         getPlayer().setFallDistance(0);
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-        getPlayer().teleport(getPlayer().getTargetBlockExact(50).getLocation());
+        Block teleBlock = getPlayer().getTargetBlockExact(50);
+        if (teleBlock == null) {
+            return;
+        }
+        Location teleLoc = teleBlock.getLocation();
+        teleLoc.setDirection(getPlayer().getLocation().getDirection());
+        getPlayer().teleport(teleLoc);
         getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
         event.getItem().damage(6, event.getPlayer());
         applyCooldown(event.getItem());

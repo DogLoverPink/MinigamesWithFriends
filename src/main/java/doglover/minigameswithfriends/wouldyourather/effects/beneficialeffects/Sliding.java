@@ -2,6 +2,7 @@ package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
@@ -33,6 +34,7 @@ public class Sliding extends WYREffect {
     int countWithoutMoreSpeed = 40;
     int noMovementTicks = 0;
 
+
     @Override
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         if (!event.getPlayer().equals(getPlayer()) || !event.isSneaking()) {
@@ -63,6 +65,7 @@ public class Sliding extends WYREffect {
         fish.setVelocity(fishVector);
         event.setCancelled(true);
         fish.addPassenger(getPlayer());
+        getPlayer().sendActionBar(Component.empty());
     }
 
     @Override

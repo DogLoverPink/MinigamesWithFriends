@@ -30,7 +30,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of());
+    private static List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(SpyglassXray.class));
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
             return constructWYREffectFromClass(TESTING_EFFECTS_TO_GET_FIRST.removeFirst(), player);
@@ -104,6 +104,9 @@ public class WYREffectHandler {
         boolean do4Hz = tick4HertzCounter >= 5;
 
         for (WYREffect effect : managedEffects) {
+            if (!effect.isPlayerValid()) {
+                continue;
+            }
             effect.onTick();
             if (do4Hz) {
                 effect.on4HertzTick();
