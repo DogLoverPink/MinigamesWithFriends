@@ -93,6 +93,8 @@ public class StealItemFromPlayer extends WYREffect {
             randPlayer = plrs.get(random.nextInt(plrs.size()));
             inventory = randPlayer.getInventory();
             getPlayer().openInventory(inventory);
+        } else {
+            getPlayer().openInventory(getPlayer().getInventory());
         }
         isPicking = true;
     }

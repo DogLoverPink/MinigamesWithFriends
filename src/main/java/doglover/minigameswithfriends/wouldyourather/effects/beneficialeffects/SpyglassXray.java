@@ -30,41 +30,30 @@ public class SpyglassXray extends WYREffect {
 
     public SpyglassXray(Player player) {
         super(player);
-        setRepeatable(true);
-        subscribeToEvent(PlayerInteractEvent.class);
-        subscribeToEvent(PlayerStopUsingItemEvent.class);
+        setRepeatable(false);
 
     }
 
-    @Override
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.getPlayer().equals(getPlayer()) || event.getHand() != EquipmentSlot.HAND) {
-            return;
-        }
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.SPYGLASS) {
-            return;
-        }
-        if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-            return;
-        }
-        mobsWithGlowing.clear();
-        for (Entity entity : event.getPlayer().getNearbyEntities(50, 50, 50)) {
-            entity.setGlowing(true);
-            mobsWithGlowing.add(entity.getUniqueId());
-        }
-    }
 
     Set<UUID> mobsWithGlowing = new HashSet<>();
 
     @Override
-    public void onPlayerStopUsingItem(PlayerStopUsingItemEvent event) {
-        if (!event.getPlayer().equals(getPlayer())) {
-            return;
+    public void onTick() {
+        if (getPlayer().hasActiveItem() && getPlayer().getActiveItem().getType() == Material.SPYGLASS) {
+            if (getPlayer().getActiveItemUsedTime() == 3) {
+                mobsWithGlowing.clear();
+                for (Entity entity : getPlayer().getNearbyEntities(50, 50, 50)) {
+                    entity.setGlowing(true);
+                    mobsWithGlowing.add(entity.getUniqueId());
+                }
+            }
+        } else {
+            stopGlowing();
         }
-        if (event.getItem().getType() != Material.SPYGLASS) {
-            return;
-        }
+    }
+
+
+    private void stopGlowing() {
         for (UUID uuid : mobsWithGlowing) {
             Entity entity = Bukkit.getEntity(uuid);
             if (entity == null) {
@@ -83,5 +72,6 @@ public class SpyglassXray extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
+        stopGlowing();
     }
 }
