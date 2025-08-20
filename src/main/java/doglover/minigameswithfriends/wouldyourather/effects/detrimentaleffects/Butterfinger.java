@@ -29,7 +29,7 @@ public class Butterfinger extends WYREffect {
 
     @Override
     public void on4HertzTick() {
-        if (!NumberUtils.chanceOf(0.011) || getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
+        if (!NumberUtils.chanceOf(0.0075) || getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
             return;
         }
         Vector dropVector = getPlayer().getLocation().getDirection().multiply(0.35);

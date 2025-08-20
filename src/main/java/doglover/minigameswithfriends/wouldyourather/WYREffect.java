@@ -218,4 +218,8 @@ public abstract class WYREffect {
     public void onPlayerStopUsingItem(PlayerStopUsingItemEvent event) {
 
     }
+
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+
+    }
 }

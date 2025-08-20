@@ -5,6 +5,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 public class WYRBlockEvents implements Listener {
 
@@ -49,6 +50,15 @@ public class WYRBlockEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onBlockDropItem(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onEntityChangeBlock(event);
             }
         }
     }
