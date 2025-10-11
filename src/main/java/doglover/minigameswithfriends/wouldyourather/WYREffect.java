@@ -222,4 +222,8 @@ public abstract class WYREffect {
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
 
     }
+
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+
+    }
 }
