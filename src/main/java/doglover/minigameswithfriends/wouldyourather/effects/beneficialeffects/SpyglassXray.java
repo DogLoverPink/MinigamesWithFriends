@@ -67,6 +67,8 @@ public class SpyglassXray extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
+        getPlayer().sendMessage("Yes yes, I am aware, but I'm too lazy to fix it");
+        getPlayer().sendMessage(" - DogLoverPink");
     }
 
     @Override

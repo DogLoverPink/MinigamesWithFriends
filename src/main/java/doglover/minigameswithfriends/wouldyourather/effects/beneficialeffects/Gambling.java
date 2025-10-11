@@ -65,6 +65,7 @@ public class Gambling extends WYREffect {
             isGambling = false;
             getPlayer().closeInventory();
             getPlayer().sendMessage(Component.text("You won!!!!").color(NamedTextColor.GREEN));
+            this.selfDestruct();
         }
     }
 
