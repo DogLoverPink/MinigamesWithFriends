@@ -28,7 +28,6 @@ public class InverseKnockback extends WYREffect {
 
     @Override
     public void onEntityKnockback(EntityKnockbackEvent event) {
-        event.getEntity().sendMessage("meow");
         if (!event.getEntity().equals(getPlayer())) {
             return;
         }

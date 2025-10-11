@@ -32,13 +32,13 @@ public class Annoyance extends WYREffect {
 
     @Override
     public void onTick() {
-        if (NumberUtils.chanceOf(0.0008)) {
+        if (NumberUtils.chanceOf(0.00075)) {
             getPlayer().showWinScreen();
         }
-        if (NumberUtils.chanceOf(0.0008)) {
+        if (NumberUtils.chanceOf(0.00075)) {
             getPlayer().showDemoScreen();
         }
-        if (!inTargetedSoundAnnoyance && NumberUtils.chanceOf(0.001)) {
+        if (!inTargetedSoundAnnoyance && NumberUtils.chanceOf(0.00075)) {
             annoyanceCount = 200;
         }
         if (!inTargetedSoundAnnoyance && annoyanceCount-- > 0) {
@@ -54,7 +54,7 @@ public class Annoyance extends WYREffect {
             getPlayer().playSound(getPlayer(), Sound.ENTITY_DOLPHIN_DEATH, 1, 2);
             getPlayer().playSound(getPlayer(), Sound.ENTITY_GHAST_DEATH, 1, 1);
         }
-        if (!inTargetedSoundAnnoyance && annoyanceCount <= 0 && NumberUtils.chanceOf(0.001)) {
+        if (!inTargetedSoundAnnoyance && annoyanceCount <= 0 && NumberUtils.chanceOf(0.00075)) {
             inTargetedSoundAnnoyance = true;
             annoyanceCount = 100;
         }
