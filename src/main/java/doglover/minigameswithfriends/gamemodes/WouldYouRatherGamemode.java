@@ -54,7 +54,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     private void chooseOptionOne(Audience aud) {
         UUID uuid = aud.get(Identity.UUID).get();
         List<WYREffect> effects = effectsToChooseFrom.get(uuid);
-        if (effects == null || effects.isEmpty() || Bukkit.getPlayer(uuid) == null) {
+        if (effects == null || effects.isEmpty() || Bukkit.getPlayer(uuid) == null || !getGame().isRunning()) {
             return;
         }
         applyEffects(Bukkit.getPlayer(uuid), effects.get(0), effects.get(1));
@@ -64,7 +64,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     private void chooseOptionTwo(Audience aud) {
         UUID uuid = aud.get(Identity.UUID).get();
         List<WYREffect> effects = effectsToChooseFrom.get(uuid);
-        if (effects == null || effects.isEmpty() || Bukkit.getPlayer(uuid) == null) {
+        if (effects == null || effects.isEmpty() || Bukkit.getPlayer(uuid) == null || !getGame().isRunning())  {
             return;
         }
         applyEffects(Bukkit.getPlayer(uuid), effects.get(2), effects.get(3));
@@ -91,6 +91,10 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     public boolean isCurrentChoosing() {
         return isCurrentChoosing;
+    }
+
+    public boolean isPlayerCurrentlyChoosing(Player plr) {
+        return effectsToChooseFrom.containsKey(plr.getUniqueId());
     }
 
     Map<UUID, List<WYREffect>> effectsToChooseFrom = new HashMap<>();
@@ -122,6 +126,9 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if (effectsToChooseFrom.isEmpty()) {
+                    cancel();
+                }
                 if (getTickGoal() > 3) {
                     return;
                 }
@@ -133,6 +140,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     private void endChoiceChooseTimer() {
         setTickGoal(getNextComputedTime());
+        Bukkit.broadcastMessage("Computed time: " + getFormattedTimeRemaining()+" with min, max: "+getMinTicks()+", "+getMaxTicks());
         List<UUID> uuids = new ArrayList<>(effectsToChooseFrom.keySet());
         for (UUID uuid : uuids) {
             Player plr = Bukkit.getPlayer(uuid);

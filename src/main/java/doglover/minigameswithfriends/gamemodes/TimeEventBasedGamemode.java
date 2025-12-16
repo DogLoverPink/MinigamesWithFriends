@@ -1,5 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
+import org.bukkit.Bukkit;
+
 import java.util.Random;
 
 public abstract class TimeEventBasedGamemode extends Gamemode {
@@ -42,7 +44,8 @@ public abstract class TimeEventBasedGamemode extends Gamemode {
     private int maxTicks;
 
     int getNextComputedTime() {
-        return random.nextInt(minTicks, maxTicks + 1);
+        int computedTimed = random.nextInt(minTicks, maxTicks + 1);
+        return computedTimed;
     }
 
     private int tickGoal;

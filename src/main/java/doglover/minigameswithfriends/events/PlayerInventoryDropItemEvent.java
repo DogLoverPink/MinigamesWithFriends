@@ -13,7 +13,7 @@ public class PlayerInventoryDropItemEvent implements Listener {
     public void onPlayerInventoryDropItem(PlayerDropItemEvent event) {
         Game game = MinigamesWithFriends.getGame();
         if (game.isRunning() && game.isGamemodeActive(WouldYouRatherGamemode.class)) {
-            if (game.getGamemode(WouldYouRatherGamemode.class).isCurrentChoosing()) {
+            if (game.getGamemode(WouldYouRatherGamemode.class).isPlayerCurrentlyChoosing(event.getPlayer())) {
                 event.setCancelled(true);
                 event.getPlayer().sendMessage("§cTsk Tsk, I know what you're up to...");
             }

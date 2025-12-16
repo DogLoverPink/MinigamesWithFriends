@@ -76,7 +76,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
         Player lastPlayer = plrs.getLast();
         swapMap.put(lastPlayer, plrs.getFirst());
         lastPlayer.teleport(loc1);
-        lastPlayer.sendMessage(Component.text("eTeleporting to " + plrs.getFirst().getName()));
+        lastPlayer.sendMessage(Component.text("§eTeleporting to " + plrs.getFirst().getName()));
 
     }
     @Override

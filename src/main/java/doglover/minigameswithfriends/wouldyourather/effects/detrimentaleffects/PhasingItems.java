@@ -15,7 +15,7 @@ public class PhasingItems extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerBeneficialWYREffect(PhasingItems.class);
+        WYREffectHandler.registerDetrimentalWYREffect(PhasingItems.class);
     }
 
     @Override

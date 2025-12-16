@@ -42,7 +42,6 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
         for (int i = 0; i < materials.size(); i++) {
             ItemStack itemStack = new ItemStack(materials2.get(i));
             if (getGame().getConfig().getRandomizerConfig().isRandomlyEnchantingGear()) {
-                MinigamesWithFriends.getGamePlugin().getLogger().info("§aITEM: §b" + itemStack.getType().name() + " §aDURABILITY: §b" + itemStack.getType().getMaxDurability());
                 randomlyEnchantItemStack(itemStack);
             }
             blockMap.put(materials.get(i), itemStack);

@@ -2,6 +2,7 @@ package doglover.minigameswithfriends.utils;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -15,7 +16,7 @@ public class JarUtils {
     public static void initalizeWouldYouRatherClasses(String packageName) {
         String packagePath = packageName.replace(".", "/");
         try {
-            String jarName = new java.io.File(MinigamesWithFriends.class.getProtectionDomain()
+            String jarName = new File(MinigamesWithFriends.class.getProtectionDomain()
                     .getCodeSource()
                     .getLocation()
                     .getPath())

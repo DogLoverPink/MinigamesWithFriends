@@ -29,6 +29,18 @@ public class ParticleUtils {
         }
     }
 
+    public static void createParticleCloud(Location loc, double radius, Particle particle, int count) {
+        for (int i = 0; i < count; i++) {
+            double angle = Math.random() * 2 * Math.PI;
+            double r = Math.random() * radius;
+            double x = loc.getX() + r * Math.cos(angle);
+            double z = loc.getZ() + r * Math.sin(angle);
+            double y = loc.getY() + (Math.random() - 0.5) * radius;
+            Location particleLoc = new Location(loc.getWorld(), x, y, z);
+            loc.getWorld().spawnParticle(particle, particleLoc, 1);
+        }
+    }
+
     public static void summonCircle(Location location, double radius, Particle particle,
                                     Particle.DustOptions dustOptions) {
         for (int d = 0; d <= 90; d += 1) {

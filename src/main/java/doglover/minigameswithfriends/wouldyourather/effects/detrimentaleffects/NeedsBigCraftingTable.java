@@ -13,7 +13,7 @@ public class NeedsBigCraftingTable extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerBeneficialWYREffect(NeedsBigCraftingTable.class);
+        WYREffectHandler.registerDetrimentalWYREffect(NeedsBigCraftingTable.class);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class NeedsBigCraftingTable extends WYREffect {
 
     public NeedsBigCraftingTable(Player player) {
         super(player);
-        setRepeatable(true);
+        setRepeatable(false);
         subscribeToEvent(PlayerInteractEvent.class);
     }
 

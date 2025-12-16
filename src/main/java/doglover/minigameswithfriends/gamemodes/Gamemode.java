@@ -28,7 +28,7 @@ public abstract class Gamemode {
 
     public static boolean isValidGamemode(String gamemodeName) {
         return switch (gamemodeName) {
-            case "DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather" -> true;
+            case "DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather", "Deathmatch" -> true;
             default -> false;
         };
     }
@@ -40,15 +40,16 @@ public abstract class Gamemode {
             case "Randomizer" -> new RandomizerGamemode();
             case "BlockShuffle" -> new BlockShuffleGamemode();
             case "WouldYouRather" -> new WouldYouRatherGamemode();
+            case "Deathmatch" -> new DeathmatchGamemode();
             default -> null;
         };
     }
 
     public static String getGamemodeListString() {
-        return "DeathSwap, DimensionSwap, Randomizer, BlockShuffle, WouldYouRather";
+        return "DeathSwap, DimensionSwap, Randomizer, BlockShuffle, WouldYouRather, Deathmatch";
     }
 
     public static List<String> getGamemodeList() {
-        return List.of("DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather");
+        return List.of("DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather", "Deathmatch");
     }
 }

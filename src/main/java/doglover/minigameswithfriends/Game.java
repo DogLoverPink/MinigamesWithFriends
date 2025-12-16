@@ -4,9 +4,11 @@ import doglover.minigameswithfriends.configs.MainGameConfig;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
+import doglover.minigameswithfriends.utils.ParticleUtils;
 import doglover.minigameswithfriends.utils.PlayerUtils;
 import fr.mrmicky.fastboard.FastBoard;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -144,6 +146,9 @@ public class Game {
         if (this.points.get(player) >= pointsToWin) {
             for (Player p : getPlayers()) {
                 p.sendMessage("§a§l" + player.getName() + " has won the game!");
+                p.playSound(p, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                ParticleUtils.createParticleCloud(p.getLocation(), 3, Particle.FIREWORK, 30);
+                p.showTitle(Title.title(Component.text(player.getName()+" won!!").color(NamedTextColor.GOLD), Component.empty(), 8, 50, 20));
             }
             endGame();
         }
@@ -266,6 +271,8 @@ public class Game {
     Map<UUID, Location> previousLocations = new HashMap<>();
 
 
+    World deathmatchWorld;
+
     public void startDeathMatch() {
         inDeathMatch = true;
         aliveDeathMatchPlayers.clear();
@@ -276,6 +283,7 @@ public class Game {
         List<Player> playersList = new ArrayList<>(getPlayers());
         Player randomPlayer = playersList.get(new Random().nextInt(playersList.size()));
         Location loc = BlockUtils.findSafeBlock(randomPlayer.getWorld().getSpawnLocation());
+        deathmatchWorld = loc.getWorld();
         BlockUtils.createWallsAroundLocation(loc);
         BlockUtils.createHollowBoxAroundLocation(loc);
         for (Player player : getPlayers()) {
@@ -293,7 +301,7 @@ public class Game {
                 public void run() {
                     if (i == 0) {
                         player.clearTitle();
-                        launchPlayerSideways(player, 12.5);
+                        launchPlayerSideways(player, 8.5);
                         this.cancel();
                         return;
                     }
@@ -386,6 +394,9 @@ public class Game {
                 continue;
             }
             addScoreboardContributution("§c♡§a" + player.getName());
+            if (!player.getWorld().equals(deathmatchWorld)) {
+                player.teleport(deathmatchWorld.getSpawnLocation());
+            }
             Location worldSpawn = player.getWorld().getSpawnLocation();
             double xDistance = Math.abs(player.getLocation().getX() - worldSpawn.getX());
             double zDistance = Math.abs(player.getLocation().getZ() - worldSpawn.getZ());

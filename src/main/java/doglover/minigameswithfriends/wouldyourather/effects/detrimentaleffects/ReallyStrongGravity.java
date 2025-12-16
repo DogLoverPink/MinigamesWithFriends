@@ -12,7 +12,7 @@ public class ReallyStrongGravity extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerBeneficialWYREffect(ReallyStrongGravity.class);
+        WYREffectHandler.registerDetrimentalWYREffect(ReallyStrongGravity.class);
     }
 
     @Override

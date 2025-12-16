@@ -27,6 +27,7 @@ public class SneakDamageReduction extends WYREffect {
 
     @Override
     public void onEffectDecompose() {
+        getPlayer().removePotionEffect(PotionEffectType.RESISTANCE);
         super.onEffectDecompose();
     }
 
