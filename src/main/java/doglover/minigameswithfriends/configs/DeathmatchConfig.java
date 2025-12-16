@@ -1,12 +1,11 @@
 package doglover.minigameswithfriends.configs;
 
-public class RandomizerConfig extends GamemodeConfig{
+public class DeathmatchConfig extends GamemodeConfig {
 
-    public RandomizerConfig() {
-        super("Randomizer");
-        registerConfigValue("RerandomizeAfterDeathMatch", Boolean.class, false);
-
-        registerConfigValue("RandomlyEnchantGear", Boolean.class, true);
+    public DeathmatchConfig() {
+        super("Deathmatch");
+        registerConfigValue("MinimumSecondsBeforeDeathMatch", Integer.class, 300);
+        registerConfigValue("MaximumSecondsBeforeDeathMatch", Integer.class, 300);
     }
 
     public boolean isRerandomizeAfterDeathMatch() {
@@ -18,7 +17,7 @@ public class RandomizerConfig extends GamemodeConfig{
     }
 
     public int getMinimumSecondsBeforeDeathMatch() {
-       return getInt("MinimumSecondsBeforeDeathMatch");
+        return getInt("MinimumSecondsBeforeDeathMatch");
     }
 
     public int getMaximumSecondsBeforeDeathMatch() {
@@ -28,6 +27,7 @@ public class RandomizerConfig extends GamemodeConfig{
     public boolean isRandomlyEnchantingGear() {
         return getBoolean("RandomlyEnchantGear");
     }
+
 
 
 }

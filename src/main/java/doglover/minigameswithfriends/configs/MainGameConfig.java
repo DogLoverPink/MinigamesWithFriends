@@ -26,6 +26,12 @@ public class MainGameConfig extends GamemodeConfig {
         return randomizerConfig;
     }
 
+    private final DeathmatchConfig deathMatchConfig = new DeathmatchConfig();
+
+    public DeathmatchConfig getDeathMatchConfig() {
+        return deathMatchConfig;
+    }
+
     private final WouldYouRatherConfig wouldYouRatherConfig = new WouldYouRatherConfig();
 
     public WouldYouRatherConfig getWouldYouRatherConfig() {
@@ -46,6 +52,7 @@ public class MainGameConfig extends GamemodeConfig {
         return switch (name.toLowerCase()) {
             case "dimensionswap" -> getDimensionSwapConfig();
             case "deathswap" -> getDeathSwapConfig();
+            case "deathmatch" -> getDeathMatchConfig();
             case "randomizer" -> getRandomizerConfig();
             case "blockshuffle" -> getBlockShuffleConfig();
             case "wouldyourather" -> getWouldYouRatherConfig();

@@ -63,8 +63,8 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameStart() {
-        this.setMinTicks(this.getGame().getConfig().getRandomizerConfig().getMinimumSecondsBeforeDeathMatch() * 20);
-        this.setMaxTicks(this.getGame().getConfig().getRandomizerConfig().getMaximumSecondsBeforeDeathMatch() * 20);
+       // this.setMinTicks(this.getGame().getConfig().getRandomizerConfig().getMinimumSecondsBeforeDeathMatch() * 20);
+      //  this.setMaxTicks(this.getGame().getConfig().getRandomizerConfig().getMaximumSecondsBeforeDeathMatch() * 20);
         super.onGameStart();
         randomizeBlocks();
 
@@ -73,9 +73,9 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
     @Override
     public void tick() {
         super.tick();
-        if (this.getGame().getConfig().getRandomizerConfig().isEnableDeathMatches()) {
-            this.getGame().addScoreboardContributution("§dDeathmatch in: §b" + getFormattedTimeRemaining());
-        }
+//        if (this.getGame().getConfig().getRandomizerConfig().isEnableDeathMatches()) {
+//            this.getGame().addScoreboardContributution("§dDeathmatch in: §b" + getFormattedTimeRemaining());
+//        }
     }
 
     @Override
@@ -87,9 +87,9 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onTimeEventTrigger() {
-        if (this.getGame().getConfig().getRandomizerConfig().isEnableDeathMatches()) {
-            this.getGame().startDeathMatch();
-        }
+//        if (this.getGame().getConfig().getRandomizerConfig().isEnableDeathMatches()) {
+//            this.getGame().startDeathMatch();
+//        }
 
     }
 
