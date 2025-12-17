@@ -21,7 +21,7 @@ import java.util.*;
 
 public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
-    private final Map<UUID, List<Class<? extends WYREffect>>> currentlyAppliedBenefitsAndDetriments = new HashMap<>();
+    public final Map<UUID, List<Class<? extends WYREffect>>> currentlyAppliedBenefitsAndDetriments = new HashMap<>();
 
 
     public static void initialize() {
@@ -97,7 +97,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         return effectsToChooseFrom.containsKey(plr.getUniqueId());
     }
 
-    Map<UUID, List<WYREffect>> effectsToChooseFrom = new HashMap<>();
+    public Map<UUID, List<WYREffect>> effectsToChooseFrom = new HashMap<>();
 
     @Override
     public void onTimeEventTrigger() {
@@ -140,7 +140,6 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     private void endChoiceChooseTimer() {
         setTickGoal(getNextComputedTime());
-        Bukkit.broadcastMessage("Computed time: " + getFormattedTimeRemaining()+" with min, max: "+getMinTicks()+", "+getMaxTicks());
         List<UUID> uuids = new ArrayList<>(effectsToChooseFrom.keySet());
         for (UUID uuid : uuids) {
             Player plr = Bukkit.getPlayer(uuid);
@@ -185,6 +184,9 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         currentlyAppliedBenefitsAndDetriments.clear();
         WYREffectHandler.clearAndDecomposeManagedEffects();
         for (Player plr : getGame().getPlayers()) {
+            for (PotionEffect effect : plr.getActivePotionEffects()) {
+                plr.removePotionEffect(effect.getType());
+            }
             plr.removePotionEffect(PotionEffectType.RESISTANCE);
         }
 

@@ -22,6 +22,10 @@ public class DeathListener implements Listener {
             return;
         }
 
+        if (event.isCancelled()) {
+            return;
+        }
+
         if (MinigamesWithFriends.getGame().getConfig().shouldKeepInventoryOnDeath()) {
             event.setKeepInventory(true);
         }

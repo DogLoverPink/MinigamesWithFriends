@@ -152,6 +152,36 @@ public class BlockUtils {
         return loc;
     }
 
+    /**
+     * Finds a safe location for teleporting within the specified radius
+     *
+     * @param loc    The center location to search around
+     * @param radius The radius to search within
+     * @return A safe location, or the input location if no safe location was found
+     */
+    public static Location findSafeLocationInRadius(Location loc, int radius) {
+        if (radius < 0 || loc == null || loc.getWorld() == null) {
+            return loc;
+        }
+        for (int r = 0; r <= radius; r++) {
+            for (int x = -r; x <= r; x++) {
+                for (int z = -r; z <= r; z++) {
+                    if (Math.abs(x) != r && Math.abs(z) != r) continue;
+
+                    for (int y = -r; y <= r; y++) {
+                        Location checkLoc = loc.clone().add(x, y, z);
+                        if (checkLoc.getBlock().getType().isSolid() &&
+                                !checkLoc.clone().add(0, 1, 0).getBlock().isSuffocating() &&
+                                !checkLoc.clone().add(0, 2, 0).getBlock().isSuffocating()) {
+                            return checkLoc.clone().add(0, 1, 0);
+                        }
+                    }
+                }
+            }
+        }
+        return loc;
+    }
+
     public static void replaceBlocksBetween(Location loc1, Location loc2, Material replaceWith, Material... find) {
         if (!loc1.getWorld().equals(loc2.getWorld())) {
             throw new IllegalArgumentException("Locations must be in the same world.");

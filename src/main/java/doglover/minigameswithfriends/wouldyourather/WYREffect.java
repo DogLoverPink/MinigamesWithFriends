@@ -235,4 +235,8 @@ public abstract class WYREffect {
     public void onExplosionPrime(ExplosionPrimeEvent event) {
 
     }
+
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+
+    }
 }

@@ -6,9 +6,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -55,14 +53,16 @@ public class StealItemFromPlayer extends WYREffect {
             }
             if (event.getInventory().equals(event.getView().getTopInventory())) {
                 ItemStack item = event.getCurrentItem();
-                if (item != null ) {
+                if (item != null) {
                     ItemUtils.giveItemsToPlayer(getPlayer(), item);
                     event.setCancelled(true);
                     isPicking = false;
                     event.getInventory().remove(item);
                     event.getInventory().close();
-                    getPlayer().sendMessage(Component.text("§aYou took §b" + item.getAmount() + " §e" + item.getType().toString() + "§a from §9" + randPlayer.getName() + "!"));
-                    randPlayer.sendMessage(Component.text("§9" + getPlayer().getName() + "§c took §b" + item.getAmount() + " §e" + item.getType().toString() + " §cfrom you!"));
+                    if (randPlayer != null) {
+                        getPlayer().sendMessage(Component.text("§aYou took §b" + item.getAmount() + " §e" + item.getType().toString() + "§a from §9" + randPlayer.getName() + "!"));
+                        randPlayer.sendMessage(Component.text("§9" + getPlayer().getName() + "§c took §b" + item.getAmount() + " §e" + item.getType().toString() + " §cfrom you!"));
+                    }
 
                     this.selfDestruct();
                 }
@@ -74,7 +74,7 @@ public class StealItemFromPlayer extends WYREffect {
     @Override
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!event.getPlayer().equals(getPlayer())) {
-         return;
+            return;
         }
         if (isPicking) {
             Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
@@ -94,6 +94,7 @@ public class StealItemFromPlayer extends WYREffect {
             inventory = randPlayer.getInventory();
             getPlayer().openInventory(inventory);
         } else {
+            inventory = getPlayer().getInventory();
             getPlayer().openInventory(getPlayer().getInventory());
         }
         isPicking = true;

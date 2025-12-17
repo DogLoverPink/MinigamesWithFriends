@@ -72,6 +72,7 @@ public class Phoenix extends WYREffect {
             meta.lore(Arrays.asList(Component.text("§cThe charred remains of what was once your hand...")));
         });
         fire.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
+        fire.addUnsafeEnchantment(Enchantment.SHARPNESS, 2);
         fire.setAmount(amount);
         return fire;
     }
@@ -128,7 +129,7 @@ public class Phoenix extends WYREffect {
                 getPlayer().getInventory().remove(item);
                 event.setCancelled(true);
                 lastLocation = getPlayer().getLocation().clone();
-                getPlayer().spigot().respawn();
+//                getPlayer().spigot().respawn();
                 getPlayer().sendMessage(Component.text("§6§lYour ashes rise from the dead!").color(NamedTextColor.GOLD));
                 activatePhoenixMode();
                 Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {

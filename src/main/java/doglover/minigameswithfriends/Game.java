@@ -36,6 +36,10 @@ public class Game {
 
     private static final Random random = new Random();
 
+    public static Random getRandom() {
+        return random;
+    }
+
     public void setRunning(boolean running) {
         isRunning = running;
     }
