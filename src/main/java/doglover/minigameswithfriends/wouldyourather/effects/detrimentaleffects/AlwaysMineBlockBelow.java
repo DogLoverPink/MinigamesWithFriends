@@ -56,7 +56,7 @@ public class AlwaysMineBlockBelow extends WYREffect {
             block = null;
             return;
         }
-        getPlayer().sendBlockDamage(newBlock.getLocation(), percentBroken);
+        getPlayer().sendBlockDamage(newBlock.getLocation(), percentBroken, -1);
 
     }
 

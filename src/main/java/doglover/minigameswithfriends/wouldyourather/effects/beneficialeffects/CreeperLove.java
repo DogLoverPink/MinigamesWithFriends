@@ -12,6 +12,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,12 +47,13 @@ public class CreeperLove extends WYREffect {
             return;
         }
         event.setCancelled(true);
-        ParticleUtils.createParticleCloud(creeper.getLocation(), 5, Particle.HEART, 60);
+        ParticleUtils.createParticleCloud(creeper.getLocation(), 5, Particle.HEART, 120);
         if (getPlayer().getWorld().equals(creeper.getWorld()) && getPlayer().getLocation().distanceSquared(creeper.getLocation()) < 25) {
-            getPlayer().heal(6);
+            getPlayer().heal(4);
         }
         creeper.getWorld().playSound(creeper.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
         creeper.remove();
+        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 1));
     }
 
     @Override

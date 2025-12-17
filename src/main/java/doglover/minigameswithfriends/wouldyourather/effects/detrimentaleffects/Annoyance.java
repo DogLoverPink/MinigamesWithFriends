@@ -32,10 +32,10 @@ public class Annoyance extends WYREffect {
 
     @Override
     public void onTick() {
-        if (NumberUtils.chanceOf(0.00075)) {
+        if (NumberUtils.chanceOf(0.0005)) {
             getPlayer().showWinScreen();
         }
-        if (NumberUtils.chanceOf(0.00075)) {
+        if (NumberUtils.chanceOf(0.0005)) {
             getPlayer().showDemoScreen();
         }
         if (!inTargetedSoundAnnoyance && NumberUtils.chanceOf(0.00075)) {
