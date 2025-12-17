@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather;
 
+import com.destroystokyo.paper.event.entity.CreeperIgniteEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
@@ -224,6 +225,14 @@ public abstract class WYREffect {
     }
 
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
+
+    }
+
+    public void onCreeperIgnite(CreeperIgniteEvent event) {
+
+    }
+
+    public void onExplosionPrime(ExplosionPrimeEvent event) {
 
     }
 }

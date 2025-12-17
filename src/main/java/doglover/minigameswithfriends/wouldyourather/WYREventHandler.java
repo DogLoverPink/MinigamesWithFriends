@@ -27,6 +27,7 @@ public class WYREventHandler {
         Bukkit.getServer().getPluginManager().registerEvents(new WYRBlockEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRItemEvents(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WYRInventoryEvents(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new WYROtherEvents(), plugin);
     }
 
     public static void subscribe(Class<? extends Event> eventClass, WYREffect effect, EventPriority priority) {
