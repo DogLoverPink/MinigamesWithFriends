@@ -42,7 +42,7 @@ public class StreetInterviewer extends WYREffect {
     Map<String, Consumer<Player>> positiveEffects = new HashMap<>();
     Map<String, Consumer<Player>> negativeEffects = new HashMap<>();
     List<PotionEffectType> positivePotionEffects
-            = new ArrayList<>(List.of(PotionEffectType.HASTE, PotionEffectType.SPEED, PotionEffectType.JUMP_BOOST, PotionEffectType.RESISTANCE, PotionEffectType.HEALTH_BOOST, PotionEffectType.REGENERATION, PotionEffectType.ABSORPTION, PotionEffectType.LUCK, PotionEffectType.STRENGTH));
+            = new ArrayList<>(List.of(PotionEffectType.HASTE, PotionEffectType.SPEED, PotionEffectType.JUMP_BOOST, PotionEffectType.RESISTANCE, PotionEffectType.REGENERATION, PotionEffectType.ABSORPTION, PotionEffectType.LUCK, PotionEffectType.STRENGTH));
     List<PotionEffectType> negativePotionEffects = new ArrayList<>(List.of(PotionEffectType.MINING_FATIGUE, PotionEffectType.HUNGER, PotionEffectType.SLOWNESS, PotionEffectType.POISON, PotionEffectType.WEAKNESS));
 
     PotionEffectType goodPotionEffect = PotionEffectType.HERO_OF_THE_VILLAGE;
@@ -68,6 +68,9 @@ public class StreetInterviewer extends WYREffect {
 
 
     public String formatEffect(String effect, boolean good) {
+            if (effect.toUpperCase().contains("HEARTS")) {
+                return effect.replace("%1$", intensity * 2 + "");
+            }
         return effect.replace("%2$", good ? goodPotionEffect.getName() : badPotionEffect.getName()).replace("%1$", intensity + "");
     }
 
@@ -174,12 +177,12 @@ public class StreetInterviewer extends WYREffect {
     private void initilizeMaps() {
 
         positiveEffects.put("Gain permanent %2$ %1$", this::givePositivePotionEffect);
-        positiveEffects.put("Gain 1 random beneficial WYR effect", this::gainBeneficialWYREffect);
+        positiveEffects.put("Gain %1$ random beneficial WYR effects", this::gainBeneficialWYREffect);
         positiveEffects.put("Gain %1$ max hearts", this::gainMaxHearts);
 
         negativeEffects.put("Gain permanent %2$ %1$", this::giveNegativePotionEffect);
         negativeEffects.put("Lose %1$ max hearts", this::loseMaxHearts);
-        negativeEffects.put("Gain 1 random detrimental WYR effect", this::gainDetrimentalWYREffect);
+        negativeEffects.put("Gain %1$ random detrimental WYR effects", this::gainDetrimentalWYREffect);
     }
 
 
@@ -209,7 +212,8 @@ public class StreetInterviewer extends WYREffect {
     NamespacedKey interviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_"+getUniqueNumber());
 
     private void gainMaxHearts(Player plr) {
-        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(interviewerKey, intensity * 2.0, AttributeModifier.Operation.ADD_NUMBER));
+        interviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_"+getUniqueNumber());
+        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(interviewerKey, intensity * 4.0, AttributeModifier.Operation.ADD_NUMBER));
         plr.sendMessage(mm.deserialize("<yellow>You have <green>gained</green> <dark_red>" + intensity * 2 + "</dark_red> max hearts!</yellow>"));
     }
     private void giveNegativePotionEffect(Player plr) {
@@ -218,7 +222,8 @@ public class StreetInterviewer extends WYREffect {
     }
 
     private void loseMaxHearts(Player plr) {
-        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(interviewerKey, intensity * -2.0, AttributeModifier.Operation.ADD_NUMBER));
+        interviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_"+getUniqueNumber());
+        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(interviewerKey, intensity * -4.0, AttributeModifier.Operation.ADD_NUMBER));
         plr.sendMessage(mm.deserialize("<yellow>You have <red>lost</red> <dark_red>" + intensity * 2 + "</dark_red> max hearts!</yellow>"));
     }
 
