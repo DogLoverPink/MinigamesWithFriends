@@ -7,6 +7,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
@@ -61,6 +62,10 @@ public class EvilPresence extends WYREffect {
     @Override
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         onDamage(event.getDamager(), event.getDamage());
+        if (!event.getEntity().equals(getPlayer())) {
+            return;
+        }
+        event.setDamage(event.getDamage() * 2);
     }
 
     @Override
@@ -99,7 +104,7 @@ public class EvilPresence extends WYREffect {
         ItemStack item = getSkull("http://textures.minecraft.net/texture/bd6976a7f24a572cf242a6eddbdf842078ad4ea4d69fd22702865e06ccb944ed");
         item.editMeta(meta ->
                 meta.displayName(miniMessage.deserialize("<#9696FF>Eye of Cthulhu Mask").decoration(TextDecoration.ITALIC, false))
-                );
+        );
         phantomBottom.getWorld().dropItem(phantomBottom.getLocation(), item);
         phantomBottom.remove();
         phantomTop.remove();
@@ -122,7 +127,9 @@ public class EvilPresence extends WYREffect {
             this.selfDestruct();
             return;
         }
-        display.setRotation(phantomBottom.getYaw() + 180, phantomBottom.getPitch());
+        if (hasSummoned) {
+            display.setRotation(phantomBottom.getYaw() + 180, phantomBottom.getPitch());
+        }
     }
 
     private boolean isPhantomInvalid() {
@@ -135,13 +142,15 @@ public class EvilPresence extends WYREffect {
             this.selfDestruct();
             return;
         }
-        phantomBottom.setTarget(getPlayer());
-        phantomTop.setTarget(getPlayer());
+        if (hasSummoned) {
+            phantomBottom.setTarget(getPlayer());
+            phantomTop.setTarget(getPlayer());
+        }
     }
 
     MiniMessage miniMessage = MiniMessage.miniMessage();
 
-    BossBar healthBar = BossBar.bossBar(Component.text("Eye of Cthulhu"), 1.0f, BossBar.Color.RED, BossBar.Overlay.PROGRESS);
+    BossBar healthBar = BossBar.bossBar(Component.text("Eye of Cthulhu").color(NamedTextColor.RED), 1.0f, BossBar.Color.RED, BossBar.Overlay.PROGRESS);
 
     private void summon() {
         getPlayer().sendMessage(miniMessage.deserialize("<#AF4BFF>Eye of Cthulhu has awoken!"));

@@ -239,4 +239,8 @@ public abstract class WYREffect {
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
 
     }
+
+    public void onPlayerInput(PlayerInputEvent event) {
+
+    }
 }
