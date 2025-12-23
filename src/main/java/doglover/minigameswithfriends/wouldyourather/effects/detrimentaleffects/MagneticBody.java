@@ -41,7 +41,7 @@ public class MagneticBody extends WYREffect {
             Material.IRON_BARS,
             Material.IRON_DOOR,
             Material.IRON_TRAPDOOR,
-            Material.CHAIN,
+            Material.IRON_CHAIN,
             Material.HEAVY_WEIGHTED_PRESSURE_PLATE,
             Material.CAULDRON,
             Material.SPAWNER,

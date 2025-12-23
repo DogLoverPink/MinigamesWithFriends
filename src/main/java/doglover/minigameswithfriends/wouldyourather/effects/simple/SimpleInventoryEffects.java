@@ -85,6 +85,7 @@ public class SimpleInventoryEffects {
     private static final Map<String, String> upgradePath = Map.of(
             "WOODEN", "STONE",
             "STONE", "IRON",
+            "COPPER", "IRON",
             "GOLDEN", "IRON",
             "IRON", "DIAMOND",
             "CHAINMAIL", "DIAMOND",

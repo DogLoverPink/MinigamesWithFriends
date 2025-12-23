@@ -48,6 +48,7 @@ public class SmeltInventory extends WYREffect {
     private static final Map<String, Material> smeltMap = Map.of(
             "IRON", Material.IRON_NUGGET,
             "GOLD", Material.GOLD_NUGGET,
+            "COPPER", Material.COPPER_NUGGET,
             "DIAMOND", Material.DIAMOND,
             "CHAIN", Material.IRON_NUGGET,
             "STONE", Material.STONE,
