@@ -32,8 +32,6 @@ public class MLG extends WYREffect {
         setRepeatable(true);
     }
 
-    static final Random random = new Random();
-
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();

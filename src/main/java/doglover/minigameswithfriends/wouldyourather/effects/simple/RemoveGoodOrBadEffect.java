@@ -57,7 +57,7 @@ public class RemoveGoodOrBadEffect {
         WYREffect randomEffect = effects.get(random.nextInt(effects.size()));
         randomEffect.selfDestruct();
         TextColor color = removeBeneficial ? NamedTextColor.RED : NamedTextColor.GREEN;
-        player.sendMessage(Component.text("Removed "+randomEffect.getDescriptionBlurb()).color(color));
+        player.sendMessage(Component.text("Removed " + randomEffect.getDescriptionBlurb()).color(color));
     }
 
 }

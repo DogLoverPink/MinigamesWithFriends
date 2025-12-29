@@ -55,8 +55,6 @@ public class SkillChecks extends WYREffect {
         getPlayer().sendActionBar(Component.text("Press SPACE at the correct time"));
     }
 
-    static final Random random = new Random();
-
     int skillCheckProgress = 0;
     int skillCheckSuccessRangeMin = -1;
     int skillCheckSuccessRangeMax = -1;

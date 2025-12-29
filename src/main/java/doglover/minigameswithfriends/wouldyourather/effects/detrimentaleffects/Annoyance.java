@@ -65,7 +65,6 @@ public class Annoyance extends WYREffect {
     }
 
     List<Sound> randomSounds = Registry.SOUNDS.stream().toList();
-    static final Random random = new Random();
 
     private Sound getRandomSound() {
         return randomSounds.get(random.nextInt(randomSounds.size()));

@@ -80,8 +80,6 @@ public class Gambling extends WYREffect {
             Material.NETHERITE_INGOT, 1
     );
 
-    static final Random random = new Random();
-
     private void setSlotsToItems() {
         List<Material> keys = mats.keySet().stream().toList();
         for (int i = 0; i < inv.getSize(); i++) {

@@ -31,7 +31,6 @@ public class PickRandomItem extends WYREffect {
         WYREffectHandler.registerBeneficialWYREffect(PickRandomItem.class);
     }
 
-    static Random random = new Random();
     List<Enchantment> enchantmentList;
 
     List<Material> matList;

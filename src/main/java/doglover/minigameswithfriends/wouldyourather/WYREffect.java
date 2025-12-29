@@ -57,6 +57,8 @@ public abstract class WYREffect {
         this.playerUUID = player.getUniqueId();
     }
 
+    public static Random random = new Random();
+
     public WYREffect() {
 
     }

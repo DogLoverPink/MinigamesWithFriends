@@ -30,8 +30,6 @@ public class InventoryRelocation extends WYREffect {
         setRepeatable(true);
     }
 
-    static final Random random = new Random();
-
     private Location getRandomizedLocation() {
         double offsetX = getPlayer().getLocation().getX() + random.nextInt(24) - 12;
         double offsetY = getPlayer().getLocation().getY() + random.nextInt(24) - 12;

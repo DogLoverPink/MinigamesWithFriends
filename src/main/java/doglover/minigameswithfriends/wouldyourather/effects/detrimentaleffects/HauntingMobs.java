@@ -107,15 +107,13 @@ public class HauntingMobs extends WYREffect {
         super.onEffectDecompose();
     }
 
-    private static final Random random = new Random();
-
     private class HauntingMob {
         private final EntityType type;
         private final Location location;
         private int counter;
-        private int counterGoal;
+        private final int counterGoal;
         private boolean markForRemoval;
-        private boolean isHostile;
+        private final boolean isHostile;
 
         public HauntingMob(EntityType type, Location location) {
             this.type = type;

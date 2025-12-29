@@ -10,7 +10,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MoreHealthForEachHoe extends WYREffect {
 
@@ -21,7 +23,7 @@ public class MoreHealthForEachHoe extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "Gain more max health for every "+ TextUtils.formatMaterialName(targetMaterial) +" you have";
+        return "Gain more max health for every " + TextUtils.formatMaterialName(targetMaterial) + " you have";
     }
 
     public MoreHealthForEachHoe(Player player) {
@@ -31,7 +33,6 @@ public class MoreHealthForEachHoe extends WYREffect {
         targetMaterial = materials.get(random.nextInt(materials.size()));
     }
 
-    private static final Random random = new Random();
     private final Material targetMaterial;
     private static final Map<Material, Double> HEALTH_GAIN = Map.of(
             Material.WOODEN_HOE, 0.5,

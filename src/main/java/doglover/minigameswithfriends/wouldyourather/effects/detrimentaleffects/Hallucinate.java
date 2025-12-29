@@ -24,7 +24,6 @@ public class Hallucinate extends WYREffect {
     private final int maxTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 5;
     private int goal = -1;
     private int ticker = 0;
-    static final Random random = new Random();
 
 
     private final String[] effects = {

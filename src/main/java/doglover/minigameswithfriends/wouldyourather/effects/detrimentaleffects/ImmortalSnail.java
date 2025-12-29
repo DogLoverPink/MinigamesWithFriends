@@ -52,8 +52,6 @@ public class ImmortalSnail extends WYREffect {
         getPlayer().damage(100000);
     }
 
-    Random random = new Random();
-
     @Override
     public void on4HertzTick() {
         if (!snail.isValid()) {

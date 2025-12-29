@@ -33,8 +33,6 @@ public class ProneToMeteors extends WYREffect {
         subscribeToEvent(ProjectileHitEvent.class);
     }
 
-    static final Random random = new Random();
-
     List<ShulkerBullet> trackedEntities = new ArrayList<>();
 
     @Override

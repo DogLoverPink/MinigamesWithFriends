@@ -36,9 +36,6 @@ public class BuilderOfBableCurse extends WYREffect {
     );
 
 
-
-    private static final Random random = new Random();
-
     private String getRandomCharString() {
         String charset = randomCharSets.get(random.nextInt(randomCharSets.size()));
         StringBuilder sb = new StringBuilder();

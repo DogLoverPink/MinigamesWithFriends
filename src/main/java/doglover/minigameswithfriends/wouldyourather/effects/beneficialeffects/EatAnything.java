@@ -22,7 +22,7 @@ public class EatAnything extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "eat";
+        return "Be able to eat anything";
     }
 
     public EatAnything(Player player) {

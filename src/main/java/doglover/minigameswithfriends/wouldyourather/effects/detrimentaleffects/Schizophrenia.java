@@ -37,8 +37,6 @@ public class Schizophrenia extends WYREffect {
         subscribeToEvent(PlayerInteractEvent.class);
     }
 
-    final Random random = new Random();
-
     int isReadyForDiamondTroll = random.nextInt(480, 1200);
     Location fakeOreLocation = null;
 

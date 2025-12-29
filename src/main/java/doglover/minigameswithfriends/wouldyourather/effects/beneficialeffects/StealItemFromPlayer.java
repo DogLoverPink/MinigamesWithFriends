@@ -25,7 +25,6 @@ public class StealItemFromPlayer extends WYREffect {
 
     boolean isPicking = false;
     Player randPlayer = null;
-    Random random = new Random();
     Inventory inventory = null;
 
     @Override
