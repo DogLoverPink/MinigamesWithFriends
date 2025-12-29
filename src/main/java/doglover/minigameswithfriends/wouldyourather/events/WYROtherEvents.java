@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 
 public class WYROtherEvents implements Listener {
 
@@ -34,6 +35,15 @@ public class WYROtherEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onProjectileLaunch(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerFish(PlayerFishEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onPlayerFish(event);
             }
         }
     }

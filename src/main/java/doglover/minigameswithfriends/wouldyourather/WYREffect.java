@@ -245,4 +245,8 @@ public abstract class WYREffect {
     public void onPlayerInput(PlayerInputEvent event) {
 
     }
+
+    public void onPlayerFish(PlayerFishEvent event) {
+
+    }
 }
