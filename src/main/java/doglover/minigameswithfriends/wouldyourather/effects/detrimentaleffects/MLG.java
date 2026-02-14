@@ -35,8 +35,9 @@ public class MLG extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
-        ItemUtils.giveItemsToPlayer(getPlayer(), getPlayer().getInventory().getItemInMainHand());
+        ItemStack currentItem = getPlayer().getInventory().getItemInMainHand();
         getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.WATER_BUCKET));
+        ItemUtils.giveItemsToPlayer(getPlayer(), currentItem);
         double yLoc = getPlayer().getLocation().getY() + random.nextInt(20, 25);
         World world = getPlayer().getWorld();
         for (double i = getPlayer().getLocation().getY(); i < yLoc + 2; i++) {

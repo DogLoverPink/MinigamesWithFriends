@@ -55,7 +55,7 @@ public class GravityGlobe extends WYREffect {
        if (!event.getPlayer().equals(getPlayer())) {
            return;
        }
-       if (!event.getItem().getType().equals(Material.RECOVERY_COMPASS)) {
+       if (event.getItem() == null || !event.getItem().getType().equals(Material.RECOVERY_COMPASS)) {
            return;
        }
        if (Boolean.FALSE.equals(event.getItem().getPersistentDataContainer().get(gravityGlobeOwnerKey, PersistentDataType.BOOLEAN))) {
