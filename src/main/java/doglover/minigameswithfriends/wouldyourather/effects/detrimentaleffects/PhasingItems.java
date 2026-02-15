@@ -55,12 +55,13 @@ public class PhasingItems extends WYREffect {
             }
         }
         if (NumberUtils.chanceOf(0.01)) {
-            ItemStack randomItemInInventory = getPlayer().getInventory().getContents()[(int) (Math.random() * getPlayer().getInventory().getContents().length)];
+            int randomSlot = (int) (Math.random() * getPlayer().getInventory().getContents().length);
+            ItemStack randomItemInInventory = getPlayer().getInventory().getContents()[randomSlot];
             if (randomItemInInventory == null) {
                 return;
             }
             phasedOutItems.add(new ItemWithCounter(randomItemInInventory));
-            getPlayer().getInventory().remove(randomItemInInventory);
+            getPlayer().getInventory().clear(randomSlot);
 //            getPlayer().playSound(getPlayer().getLocation(), Sound.BLOCK_CHEST_OPEN, 0.4f, 1f);
         }
     }
