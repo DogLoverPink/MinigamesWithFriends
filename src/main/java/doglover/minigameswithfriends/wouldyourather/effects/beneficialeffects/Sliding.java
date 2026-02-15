@@ -4,6 +4,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.util.TriState;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -40,7 +41,7 @@ public class Sliding extends WYREffect {
         if (!event.getPlayer().equals(getPlayer()) || !event.isSneaking()) {
             return;
         }
-        if (!getPlayer().isSprinting()) {
+        if (!getPlayer().isSprinting() || getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
             return;
         }
 
@@ -65,7 +66,7 @@ public class Sliding extends WYREffect {
         fish.setVelocity(fishVector);
         event.setCancelled(true);
         fish.addPassenger(getPlayer());
-        getPlayer().sendActionBar(Component.empty());
+        getGame().sendActionBar("sliding", Component.empty(), getPlayer(), 1);
     }
 
     @Override

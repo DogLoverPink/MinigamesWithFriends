@@ -431,7 +431,34 @@ public class Game {
         }
     }
 
+    private final Map<String, TimedActionBar> actionBars = new LinkedHashMap<>();
+
+    private record TimedActionBar (String key, Component text, int serverTickEndTime, Player player) {
+
+    }
+
+    public void sendActionBar(String key, Component text, Player player) {
+        sendActionBar(key, text, player, 60);
+    }
+
+    public void sendActionBar(String key, Component text, Player player, int durationTicks) {
+        durationTicks = durationTicks + Bukkit.getCurrentTick();
+        actionBars.put(key, new TimedActionBar(key, text, durationTicks, player));
+    }
+
     public void tick() {
+        for (Player plr :getPlayers()) {
+            Component actionBarString = Component.empty();
+            List<TimedActionBar> actionBarList = actionBars.values().stream().filter(actionBar -> actionBar.player.equals(plr)).toList();
+            for (TimedActionBar actionBar : actionBarList) {
+                actionBarString = actionBarString.append(actionBar.text());
+                if (!actionBar.equals(actionBarList.getLast())) {
+                    actionBarString = actionBarString.append(Component.text(" | "));
+                }
+            }
+            plr.sendActionBar(actionBarString);
+        }
+        actionBars.values().removeIf(actionBar -> actionBar.serverTickEndTime() < Bukkit.getCurrentTick());
         if (inDeathMatch) {
             if (isGamemodeActive(WouldYouRatherGamemode.class)) {
                 getGamemode(WouldYouRatherGamemode.class).tick();

@@ -52,7 +52,7 @@ public class SkillChecks extends WYREffect {
     private void giveSkillCheckWarning() {
         skillCheckProgress = -20;
         getPlayer().playSound(getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1.5f);
-        getPlayer().sendActionBar(Component.text("Press SPACE at the correct time"));
+        getGame().sendActionBar("skillChecks", Component.text("Press SPACE at the correct time"), getPlayer(), 30);
     }
 
     int skillCheckProgress = 0;
@@ -99,13 +99,6 @@ public class SkillChecks extends WYREffect {
 
     }
 
-    @Override
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (!event.getPlayer().equals(getPlayer())) {
-            return;
-        }
-        doSkillCheck();
-    }
 
     @Override
     public void onPlayerJump(PlayerJumpEvent event) {

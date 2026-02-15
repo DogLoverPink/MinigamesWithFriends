@@ -4,6 +4,7 @@ import doglover.minigameswithfriends.utils.NumberUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -35,11 +36,11 @@ public class FeatherDropForFly extends WYREffect {
     public void on4HertzTick() {
         if (flightTime > 0) {
             flightTime--;
-            getPlayer().sendActionBar(Component.text("\uD83E\uDEB6"+getFlightTimeString()));
+            getGame().sendActionBar("flyWithFeather", Component.text("\uD83E\uDEB6"+getFlightTimeString()), getPlayer(), 25);
             if (flightTime <= 0) {
                 getPlayer().setAllowFlight(false);
                 getPlayer().setFlying(false);
-                getPlayer().sendActionBar(Component.text(""));
+                getGame().sendActionBar("flyWithFeather", Component.empty(), getPlayer(), 5);
             }
         }
     }

@@ -3,6 +3,8 @@ package doglover.minigameswithfriends.wouldyourather;
 import com.destroystokyo.paper.event.entity.CreeperIgniteEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import doglover.minigameswithfriends.Game;
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Bukkit;
@@ -247,6 +249,14 @@ public abstract class WYREffect {
     }
 
     public void onPlayerFish(PlayerFishEvent event) {
+
+    }
+
+    public Game getGame() {
+        return MinigamesWithFriends.getGame();
+    }
+
+    public void onBlockCook(BlockCookEvent event) {
 
     }
 }

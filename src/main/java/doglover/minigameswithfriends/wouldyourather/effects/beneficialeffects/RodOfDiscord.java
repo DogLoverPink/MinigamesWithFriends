@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
-import javax.naming.Name;
 import java.util.List;
 
 public class RodOfDiscord extends WYREffect {
@@ -53,7 +52,7 @@ public class RodOfDiscord extends WYREffect {
         }
         long timeLeft = event.getItem().getPersistentDataContainer().get(key, PersistentDataType.LONG).longValue() - System.currentTimeMillis();
         if (timeLeft > 0) {
-            getPlayer().sendActionBar(Component.text("Rod Cooldown: " + timeLeft / 1000 + "s").color(NamedTextColor.RED));
+            getGame().sendActionBar("rodOfDiscord", Component.text("Rod Cooldown: " + timeLeft / 1000 + "s").color(NamedTextColor.RED), getPlayer(), 40);
             return;
         }
         getPlayer().setFallDistance(0);
