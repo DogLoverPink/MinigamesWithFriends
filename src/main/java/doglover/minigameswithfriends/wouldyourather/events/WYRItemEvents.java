@@ -9,6 +9,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 
 public class WYRItemEvents implements Listener {
 
@@ -26,6 +27,15 @@ public class WYRItemEvents implements Listener {
         if (WYREventHandler.isActive()) {
             for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
                 effect.onPlayerDropItem(event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerItemDamageEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onPlayerItemDamage(event);
             }
         }
     }

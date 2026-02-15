@@ -88,12 +88,17 @@ public class StealItemFromPlayer extends WYREffect {
         super.onEffectInitiate();
         ArrayList<Player> plrs = new ArrayList<>(MinigamesWithFriends.getGame().getPlayers());
         plrs.remove(getPlayer());
+        plrs.removeIf(p -> p.getInventory().isEmpty());
         if (!plrs.isEmpty()) {
             randPlayer = plrs.get(random.nextInt(plrs.size()));
             inventory = randPlayer.getInventory();
             getPlayer().openInventory(inventory);
         } else {
             inventory = getPlayer().getInventory();
+            if (inventory.isEmpty()) {
+                this.selfDestruct();
+                return;
+            }
             getPlayer().openInventory(getPlayer().getInventory());
         }
         isPicking = true;

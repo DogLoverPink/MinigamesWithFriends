@@ -259,4 +259,8 @@ public abstract class WYREffect {
     public void onBlockCook(BlockCookEvent event) {
 
     }
+
+    public void onPlayerItemDamage(PlayerItemDamageEvent event) {
+
+    }
 }

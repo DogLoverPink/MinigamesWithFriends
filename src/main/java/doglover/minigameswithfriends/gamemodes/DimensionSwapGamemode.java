@@ -120,8 +120,8 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             MinigamesWithFriends.getGamePlugin().getLogger().info("name: " + newWorldFolder.getPath().replace("\\", "/"));
             World world = Bukkit.createWorld(new WorldCreator(newWorldFolder.getPath().replace("\\", "/")));
             world.setDifficulty(Difficulty.NORMAL);
-            world.setGameRule(GameRule.DO_TILE_DROPS, true);
-            world.setGameRule(GameRule.FALL_DAMAGE, true);
+            world.setGameRule(GameRules.BLOCK_DROPS, true);
+            world.setGameRule(GameRules.FALL_DAMAGE, true);
             plr.setFallDistance(0);
             plr.teleport(BlockUtils.findSafeBlock(world.getSpawnLocation()));
         }

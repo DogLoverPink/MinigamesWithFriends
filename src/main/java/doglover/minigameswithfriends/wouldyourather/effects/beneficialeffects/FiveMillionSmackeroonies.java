@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
+import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -26,9 +27,11 @@ public class FiveMillionSmackeroonies extends WYREffect {
         setRepeatable(true);
     }
 
+    boolean dontTick = false;
+
     @Override
     public void onTick() {
-        if (!isPlayerValid()) {
+        if (!isPlayerValid() || dontTick) {
             return;
         }
         String money = formatDollarsWithCommas(moneyTotals.get(getPlayer().getUniqueId()));
@@ -40,6 +43,10 @@ public class FiveMillionSmackeroonies extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
+        if (moneyTotals.containsKey(getPlayer().getUniqueId())) {
+            //Prevent duplicate scoreboard entries
+            dontTick = true;
+        }
         moneyTotals.putIfAbsent(getPlayer().getUniqueId(), 0);
         moneyTotals.replace(getPlayer().getUniqueId(), moneyTotals.get(getPlayer().getUniqueId()) + 5000000);
         getGame().broadcast(MiniMessage.miniMessage().deserialize(
