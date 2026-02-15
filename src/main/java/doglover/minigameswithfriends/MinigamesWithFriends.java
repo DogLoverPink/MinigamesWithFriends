@@ -1,6 +1,6 @@
 package doglover.minigameswithfriends;
 
-import doglover.minigameswithfriends.commands.DimensionSwapCommand;
+import doglover.minigameswithfriends.commands.MinigamesWithFriendCommand;
 import doglover.minigameswithfriends.commands.GameCommandTabCompleter;
 import doglover.minigameswithfriends.events.*;
 import doglover.minigameswithfriends.gamemodes.DimensionSwapGamemode;
@@ -27,7 +27,7 @@ public final class MinigamesWithFriends extends JavaPlugin {
     public void onEnable() {
         this.getLogger().info("Plugin is starting up!");
         PluginCommand minigameCommand = this.getCommand("minigames");
-        minigameCommand.setExecutor(new DimensionSwapCommand());
+        minigameCommand.setExecutor(new MinigamesWithFriendCommand());
         minigameCommand.setTabCompleter(new GameCommandTabCompleter());
         this.getServer().getPluginManager().registerEvents(new DeathListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandBlockRunEvent(), this);

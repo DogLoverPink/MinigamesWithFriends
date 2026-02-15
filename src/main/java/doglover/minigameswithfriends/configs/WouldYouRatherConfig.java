@@ -6,9 +6,7 @@ public class WouldYouRatherConfig extends GamemodeConfig {
         super("WouldYouRather");
         registerConfigValue("MinimumSecondsBeforeNewChoice", Integer.class, 60);
         registerConfigValue("MaximumSecondsBeforeNewChoice", Integer.class, 180);
-        registerConfigValue("AllocatedSecondsForChoosingOption", Integer.class, 15);
-        registerConfigValue("MinimumSecondsBeforeDeathMatch", Integer.class, 180);
-        registerConfigValue("MaximumSecondsBeforeDeathMatch", Integer.class, 180);
+        registerConfigValue("AllocatedSecondsForChoosingOption", Integer.class, 25);
     }
 
 
@@ -24,12 +22,5 @@ public class WouldYouRatherConfig extends GamemodeConfig {
         return getInt("AllocatedSecondsForChoosingOption");
     }
 
-    public int getMinimumSecondsBeforeDeathMatch() {
-        return getInt("MinimumSecondsBeforeDeathMatch");
-    }
-
-    public int getMaximumSecondsBeforeDeathMatch() {
-        return getInt("MaximumSecondsBeforeDeathMatch");
-    }
 
 }

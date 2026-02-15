@@ -18,7 +18,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
     @Override
     public void tick() {
         super.tick();
-        this.getGame().addScoreboardContributution("§dDeath Swap in: §b" + getFormattedTimeRemaining());
+        this.getGame().addScoreboardContribution("§dDeath Swap in: §b" + getFormattedTimeRemaining());
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
         for (Player plr : this.getGame().getPlayers()) {
             PlayerUtils.resetPlayer(plr);
             plr.sendMessage("§eDeath Swap has begun!");
-            this.getGame().addScoreboardContributution("§dDeath Swap in: §b" + (int) (this.getTickGoal() / 20) + " seconds");
+            this.getGame().addScoreboardContribution("§dDeath Swap in: §b" + (int) (this.getTickGoal() / 20) + " seconds");
         }
     }
 

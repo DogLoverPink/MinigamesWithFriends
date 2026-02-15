@@ -13,18 +13,6 @@ public class RandomizerConfig extends GamemodeConfig{
         return getBoolean("RerandomizeAfterDeathMatch");
     }
 
-    public boolean isEnableDeathMatches() {
-        return getBoolean("EnableDeathMatches");
-    }
-
-    public int getMinimumSecondsBeforeDeathMatch() {
-       return getInt("MinimumSecondsBeforeDeathMatch");
-    }
-
-    public int getMaximumSecondsBeforeDeathMatch() {
-        return getInt("MaximumSecondsBeforeDeathMatch");
-    }
-
     public boolean isRandomlyEnchantingGear() {
         return getBoolean("RandomlyEnchantGear");
     }

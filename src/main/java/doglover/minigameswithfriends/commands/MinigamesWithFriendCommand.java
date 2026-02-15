@@ -8,6 +8,8 @@ import doglover.minigameswithfriends.gamemodes.DimensionSwapGamemode;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.PlayerUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class DimensionSwapCommand implements CommandExecutor {
+public class MinigamesWithFriendCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
@@ -32,27 +34,27 @@ public class DimensionSwapCommand implements CommandExecutor {
         if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
             handleEnableGamemode(commandSender, args);
         }
-        if (minigameCommand.equalsIgnoreCase("SafeLoc")) {
+        else if (minigameCommand.equalsIgnoreCase("SafeLoc")) {
             Player plr = (Player) commandSender;
             plr.setFallDistance(0);
             plr.teleport(BlockUtils.findSafeBlock(plr.getLocation()));
         }
-        if (minigameCommand.equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
+        else if (minigameCommand.equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
             DimensionSwapGamemode.preLoadSavedWorlds((Player) commandSender);
         }
-        if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
+        else if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
             Player plr = (Player) commandSender;
             PlayerUtils.launchPlayerToLoc(plr, plr.getWorld().getSpawnLocation());
         }
-        if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
+        else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
             handleDisableGamemode(commandSender, args);
         }
-        if (minigameCommand.equalsIgnoreCase("ClearGamemodes")) {
+        else if (minigameCommand.equalsIgnoreCase("ClearGamemodes")) {
             MinigamesWithFriends.getGame().clearGamemodes();
             commandSender.sendMessage("§aCleared all gamemodes.");
         }
 
-        if (minigameCommand.equalsIgnoreCase("start")) {
+        else if (minigameCommand.equalsIgnoreCase("start")) {
             if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
                 commandSender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
                 return true;
@@ -60,18 +62,18 @@ public class DimensionSwapCommand implements CommandExecutor {
             MinigamesWithFriends.getGame().startGame();
             commandSender.sendMessage("§aGame started.");
         }
-        if (minigameCommand.equalsIgnoreCase("fling")) {
+        else if (minigameCommand.equalsIgnoreCase("fling")) {
             Player plr = (Player) commandSender;
             Game.launchPlayerSideways(plr, 10);
         }
-        if (minigameCommand.equalsIgnoreCase("stop")) {
+        else if (minigameCommand.equalsIgnoreCase("stop")) {
             MinigamesWithFriends.getGame().endGame();
             commandSender.sendMessage("§cGame stopped.");
         }
-        if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
+        else if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
             handleBlockShuffleCommand(commandSender, args);
         }
-        if (minigameCommand.equalsIgnoreCase("config")) {
+        else if (minigameCommand.equalsIgnoreCase("config")) {
             if (args.length == 1) {
                 commandSender.sendMessage("§cSpecify a gamemode and a config key.");
                 commandSender.sendMessage("§eEx.: /dimensionSwap config dimensionSwap canVisitSameWorldTwice true");
@@ -89,6 +91,8 @@ public class DimensionSwapCommand implements CommandExecutor {
             if (args.length == 4) {
                 handleSettingConfigValue(commandSender, args[1], args[2], args[3]);
             }
+        } else {
+            commandSender.sendMessage(Component.text("Invalid command!").color(NamedTextColor.RED));
         }
         return false;
     }

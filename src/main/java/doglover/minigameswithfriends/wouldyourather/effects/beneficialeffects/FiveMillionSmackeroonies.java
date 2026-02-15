@@ -2,10 +2,8 @@ package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +32,7 @@ public class FiveMillionSmackeroonies extends WYREffect {
             return;
         }
         String money = formatDollarsWithCommas(moneyTotals.get(getPlayer().getUniqueId()));
-        getGame().addScoreboardContributution("§a" + getPlayer().getName()+": §e"+money);
+        getGame().addScoreboardContribution("§a" + getPlayer().getName()+": §e"+money);
     }
 
     static Map<UUID, Integer> moneyTotals = new HashMap<>();

@@ -45,7 +45,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     public void tick() {
         super.tick();
         if (!effectsToChooseFrom.isEmpty()) {
-            getGame().addScoreboardContributution("§bTime to make choice: §d" + getFormattedTimeRemaining());
+            getGame().addScoreboardContribution("§bTime to make choice: §d" + getFormattedTimeRemaining());
         }
         WYREffectHandler.tick();
 

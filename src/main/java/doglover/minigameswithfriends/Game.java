@@ -152,9 +152,10 @@ public class Game {
                 p.sendMessage("§a§l" + player.getName() + " has won the game!");
                 p.playSound(p, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                 ParticleUtils.createParticleCloud(p.getLocation(), 3, Particle.FIREWORK, 30);
-                p.showTitle(Title.title(Component.text(player.getName()+" won!!").color(NamedTextColor.GOLD), Component.empty(), 8, 50, 20));
+                p.showTitle(Title.title(Component.text(player.getName() + " won!!").color(NamedTextColor.GOLD), Component.empty(), 8, 50, 20));
             }
-            endGame();
+            //prevents concurrent modification exception
+            Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), this::endGame, 0);
         }
     }
 
@@ -193,11 +194,15 @@ public class Game {
 
     public void startGame() {
 
+
         if (players.isEmpty()) {
             players.addAll(Bukkit.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).toList());
         }
         pointsToWin = config.getPointsToWin();
         isRunning = true;
+        inDeathMatch = false;
+        aliveDeathMatchPlayers.clear();
+        deadDeathMatchPlayers.clear();
 
         if (getConfig().shouldSetToDayOnStart()) {
             for (Player player : getPlayers()) {
@@ -211,9 +216,9 @@ public class Game {
 
             if (config.shouldResetAdvancementsOnGameStart()) {
                 Bukkit.getServer().advancementIterator().forEachRemaining(advancement -> {
-                   for (String criteria : player.getAdvancementProgress(advancement).getAwardedCriteria()) {
-                       player.getAdvancementProgress(advancement).revokeCriteria(criteria);
-                   }
+                    for (String criteria : player.getAdvancementProgress(advancement).getAwardedCriteria()) {
+                        player.getAdvancementProgress(advancement).revokeCriteria(criteria);
+                    }
                 });
             }
 
@@ -254,10 +259,10 @@ public class Game {
 
     }
 
-    private final List<String> scoreboardContribututions = new ArrayList<>();
+    private final List<String> scoreboardContributions = new ArrayList<>();
 
-    public void addScoreboardContributution(String contributution) {
-        this.scoreboardContribututions.add(contributution);
+    public void addScoreboardContribution(String contribution) {
+        this.scoreboardContributions.add(contribution);
     }
 
     public boolean isInDeathMatch() {
@@ -313,11 +318,10 @@ public class Game {
                     i--;
                 }
 
-                ;
             };
             runnable.runTaskTimer(MinigamesWithFriends.getGamePlugin(), 0, 20);
             Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
-                MinigamesWithFriends.getGamePlugin().getLogger().info("Removing walls around location: " + loc.toString());
+                MinigamesWithFriends.getGamePlugin().getLogger().info("Removing walls around location: " + loc);
                 BlockUtils.removeHollowBoxAroundLocation(loc);
             }, 98);
         }
@@ -335,10 +339,15 @@ public class Game {
 
     private void endDeathMatch(Player winner) {
 
-        addPointsToPlayer(winner, config.getPointsPerDeathmatchWin());
+        String winnerName = "No one";
+        if (winner != null) {
+            addPointsToPlayer(winner, config.getPointsPerDeathmatchWin());
+            winnerName = winner.getName();
+        }
+
 
         if (!isRunning) {
-            Location dmloc = winner.getWorld().getSpawnLocation();
+            Location dmloc = deathmatchWorld.getSpawnLocation();
             BlockUtils.removeWallsAroundLocation(dmloc);
             aliveDeathMatchPlayers.clear();
             deadDeathMatchPlayers.clear();
@@ -346,12 +355,12 @@ public class Game {
             return;
         }
 
-        Location dmloc = winner.getWorld().getSpawnLocation();
+        Location dmloc = deathmatchWorld.getSpawnLocation();
         BlockUtils.removeWallsAroundLocation(dmloc);
 
 
         for (Player plr : getPlayers()) {
-            plr.sendMessage("§a" + winner.getName() + " won deathmatch! ");
+            plr.sendMessage("§a" + winnerName + " won deathmatch! ");
             plr.setHealth(20.0);
             Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
                 Location loc = previousLocations.get(plr.getUniqueId());
@@ -368,9 +377,7 @@ public class Game {
             gamemode.onDeathMatchEnd();
         }
 
-        Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
-            inDeathMatch = false;
-        }, 60);
+        Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> inDeathMatch = false, 60);
         aliveDeathMatchPlayers.clear();
         deadDeathMatchPlayers.clear();
     }
@@ -384,20 +391,20 @@ public class Game {
         if (aliveDeathMatchPlayers.size() == 1) {
             Player winner = Bukkit.getPlayer(aliveDeathMatchPlayers.getFirst());
             endDeathMatch(winner);
+        } else if (aliveDeathMatchPlayers.isEmpty()) {
+            endDeathMatch(null);
         }
         player.setGameMode(GameMode.SPECTATOR);
     }
 
-    private int heavyTickCounter = 0;
-
     public void tickDeathMatch() {
-        addScoreboardContributution("§c§lDeathmatch");
+        addScoreboardContribution("§c§lDeathmatch");
         for (UUID uuid : aliveDeathMatchPlayers) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null || !player.isOnline()) {
                 continue;
             }
-            addScoreboardContributution("§c♡§a" + player.getName());
+            addScoreboardContribution("§c♡§a" + player.getName());
             if (!player.getWorld().equals(deathmatchWorld)) {
                 player.teleport(deathmatchWorld.getSpawnLocation());
             }
@@ -416,9 +423,9 @@ public class Game {
             if (player == null || !player.isOnline()) {
                 continue;
             }
-            addScoreboardContributution("§4☠§c" + player.getName());
+            addScoreboardContribution("§4☠§c" + player.getName());
         }
-        displayOnBoard(scoreboardContribututions);
+        displayOnBoard(scoreboardContributions);
     }
 
 
@@ -433,7 +440,7 @@ public class Game {
 
     private final Map<String, TimedActionBar> actionBars = new LinkedHashMap<>();
 
-    private record TimedActionBar (String key, Component text, int serverTickEndTime, Player player) {
+    private record TimedActionBar(String key, Component text, int serverTickEndTime, Player player) {
 
     }
 
@@ -447,7 +454,7 @@ public class Game {
     }
 
     public void tick() {
-        for (Player plr :getPlayers()) {
+        for (Player plr : getPlayers()) {
             Component actionBarString = Component.empty();
             List<TimedActionBar> actionBarList = actionBars.values().stream().filter(actionBar -> actionBar.player.equals(plr)).toList();
             for (TimedActionBar actionBar : actionBarList) {
@@ -463,21 +470,21 @@ public class Game {
             if (isGamemodeActive(WouldYouRatherGamemode.class)) {
                 getGamemode(WouldYouRatherGamemode.class).tick();
             }
-            scoreboardContribututions.clear();
+            scoreboardContributions.clear();
             tickDeathMatch();
             return;
         }
-        scoreboardContribututions.clear();
+        scoreboardContributions.clear();
         for (Gamemode gamemode : gamemodes) {
             gamemode.tick();
         }
-        scoreboardContribututions.add("§dPoints: (First to " + pointsToWin + ")");
+        scoreboardContributions.add("§dPoints: (First to " + pointsToWin + ")");
         List<Player> sortedPlayerPoints = new ArrayList<>(getPlayers());
         sortedPlayerPoints.sort(Comparator.comparingInt(this::getPointsFromPlayer).reversed());
         for (Player player : sortedPlayerPoints) {
-            scoreboardContribututions.add("§b" + player.getName() + ": §d" + getPointsFromPlayer(player));
+            scoreboardContributions.add("§b" + player.getName() + ": §d" + getPointsFromPlayer(player));
         }
-        displayOnBoard(scoreboardContribututions);
+        displayOnBoard(scoreboardContributions);
     }
 
 

@@ -178,10 +178,10 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
                 notifyBlockSteppedOn(player);
             }
         }
-        getGame().addScoreboardContributution("§dBlock Shuffle in: §b" + getFormattedTimeRemaining());
+        getGame().addScoreboardContribution("§dBlock Shuffle in: §b" + getFormattedTimeRemaining());
         if (!getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
             if (!playerBlocks.isEmpty()) {
-                getGame().addScoreboardContributution("§dTarget Block: §b" + playerBlocks.values().toArray()[0]);
+                getGame().addScoreboardContribution("§dTarget Block: §b" + playerBlocks.values().toArray()[0]);
             }
         }
     }

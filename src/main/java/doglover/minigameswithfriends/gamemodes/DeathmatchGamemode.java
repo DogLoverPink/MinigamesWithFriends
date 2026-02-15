@@ -6,7 +6,7 @@ public class DeathmatchGamemode extends TimeEventBasedGamemode {
     public void tick() {
         super.tick();
 
-        this.getGame().addScoreboardContributution("§dDeathmatch in: §b" + getFormattedTimeRemaining());
+        this.getGame().addScoreboardContribution("§dDeathmatch in: §b" + getFormattedTimeRemaining());
 
     }
     @Override
