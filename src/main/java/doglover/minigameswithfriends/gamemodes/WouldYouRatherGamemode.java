@@ -12,6 +12,11 @@ import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -36,14 +41,15 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     }
 
 
-
     public void removeEffectFromPlayer(Player plr, Class<? extends WYREffect> effectClass) {
         currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).remove(effectClass);
     }
 
     @Override
     public void tick() {
-        super.tick();
+        if (!getGame().isInDeathMatch()) {
+            super.tick();
+        }
         if (!effectsToChooseFrom.isEmpty()) {
             getGame().addScoreboardContribution("§bTime to make choice: §d" + getFormattedTimeRemaining());
         }
@@ -64,7 +70,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     private void chooseOptionTwo(Audience aud) {
         UUID uuid = aud.get(Identity.UUID).get();
         List<WYREffect> effects = effectsToChooseFrom.get(uuid);
-        if (effects == null || effects.isEmpty() || Bukkit.getPlayer(uuid) == null || !getGame().isRunning())  {
+        if (effects == null || effects.isEmpty() || Bukkit.getPlayer(uuid) == null || !getGame().isRunning()) {
             return;
         }
         applyEffects(Bukkit.getPlayer(uuid), effects.get(2), effects.get(3));
@@ -78,6 +84,13 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
             currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).add(badEffect.getClass());
         }
         plr.sendMessage(Component.text("You chose!"));
+        if (getGame().getConfig().getWouldYouRatherConfig().shouldApplyDamageImmunityDuringChoiceSelection()) {
+            plr.removePotionEffect(PotionEffectType.RESISTANCE);
+        }
+        if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
+            plr.getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(preventMovingKey);
+            plr.getAttribute(Attribute.JUMP_STRENGTH).removeModifier(preventJumpingKey);
+        }
         goodEffect.onEffectInitiate();
         badEffect.onEffectInitiate();
         effectsToChooseFrom.remove(plr.getUniqueId());
@@ -99,11 +112,20 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     public Map<UUID, List<WYREffect>> effectsToChooseFrom = new HashMap<>();
 
+    NamespacedKey preventMovingKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "WYRPreventMoving");
+    NamespacedKey preventJumpingKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "WYRPreventJumping");
+
     @Override
     public void onTimeEventTrigger() {
         isCurrentChoosing = true;
         for (Player plr : getGame().getPlayers()) {
-            plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, -1, 4));
+            if (getGame().getConfig().getWouldYouRatherConfig().shouldApplyDamageImmunityDuringChoiceSelection()) {
+                plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, -1, 4));
+            }
+            if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
+                plr.getAttribute(Attribute.MOVEMENT_SPEED).addModifier(new AttributeModifier(preventMovingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+                plr.getAttribute(Attribute.JUMP_STRENGTH).addModifier(new AttributeModifier(preventJumpingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+            }
             List<Class<? extends WYREffect>> current = currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
             effectsToChooseFrom.putIfAbsent(plr.getUniqueId(), new ArrayList<>());
             WYREffect good1 = WYREffectHandler.getRandomBeneficialWYREffectExceptFor(plr, current);
@@ -147,7 +169,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
             plr.sendMessage(Component.text("You ran out of time! Automatically choosing first option... ").color(NamedTextColor.RED));
             chooseOptionOne(plr);
         }
-        for (Player plr: getGame().getPlayers()) {
+        for (Player plr : getGame().getPlayers()) {
             plr.removePotionEffect(PotionEffectType.RESISTANCE);
         }
         isCurrentChoosing = false;
@@ -184,6 +206,10 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         currentlyAppliedBenefitsAndDetriments.clear();
         WYREffectHandler.clearAndDecomposeManagedEffects();
         for (Player plr : getGame().getPlayers()) {
+            if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
+                plr.getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(preventMovingKey);
+                plr.getAttribute(Attribute.JUMP_STRENGTH).removeModifier(preventJumpingKey);
+            }
             for (PotionEffect effect : plr.getActivePotionEffects()) {
                 plr.removePotionEffect(effect.getType());
             }
@@ -198,6 +224,9 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         this.setMinTicks(getGame().getConfig().getWouldYouRatherConfig().getMinimumSecondsBeforeNewChoice() * 20);
         this.setMaxTicks(getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 20);
         super.onGameStart();
+        if (this.getGame().getConfig().getWouldYouRatherConfig().shouldStartGameWithAChoicePrompt()) {
+            setTickGoal(60);
+        }
         for (Player plr : this.getGame().getPlayers()) {
             currentlyAppliedBenefitsAndDetriments.put(plr.getUniqueId(), new ArrayList<>());
         }

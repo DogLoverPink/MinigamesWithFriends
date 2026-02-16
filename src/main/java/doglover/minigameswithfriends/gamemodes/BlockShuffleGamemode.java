@@ -4,6 +4,7 @@ import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -141,6 +142,13 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
             if (playerBlocks.isEmpty()) {
                 onTimeEventTrigger();
                 this.setTickGoal(getNextComputedTime());
+            }
+        }
+        for (Player plr: getGame().getPlayers()) {
+            if (plr.equals(player)) {
+                plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+            } else {
+                plr.playSound(plr.getLocation(), Sound.ENTITY_ENDER_DRAGON_HURT, 1, 1);
             }
         }
     }

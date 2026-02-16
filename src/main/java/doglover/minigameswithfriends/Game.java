@@ -232,6 +232,9 @@ public class Game {
 
             PlayerUtils.resetPlayer(player);
             player.setGameMode(GameMode.SURVIVAL);
+            if (getConfig().shouldTeleportPlayersToWorldSpawnOnGameStart()) {
+                player.teleport(player.getWorld().getSpawnLocation());
+            }
             player.sendMessage("§a§lGame Started!");
             player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
 
@@ -251,6 +254,10 @@ public class Game {
             if (board != null) {
                 board.delete();
             }
+        }
+        if (isInDeathMatch()) {
+            Location dmloc = deathmatchWorld.getSpawnLocation();
+            BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
         }
         players.clear();
         boards.clear();
@@ -293,7 +300,7 @@ public class Game {
         Player randomPlayer = playersList.get(new Random().nextInt(playersList.size()));
         Location loc = BlockUtils.findSafeBlock(randomPlayer.getWorld().getSpawnLocation());
         deathmatchWorld = loc.getWorld();
-        BlockUtils.createWallsAroundLocation(loc);
+        BlockUtils.createWallsAroundLocation(loc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
         BlockUtils.createHollowBoxAroundLocation(loc);
         for (Player player : getPlayers()) {
             previousLocations.put(player.getUniqueId(), player.getLocation());
@@ -348,7 +355,7 @@ public class Game {
 
         if (!isRunning) {
             Location dmloc = deathmatchWorld.getSpawnLocation();
-            BlockUtils.removeWallsAroundLocation(dmloc);
+            BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
             aliveDeathMatchPlayers.clear();
             deadDeathMatchPlayers.clear();
             inDeathMatch = false;
@@ -356,7 +363,7 @@ public class Game {
         }
 
         Location dmloc = deathmatchWorld.getSpawnLocation();
-        BlockUtils.removeWallsAroundLocation(dmloc);
+        BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
 
 
         for (Player plr : getPlayers()) {
@@ -411,8 +418,13 @@ public class Game {
             Location worldSpawn = player.getWorld().getSpawnLocation();
             double xDistance = Math.abs(player.getLocation().getX() - worldSpawn.getX());
             double zDistance = Math.abs(player.getLocation().getZ() - worldSpawn.getZ());
-            if (xDistance >= 35 || zDistance >= 35) {
-                BlockUtils.removeBlockOfTypeNearThenReplace(player.getLocation(), Material.AIR, Material.RED_WOOL);
+            int deathMatchRadius = getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks();
+            if (xDistance >= deathMatchRadius || zDistance >= deathMatchRadius) {
+                if (xDistance - 3 >= deathMatchRadius || zDistance - 3 >= deathMatchRadius) {
+                    BlockUtils.removeBlockOfTypeNearThenReplace(player.getLocation(), Material.AIR, (Material[]) null);
+                } else {
+                    BlockUtils.removeBlockOfTypeNearThenReplace(player.getLocation(), Material.AIR, Material.RED_WOOL);
+                }
                 PlayerUtils.launchPlayerToLoc(player, worldSpawn);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * 3, 1, true, false));
                 player.sendMessage("§cnuh uh uh");

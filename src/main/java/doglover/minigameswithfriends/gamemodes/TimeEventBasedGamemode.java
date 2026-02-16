@@ -44,8 +44,7 @@ public abstract class TimeEventBasedGamemode extends Gamemode {
     private int maxTicks;
 
     int getNextComputedTime() {
-        int computedTimed = random.nextInt(minTicks, maxTicks + 1);
-        return computedTimed;
+        return random.nextInt(minTicks, maxTicks + 1);
     }
 
     private int tickGoal;

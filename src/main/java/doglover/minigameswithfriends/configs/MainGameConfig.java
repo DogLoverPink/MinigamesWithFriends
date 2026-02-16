@@ -45,6 +45,7 @@ public class MainGameConfig extends GamemodeConfig {
         registerConfigValue("KeepInventoryOnDeath", Boolean.class, false);
         registerConfigValue("SetToDayOnStart", Boolean.class, true);
         registerConfigValue("ResetAdvancementsOnGameStart", Boolean.class, false);
+        registerConfigValue("TeleportPlayersToWorldSpawnOnGameStart", Boolean.class, true);
     }
 
 
@@ -79,5 +80,9 @@ public class MainGameConfig extends GamemodeConfig {
 
     public boolean shouldResetAdvancementsOnGameStart() {
         return getBoolean("ResetAdvancementsOnGameStart");
+    }
+
+    public boolean shouldTeleportPlayersToWorldSpawnOnGameStart() {
+        return getBoolean("TeleportPlayersToWorldSpawnOnGameStart");
     }
 }

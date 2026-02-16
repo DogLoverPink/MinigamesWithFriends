@@ -10,7 +10,7 @@ public class TemuTools extends WYREffect {
 
 
     static {
-        WYREffectHandler.registerBeneficialWYREffect(TemuTools.class);
+        WYREffectHandler.registerDetrimentalWYREffect(TemuTools.class);
     }
 
     @Override

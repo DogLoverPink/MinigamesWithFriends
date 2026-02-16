@@ -62,5 +62,6 @@ public class FiveMillionSmackeroonies extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
+        moneyTotals.replace(getPlayer().getUniqueId(), moneyTotals.get(getPlayer().getUniqueId()) - 5000000);
     }
 }

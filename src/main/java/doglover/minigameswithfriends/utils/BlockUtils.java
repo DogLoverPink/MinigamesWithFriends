@@ -81,12 +81,12 @@ public class BlockUtils {
         return found;
     }
 
-    public static void createWallsAroundLocation(Location loc) {
-        //Get the 4 corner locations of the wall, 35 blocks away from the center
-        Location loc1 = loc.clone().add(35, 35, 35);
-        Location loc2 = loc.clone().add(35, -35, -35);
-        Location loc3 = loc.clone().add(-35, 35, -35);
-        Location loc4 = loc.clone().add(-35, -35, 35);
+    public static void createWallsAroundLocation(Location loc, int size) {
+        //Get the 4 corner locations of the wall, size blocks away from the center
+        Location loc1 = loc.clone().add(size, size, size);
+        Location loc2 = loc.clone().add(size, -size, -size);
+        Location loc3 = loc.clone().add(-size, size, -size);
+        Location loc4 = loc.clone().add(-size, -size, size);
         //Set the blocks between the 4 corner locations to wool
         replaceBlocksBetween(loc1, loc2, Material.RED_WOOL, Material.AIR);
         replaceBlocksBetween(loc2, loc3, Material.RED_WOOL, Material.AIR);
@@ -94,11 +94,18 @@ public class BlockUtils {
         replaceBlocksBetween(loc4, loc1, Material.RED_WOOL, Material.AIR);
     }
 
+    /**
+     * Finds any blocks specified in the find list, and replaces them with the replaceWith material, then will replace them back after 20 ticks.
+     * Set find to null to change any non-air block
+     */
     public static void removeBlockOfTypeNearThenReplace(Location loc, Material replaceWith, Material... find) {
-        List<Material> findList = new ArrayList<>(Arrays.asList(find));
-        if (findList.contains(Material.AIR)) {
-            findList.add(Material.CAVE_AIR);
-            findList.add(Material.VOID_AIR);
+        List<Material> findList = null;
+        if (find != null) {
+            findList = new ArrayList<>(Arrays.asList(find));
+            if (findList.contains(Material.AIR)) {
+                findList.add(Material.CAVE_AIR);
+                findList.add(Material.VOID_AIR);
+            }
         }
         Map<Location, Material> removedBlocks = new HashMap<>();
         int radius = 2;
@@ -108,7 +115,10 @@ public class BlockUtils {
                 for (int z = -radius; z <= radius; z++) {
                     Location newLoc = loc.clone().add(x, y, z);
                     Block newBlock = newLoc.getBlock();
-                    if (findList.contains(newBlock.getType())) {
+                    if (
+                            (findList == null && !newBlock.getType().isAir())
+                                    || (findList != null && findList.contains(newBlock.getType()))
+                    ) {
                         removedBlocks.put(newLoc, newBlock.getType());
                         newBlock.setType(replaceWith);
                     }
@@ -122,12 +132,12 @@ public class BlockUtils {
         }, 20L);
     }
 
-    public static void removeWallsAroundLocation(Location loc) {
+    public static void removeWallsAroundLocation(Location loc, int size) {
         //Get the 4 corner locations of the wall, 35 blocks away from the center
-        Location loc1 = loc.clone().add(35, 35, 35);
-        Location loc2 = loc.clone().add(35, -35, -35);
-        Location loc3 = loc.clone().add(-35, 35, -35);
-        Location loc4 = loc.clone().add(-35, -35, 35);
+        Location loc1 = loc.clone().add(size, size, size);
+        Location loc2 = loc.clone().add(size, -size, -size);
+        Location loc3 = loc.clone().add(-size, size, -size);
+        Location loc4 = loc.clone().add(-size, -size, size);
         //Set the blocks between the 4 corner locations to wool
         replaceBlocksBetween(loc1, loc2, Material.AIR, Material.RED_WOOL);
         replaceBlocksBetween(loc2, loc3, Material.AIR, Material.RED_WOOL);

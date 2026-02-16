@@ -6,6 +6,7 @@ public class DeathmatchConfig extends GamemodeConfig {
         super("Deathmatch");
         registerConfigValue("MinimumSecondsBeforeDeathMatch", Integer.class, 300);
         registerConfigValue("MaximumSecondsBeforeDeathMatch", Integer.class, 300);
+        registerConfigValue("DeathmatchAreaRadiusBlocks", Integer.class, 35);
     }
 
     public boolean isRerandomizeAfterDeathMatch() {
@@ -26,6 +27,10 @@ public class DeathmatchConfig extends GamemodeConfig {
 
     public boolean isRandomlyEnchantingGear() {
         return getBoolean("RandomlyEnchantGear");
+    }
+
+    public int getDeathmatchAreaRadiusBlocks() {
+        return getInt("DeathmatchAreaRadiusBlocks");
     }
 
 
