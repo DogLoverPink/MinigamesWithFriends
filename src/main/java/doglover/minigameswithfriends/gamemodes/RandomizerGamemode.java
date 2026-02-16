@@ -29,6 +29,10 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     }
 
+    @Override
+    public void updateConfig() {
+    }
+
     public void randomizeBlocks() {
         enchantmentList = Lists.newArrayList(RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).iterator());
         enchantmentMap.clear();

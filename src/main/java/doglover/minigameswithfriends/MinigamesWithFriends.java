@@ -39,8 +39,7 @@ public final class MinigamesWithFriends extends JavaPlugin {
 
         WYREventHandler.registerEvents(this);
 
-        Game swapGame = new Game();
-        game = swapGame;
+        game = new Game();
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             if (game.isRunning()) {
                 game.tick();
@@ -53,6 +52,5 @@ public final class MinigamesWithFriends extends JavaPlugin {
     @Override
     public void onDisable() {
         getGame().endGame();
-        // Plugin shutdown logic
     }
 }

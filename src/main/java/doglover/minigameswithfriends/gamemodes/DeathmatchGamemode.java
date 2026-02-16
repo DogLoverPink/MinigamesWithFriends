@@ -11,9 +11,14 @@ public class DeathmatchGamemode extends TimeEventBasedGamemode {
     }
     @Override
     public void onGameStart() {
+        updateConfig();
+        super.onGameStart();
+    }
+
+    @Override
+    public void updateConfig() {
         this.setMinTicks(20 * this.getGame().getConfig().getDeathMatchConfig().getMinimumSecondsBeforeDeathMatch());
         this.setMaxTicks(20 * this.getGame().getConfig().getDeathMatchConfig().getMaximumSecondsBeforeDeathMatch());
-        super.onGameStart();
     }
 
     @Override

@@ -112,12 +112,17 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameStart() {
-        this.setMinTicks(getGame().getConfig().getBlockShuffleConfig().getMinimumSecondsBeforeShuffle() * 20);
-        this.setMaxTicks(getGame().getConfig().getBlockShuffleConfig().getMaximumSecondsBeforeShuffle() * 20);
+        updateConfig();
         saveBannedBlocksFile();
         removeNetherBlocksIfApplicable();
         super.onGameStart();
         assignNewBlocks();
+    }
+
+    @Override
+    public void updateConfig() {
+        this.setMinTicks(getGame().getConfig().getBlockShuffleConfig().getMinimumSecondsBeforeShuffle() * 20);
+        this.setMaxTicks(getGame().getConfig().getBlockShuffleConfig().getMaximumSecondsBeforeShuffle() * 20);
     }
 
 
@@ -190,6 +195,18 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
         if (!getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
             if (!playerBlocks.isEmpty()) {
                 getGame().addScoreboardContribution("§dTarget Block: §b" + playerBlocks.values().toArray()[0]);
+            }
+        } else {
+            int i = 0;
+            for (Map.Entry<UUID, Material> entry : playerBlocks.entrySet()) {
+                Player player = Bukkit.getPlayer(entry.getKey());
+                if (i > 4) {
+                    getGame().addScoreboardContribution("§dAnd " + (playerBlocks.size() - 5) + " more...");
+                }
+                if (player != null) {
+                    getGame().addScoreboardContribution("§d" + player.getName() + "'s Block: §b" + entry.getValue().name());
+                }
+                i++;
             }
         }
     }

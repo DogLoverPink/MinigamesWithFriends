@@ -33,6 +33,8 @@ public abstract class Gamemode {
         };
     }
 
+    public abstract void updateConfig();
+
     public static Gamemode getGamemodeFromName(String gamemodeName) {
         return switch (gamemodeName) {
             case "DeathSwap" -> new DeathSwapGamemode();

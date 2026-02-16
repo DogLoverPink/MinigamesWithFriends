@@ -27,14 +27,19 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
 
     @Override
     public void onGameStart() {
-        this.setMinTicks(getGame().getConfig().getDeathSwapConfig().getMinimumSecondsBeforeSwap() * 20);
-        this.setMaxTicks(getGame().getConfig().getDeathSwapConfig().getMaximumSecondsBeforeSwap() * 20);
+        updateConfig();
         super.onGameStart();
         for (Player plr : this.getGame().getPlayers()) {
             PlayerUtils.resetPlayer(plr);
             plr.sendMessage("§eDeath Swap has begun!");
             this.getGame().addScoreboardContribution("§dDeath Swap in: §b" + (int) (this.getTickGoal() / 20) + " seconds");
         }
+    }
+
+    @Override
+    public void updateConfig() {
+        this.setMinTicks(getGame().getConfig().getDeathSwapConfig().getMinimumSecondsBeforeSwap() * 20);
+        this.setMaxTicks(getGame().getConfig().getDeathSwapConfig().getMaximumSecondsBeforeSwap() * 20);
     }
 
     private final Map<Player, Player> swapMap = new HashMap<>();

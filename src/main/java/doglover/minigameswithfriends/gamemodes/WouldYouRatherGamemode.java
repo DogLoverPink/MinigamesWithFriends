@@ -219,10 +219,15 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     }
 
     @Override
-    public void onGameStart() {
-        WYREventHandler.setActive(true);
+    public void updateConfig() {
         this.setMinTicks(getGame().getConfig().getWouldYouRatherConfig().getMinimumSecondsBeforeNewChoice() * 20);
         this.setMaxTicks(getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 20);
+    }
+
+    @Override
+    public void onGameStart() {
+        WYREventHandler.setActive(true);
+        updateConfig();
         super.onGameStart();
         if (this.getGame().getConfig().getWouldYouRatherConfig().shouldStartGameWithAChoicePrompt()) {
             setTickGoal(60);

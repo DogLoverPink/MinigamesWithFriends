@@ -192,6 +192,15 @@ public class Game {
         }
     }
 
+    public void updateConfig() {
+        pointsToWin = config.getPointsToWin();
+        if (isRunning) {
+            for (Gamemode gamemode : gamemodes) {
+                gamemode.updateConfig();
+            }
+        }
+    }
+
     public void startGame() {
 
 
@@ -279,6 +288,7 @@ public class Game {
     public void setInDeathMatch(boolean inDeathMatch) {
         this.inDeathMatch = inDeathMatch;
     }
+
 
     private boolean inDeathMatch = false;
 

@@ -216,6 +216,7 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             return;
         }
         commandSender.sendMessage("§aConfig: " + configKey + " set to " + value);
+        MinigamesWithFriends.getGame().updateConfig();
     }
 
     private void handleFetchingConfigValue(CommandSender commandSender, String configName, String configKey) {

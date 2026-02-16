@@ -3,6 +3,9 @@ package doglover.minigameswithfriends.gamemodes;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.WorldFileUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -11,7 +14,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
@@ -59,12 +64,17 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
     }
 
     @Override
-    public void onGameStart() {
-        WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
+    public void updateConfig() {
         this.setMinTicks(getGame().getConfig().getDimensionSwapConfig().getMinimumSecondsBeforeSwap() * 20);
         this.setMaxTicks(getGame().getConfig().getDimensionSwapConfig().getMaximumSecondsBeforeSwap() * 20);
-        super.onGameStart();
         this.maxRounds = getGame().getConfig().getDimensionSwapConfig().getNumberOfSwaps();
+    }
+
+    @Override
+    public void onGameStart() {
+        WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
+        updateConfig();
+        super.onGameStart();
         this.currentRound = 0;
         refreshWorldFolders();
         try {
@@ -81,14 +91,24 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             throw new RuntimeException(e);
         }
         MinigamesWithFriends.getGamePlugin().getLogger().info("Starting game...");
-        shufflePlayers();
+        if (yetToBeUsedWorlds.isEmpty()) {
+            getGame().broadcast(Component.text("No eligible dimensionswap worlds found! Disabling gamemode...").color(NamedTextColor.RED));
+            getGame().broadcast(MiniMessage.miniMessage().deserialize(
+                    "<red>Tell the server owner to add unzipped minecraft maps/worlds to </red>"
+                    +"<yellow>/plugins/MinigamesWithFriends/savedDimensionTPWorlds/</yellow><red>!</red>"
+            ));
+            Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), ()-> getGame().removeGamemode(DimensionSwapGamemode.class), 0);
+        } else {
+            shufflePlayers();
+        }
     }
+
 
     @Override
     public void tick() {
         super.tick();
-        getGame().addScoreboardContribution("§bDimension Switch in: §d" + getFormattedTimeRemaining());
-        getGame().addScoreboardContribution("§bDimension Round: §d" + currentRound + "§b/§d" + maxRounds);
+        getGame().addScoreboardContribution("§dDimension Switch in: §b" + getFormattedTimeRemaining());
+        getGame().addScoreboardContribution("§dRounds Until Deathmatch: §b" + currentRound + "§b/§d" + maxRounds);
     }
 
     private void shufflePlayers() {
