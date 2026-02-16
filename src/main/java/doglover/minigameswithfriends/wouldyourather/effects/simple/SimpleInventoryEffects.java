@@ -69,10 +69,11 @@ public class SimpleInventoryEffects {
 
     private static void fillInventoryWithRandomItems(Player player) {
         PlayerInventory inv = player.getInventory();
+        List<Material> materials = Arrays.stream(Material.values()).filter(Material::isItem).toList();
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (item == null || item.getType() == Material.AIR) {
-                Material randomMaterial = Material.values()[new Random().nextInt(Material.values().length)];
+                Material randomMaterial = materials.get(new Random().nextInt(materials.size()));
                 int amount = (int) (Math.random() * 5) + 1;
                 if (randomMaterial.isItem()) {
                     inv.setItem(i, new ItemStack(randomMaterial, amount));

@@ -38,7 +38,11 @@ public class Hallucinate extends WYREffect {
             "The sanctum of flesh withers beneath the moon",
             "The veil of truth burns in silence",
             "The chained star descends once more",
-            "The covenant of the holy is sealed in blood"
+            "The covenant of the holy is sealed in blood",
+            "The hollow choir screeches from beneath",
+            "The fractured crown weeps crimson ash",
+            "The blackened hour grows ever nearer",
+            "The chorus of zealots fevers in unison"
 
     };
 
@@ -97,9 +101,9 @@ public class Hallucinate extends WYREffect {
         if (getPlayer() == null) {
             return;
         }
-        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 15 * 20, 1));
-        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 5 * 20, 1));
-        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 8 * 20, 1));
+        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 17 * 20, 1));
+        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 8 * 20, 1));
+        getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 9 * 20, 1));
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, 1);
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, .8f);
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, .9f);

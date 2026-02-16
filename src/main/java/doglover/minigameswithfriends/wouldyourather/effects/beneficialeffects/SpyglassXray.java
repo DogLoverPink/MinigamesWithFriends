@@ -25,7 +25,7 @@ public class SpyglassXray extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "Get Xray when using a spyglass";
+        return "Gain entity Xray when using a spyglass";
     }
 
     public SpyglassXray(Player player) {

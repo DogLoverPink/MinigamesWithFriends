@@ -21,7 +21,7 @@ public class Telekinesis extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "Mined blocks are automatically collected";
+        return "Have mined blocks be automatically collected";
     }
 
     public Telekinesis(Player player) {

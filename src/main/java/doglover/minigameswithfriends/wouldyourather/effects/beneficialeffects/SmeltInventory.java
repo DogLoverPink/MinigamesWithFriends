@@ -21,7 +21,7 @@ public class SmeltInventory extends WYREffect {
         WYREffectHandler.registerDetrimentalWYREffect(new WYREffect() {
             @Override
             public String getDescriptionBlurb() {
-                return "EVERYTHING is in your inventory is smelted";
+                return "Have EVERYTHING is in your inventory smelted";
             }
 
             @Override

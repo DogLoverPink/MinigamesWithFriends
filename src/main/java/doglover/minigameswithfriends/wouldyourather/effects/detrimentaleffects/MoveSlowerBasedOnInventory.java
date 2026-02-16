@@ -24,7 +24,7 @@ public class MoveSlowerBasedOnInventory extends WYREffect {
 
     public MoveSlowerBasedOnInventory(Player player) {
         super(player);
-        setRepeatable(true);
+        setRepeatable(false);
     }
 
     NamespacedKey key = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "slow_from_inv"+getUniqueNumber());

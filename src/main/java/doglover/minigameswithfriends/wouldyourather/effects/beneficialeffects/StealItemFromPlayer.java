@@ -29,7 +29,7 @@ public class StealItemFromPlayer extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You get to take your friend's most prized procession.";
+        return "Get to take your friend's most prized procession.";
     }
 
     public StealItemFromPlayer(Player player) {

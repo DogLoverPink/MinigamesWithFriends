@@ -24,6 +24,11 @@ public class Example extends WYREffect {
     }
 
     @Override
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        //Do something
+    }
+
+    @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
     }

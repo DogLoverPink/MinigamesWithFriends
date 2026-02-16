@@ -40,7 +40,7 @@ public class PickRandomItem extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You get a piece from a fortuitous selection of goodies";
+        return "Get to pick from a fortuitous selection of goodies";
     }
 
     public PickRandomItem(Player player) {

@@ -33,7 +33,7 @@ public class Schizophrenia extends WYREffect {
 
     public Schizophrenia(Player player) {
         super(player);
-        setRepeatable(true);
+        setRepeatable(false);
         subscribeToEvent(PlayerInteractEvent.class);
     }
 

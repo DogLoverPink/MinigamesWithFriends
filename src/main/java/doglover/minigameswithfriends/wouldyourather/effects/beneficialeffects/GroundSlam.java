@@ -117,7 +117,7 @@ public class GroundSlam extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You can ground slam by shifting in the air";
+        return "Be able to ground slam by shifting in the air";
     }
 
 

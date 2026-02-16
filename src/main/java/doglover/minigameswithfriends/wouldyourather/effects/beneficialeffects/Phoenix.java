@@ -5,6 +5,8 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,7 +41,7 @@ public class Phoenix extends WYREffect {
 
     @Override
     public String getDescriptionBlurb() {
-        return "You can harness the power of the phoenix";
+        return "Harness the power of the phoenix";
     }
 
     public Phoenix(Player player) {
@@ -69,7 +71,10 @@ public class Phoenix extends WYREffect {
         ItemStack fire = new ItemStack(Material.BLAZE_POWDER);
         fire.editMeta(meta -> {
             meta.customName(Component.text("§6§lPhoenix's Fire"));
-            meta.lore(Arrays.asList(Component.text("§cThe charred remains of what was once your hand...")));
+            meta.lore(Arrays.asList(
+                    Component.text("§cThe charred remains of what was once your hand..."),
+                    MiniMessage.miniMessage().deserialize("<gray>Property of "+getPlayer().getName()).decoration(TextDecoration.ITALIC, false)
+            ));
         });
         fire.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
         fire.addUnsafeEnchantment(Enchantment.SHARPNESS, 2);

@@ -56,7 +56,7 @@ public class StreetInterviewer extends WYREffect {
 
         @Override
     public String getDescriptionBlurb() {
-        return "You get approached by a street interviewer.";
+        return "Get approached by a street interviewer.";
     }
 
     public StreetInterviewer(Player player) {
