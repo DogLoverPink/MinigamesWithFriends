@@ -13,9 +13,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -123,8 +121,11 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
                 plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, -1, 4));
             }
             if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
-                plr.getAttribute(Attribute.MOVEMENT_SPEED).addModifier(new AttributeModifier(preventMovingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
-                plr.getAttribute(Attribute.JUMP_STRENGTH).addModifier(new AttributeModifier(preventJumpingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+                if (plr.getAttribute(Attribute.MOVEMENT_SPEED).getModifier(preventMovingKey) == null
+                        && plr.getAttribute(Attribute.JUMP_STRENGTH).getModifier(preventJumpingKey) == null) {
+                    plr.getAttribute(Attribute.MOVEMENT_SPEED).addModifier(new AttributeModifier(preventMovingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+                    plr.getAttribute(Attribute.JUMP_STRENGTH).addModifier(new AttributeModifier(preventJumpingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+                }
             }
             List<Class<? extends WYREffect>> current = currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
             effectsToChooseFrom.putIfAbsent(plr.getUniqueId(), new ArrayList<>());

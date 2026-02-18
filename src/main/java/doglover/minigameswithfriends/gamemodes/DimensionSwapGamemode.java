@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.gamemodes;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.WorldFileUtils;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -37,9 +38,9 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
     }
 
-    public static void preLoadSavedWorlds(Player player) {
+    public static void preLoadSavedWorlds(Audience reporterPlayer) {
         WorldFileUtils.sanitizeWorldSaveFolder(savedWorldsFolder);
-        WorldFileUtils.loadAllWorldsInFolder(savedWorldsFolder, player);
+        WorldFileUtils.loadAllWorldsInFolder(savedWorldsFolder, reporterPlayer);
     }
 
 

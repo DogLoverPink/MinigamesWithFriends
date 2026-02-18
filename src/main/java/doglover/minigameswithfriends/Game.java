@@ -185,7 +185,7 @@ public class Game {
         if (isRunning && players.contains(player.getUniqueId())) {
             FastBoard board = new FastBoard(player);
             boards.put(player.getUniqueId(), board);
-            board.updateTitle("§b§lEpic Minigames");
+            board.updateTitle("§b§lMinigames with Friends");
             board.updateLines(new ArrayList<>());
             player.sendMessage("§aContinued game in progress!");
             player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
@@ -236,7 +236,7 @@ public class Game {
 
 
             boards.put(player.getUniqueId(), board);
-            board.updateTitle("§b§lEpic Minigames");
+            board.updateTitle("§b§lMinigames with Friends");
             board.updateLines(new ArrayList<>());
 
             PlayerUtils.resetPlayer(player);

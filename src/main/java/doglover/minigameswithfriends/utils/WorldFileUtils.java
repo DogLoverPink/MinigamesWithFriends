@@ -1,6 +1,8 @@
 package doglover.minigameswithfriends.utils;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -43,7 +45,7 @@ public class WorldFileUtils {
         }
     }
 
-    public static void loadAllWorldsInFolder(File worldsFolder, Player playerToNotify) {
+    public static void loadAllWorldsInFolder(File worldsFolder, Audience playerToNotify) {
         final List<File> worlds = new ArrayList<>();
         for (File file : worldsFolder.listFiles()) {
             if (!file.isDirectory() || file.list() == null && !Arrays.asList(file.list()).contains("level.dat")) {
@@ -55,18 +57,18 @@ public class WorldFileUtils {
         int worldsCount = worlds.size();
         Bukkit.getScheduler().runTaskTimer(MinigamesWithFriends.getGamePlugin(), (task) -> {
             if (worlds.isEmpty()) {
-                playerToNotify.sendMessage("§a§lPreloading complete!.");
-                playerToNotify.sendMessage("§aIt is highly recomended that you restart your server!");
+                playerToNotify.sendMessage(Component.text("§a§lPreloading complete!."));
+                playerToNotify.sendMessage(Component.text("§aIt is highly recomended that you restart your server!"));
                 task.cancel();
                 return;
             }
             File file = worlds.removeFirst();
-            playerToNotify.sendMessage("§eLoading world: §a" + file.getName());
+            playerToNotify.sendMessage(Component.text("§eLoading world: §a" + file.getName()));
             MinigamesWithFriends.getGamePlugin().getLogger().info("Loading world: " + file.getName());
             World world = Bukkit.createWorld(new WorldCreator(file.getPath().replace("\\", "/")));
-            playerToNotify.sendMessage("§aComplete. §eUnloading §a" + world.getName());
+            playerToNotify.sendMessage(Component.text("§aComplete. §eUnloading §a" + world.getName()));
             Bukkit.unloadWorld(world, true);
-            playerToNotify.sendMessage("§aCompleted (" + (worldsCount - worlds.size()) + "/" + worldsCount + ")");
+            playerToNotify.sendMessage(Component.text("§aCompleted (" + (worldsCount - worlds.size()) + "/" + worldsCount + ")"));
         }, 0, 20);
     }
 

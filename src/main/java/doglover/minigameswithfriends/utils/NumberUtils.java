@@ -7,9 +7,6 @@ public class NumberUtils {
     public static Random random = new Random();
 
     public static boolean chanceOf(double chance) {
-        if (chance < 0 || chance > 1) {
-            throw new IllegalArgumentException("Chance must be between 0 and 1");
-        }
         return Math.random() < chance;
     }
 

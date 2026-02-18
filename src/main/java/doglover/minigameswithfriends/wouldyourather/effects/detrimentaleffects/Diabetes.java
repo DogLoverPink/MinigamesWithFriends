@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Campfire;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -177,13 +178,13 @@ public class Diabetes extends WYREffect {
         setRepeatable(false);
         subscribeToEvent(PlayerInteractEvent.class);
         subscribeToEvent(BlockCookEvent.class);
-        subscribeToEvent(PlayerDeathEvent.class);
+        subscribeToEvent(PlayerDeathEvent.class, EventPriority.MONITOR);
         subscribeToEvent(PlayerItemConsumeEvent.class);
     }
 
     @Override
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (event.getPlayer().equals(getPlayer())) {
+        if (event.getPlayer().equals(getPlayer()) && !event.isCancelled()) {
             bloodSugarLevel = 85;
             generallyIncreasing = random.nextBoolean();
         }

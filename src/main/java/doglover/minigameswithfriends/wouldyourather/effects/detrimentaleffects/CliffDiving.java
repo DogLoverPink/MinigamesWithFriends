@@ -2,6 +2,7 @@ package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -35,6 +36,10 @@ public class CliffDiving extends WYREffect {
 
     @Override
     public void onTick() {
+
+        if (getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
 
         Block below = getPlayer().getLocation().clone().subtract(0, 1, 0).getBlock();
         if (below.getType().isAir() || below.getType() == Material.POINTED_DRIPSTONE) {

@@ -1,21 +1,30 @@
 package doglover.minigameswithfriends.commands;
 
-import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.Game;
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.GamemodeConfig;
 import doglover.minigameswithfriends.gamemodes.BlockShuffleGamemode;
 import doglover.minigameswithfriends.gamemodes.DimensionSwapGamemode;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.PlayerUtils;
+import doglover.minigameswithfriends.wouldyourather.WYREffect;
+import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Iterator;
 
 public class MinigamesWithFriendCommand implements CommandExecutor {
 
@@ -33,47 +42,41 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
 
         if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
             handleEnableGamemode(commandSender, args);
-        }
-        else if (minigameCommand.equalsIgnoreCase("SafeLoc")) {
+        } else if (minigameCommand.equalsIgnoreCase("SafeLoc")) {
             Player plr = (Player) commandSender;
             plr.setFallDistance(0);
             plr.teleport(BlockUtils.findSafeBlock(plr.getLocation()));
+        } else if (minigameCommand.equalsIgnoreCase("dimensionswap")) {
+            handleDimensionSwapCommand(commandSender, args);
         }
-        else if (minigameCommand.equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
-            DimensionSwapGamemode.preLoadSavedWorlds((Player) commandSender);
-        }
-        else if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
+        else if (minigameCommand.equalsIgnoreCase("help")) {
+            handleHelpCommand(commandSender, args);
+        }else if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
             Player plr = (Player) commandSender;
             PlayerUtils.launchPlayerToLoc(plr, plr.getWorld().getSpawnLocation());
-        }
-        else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
+        } else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
             handleDisableGamemode(commandSender, args);
-        }
-        else if (minigameCommand.equalsIgnoreCase("ClearGamemodes")) {
+        } else if (minigameCommand.equalsIgnoreCase("ClearGamemodes")) {
             MinigamesWithFriends.getGame().clearGamemodes();
             commandSender.sendMessage("§aCleared all gamemodes.");
-        }
-
-        else if (minigameCommand.equalsIgnoreCase("start")) {
+        } else if (minigameCommand.equalsIgnoreCase("start")) {
             if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
                 commandSender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
                 return true;
             }
             MinigamesWithFriends.getGame().startGame();
             commandSender.sendMessage("§aGame started.");
-        }
-        else if (minigameCommand.equalsIgnoreCase("fling")) {
+        } else if (minigameCommand.equalsIgnoreCase("fling")) {
             Player plr = (Player) commandSender;
             Game.launchPlayerSideways(plr, 10);
-        }
-        else if (minigameCommand.equalsIgnoreCase("stop")) {
+        } else if (minigameCommand.equalsIgnoreCase("stop")) {
             MinigamesWithFriends.getGame().endGame();
             commandSender.sendMessage("§cGame stopped.");
-        }
-        else if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
+        } else if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
             handleBlockShuffleCommand(commandSender, args);
-        }
-        else if (minigameCommand.equalsIgnoreCase("config")) {
+        } else if (minigameCommand.equalsIgnoreCase("wouldyourather")) {
+            handleWouldYouRatherCommand(commandSender, args);
+        } else if (minigameCommand.equalsIgnoreCase("config")) {
             if (args.length == 1) {
                 commandSender.sendMessage("§cSpecify a gamemode and a config key.");
                 commandSender.sendMessage("§eEx.: /dimensionSwap config dimensionSwap canVisitSameWorldTwice true");
@@ -97,7 +100,92 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
         return false;
     }
 
-    private static void handleDevCommand(CommandSender commandSender, String [] args) {
+    private void handleHelpCommand(CommandSender commandSender, String[] args) {
+        Component message = MiniMessage.miniMessage().deserialize(
+                "<yellow>For help with the plugin, refer to <click:open_url:'https://REPLACEMEWITHDOCSLINK.com'><u><aqua>the documentation</aqua></u></click></yellow>"
+        );
+        message = message.hoverEvent(Component.text("Click to open the documentation.").color(NamedTextColor.AQUA));
+        commandSender.sendMessage(message);
+    }
+
+    private void handleDimensionSwapCommand(CommandSender commandSender, String[] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("PreLoadSavedDimensionSwapWorlds")) {
+            DimensionSwapGamemode.preLoadSavedWorlds(commandSender);
+        }
+        commandSender.sendMessage("§cInvalid subcommand!");
+    }
+
+    private void handleWouldYouRatherCommand(CommandSender commandSender, String[] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("RemoveEffect")) {
+            if (args.length < 4) {
+                commandSender.sendMessage("§cInvalid usage! Do §e/mg wouldyourather removeEffect <player> <effect>");
+                return;
+            }
+            Player plr = Bukkit.getPlayer(args[2]);
+            if (plr == null) {
+                commandSender.sendMessage("§cUnknown player §e" + args[2]);
+                return;
+            }
+            String effectToRemove = args[3];
+            Iterator<WYREffect> effectIterator = WYREffectHandler.getManagedEffects().iterator();
+            while (effectIterator.hasNext()) {
+                WYREffect effect = effectIterator.next();
+                if (effect.getPlayer().equals(plr) && effect.getClass().getSimpleName().equalsIgnoreCase(effectToRemove)) {
+                    effect.selfDestruct();
+                    commandSender.sendMessage("§aRemoved §e" + effectToRemove + "§a from §e" + plr.getName());
+                    effectIterator.remove();
+                    return;
+                }
+            }
+            commandSender.sendMessage("§cEffect not found!");
+        }
+        if (args[1].equalsIgnoreCase("CheckActiveEffects")) {
+            Player plr;
+            if (args.length < 3 && commandSender instanceof Player) {
+                plr = (Player) commandSender;
+            } else if (args.length >= 3) {
+                plr = Bukkit.getPlayer(args[2]);
+                if (plr == null) {
+                    commandSender.sendMessage("§cUnknown player §e" + args[2]);
+                    return;
+                }
+            } else {
+                commandSender.sendMessage("§cUnknown player");
+                return;
+            }
+            if (!WYREventHandler.isActive() || WYREffectHandler.getManagedEffects().isEmpty()) {
+                commandSender.sendMessage("§e" + plr.getName() + "§c has no active effects.");
+                return;
+            }
+            commandSender.sendMessage("§eActive effects on §b" + plr.getName() + "§e:");
+            for (WYREffect effect : WYREffectHandler.getManagedEffects()) {
+                if (effect.getPlayer().equals(plr)) {
+                    NamedTextColor color = WYREffectHandler.isEffectBeneficial(effect) ? NamedTextColor.GREEN : NamedTextColor.RED;
+                    TextComponent effectComponent = Component.text(" - ").color(NamedTextColor.YELLOW);
+                    effectComponent = effectComponent.append(Component.text(effect.getClass().getSimpleName()).color(color));
+                    effectComponent = effectComponent.hoverEvent(Component.text(effect.getDescriptionBlurb()).color(color));
+                    commandSender.sendMessage(effectComponent);
+                }
+            }
+        }
+        if (args[1].equalsIgnoreCase("SendNewPrompt")) {
+            if (!WYREventHandler.isActive() || !MinigamesWithFriends.getGame().isGamemodeActive(WouldYouRatherGamemode.class)) {
+                commandSender.sendMessage("§cThe Would You Rather gamemode is not active!");
+                return;
+            }
+            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).onTimeEventTrigger();
+        }
+    }
+
+    private static void handleDevCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
             commandSender.sendMessage("§cPlease specify a subcommand.");
             return;
@@ -154,8 +242,7 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             for (String materialName : BlockShuffleGamemode.getBannedBlocksStringList()) {
                 commandSender.sendMessage("§b" + materialName);
             }
-        }
-        else if (args[1].equalsIgnoreCase("skip")) {
+        } else if (args[1].equalsIgnoreCase("skip")) {
             if (!MinigamesWithFriends.getGame().isRunning() || !MinigamesWithFriends.getGame().isGamemodeActive(BlockShuffleGamemode.class)) {
                 return;
             }
@@ -250,7 +337,7 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
         for (String configKey : conf.getConfigValues().keySet()) {
             String type = conf.getConfigValues().get(configKey).getSimpleName();
             String value = conf.getString(configKey);
-            commandSender.sendMessage("§d" + configKey + " = " +value+ " §e: " + type);
+            commandSender.sendMessage("§d" + configKey + " = " + value + " §e: " + type);
         }
     }
 }

@@ -4,9 +4,16 @@ import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.GamemodeConfig;
 import doglover.minigameswithfriends.gamemodes.BlockShuffleGamemode;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.wouldyourather.WYREffect;
+import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -16,15 +23,20 @@ public class GameCommandTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return filterByStartsWith(List.of("start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle"), args[0]);
+            return filterByStartsWith(List.of("help", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle", "wouldyourather", "dimensionswap"), args[0]);
         }
         String minigameCommand = args[0];
         if (minigameCommand.equalsIgnoreCase("config")) {
             return handleConfigTagComplete(args);
+        } else if (minigameCommand.equalsIgnoreCase("wouldyourather")) {
+                return handleWouldYouRatherTagComplete(args);
         } else if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
             return filterByStartsWith(Gamemode.getGamemodeList(), args[1]);
         } else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
             return filterByStartsWith(MinigamesWithFriends.getGame().getGamemodesAsString(), args[1]);
+        }
+        else if (minigameCommand.equalsIgnoreCase("dimensionswap")) {
+            return filterByStartsWith(List.of("PreLoadSavedDimensionSwapWorlds"), args[1]);
         }
         if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
             if (args.length == 2) {
@@ -44,6 +56,31 @@ public class GameCommandTabCompleter implements TabCompleter {
         }
 
         return null;
+    }
+
+    private List<String> handleWouldYouRatherTagComplete(String[] args) {
+        if (args.length == 2) {
+            return filterByStartsWith(List.of("RemoveEffect", "SendNewPrompt", "CheckActiveEffects"), args[1]);
+        }
+        if (args[1].equalsIgnoreCase("RemoveEffect")) {
+            if (args.length == 3) {
+                return filterByStartsWith(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[2]);
+            }
+            if (args.length == 4) {
+                Player plr = Bukkit.getPlayer(args[2]);
+                if (!WYREventHandler.isActive() || plr == null) {
+                    return List.of();
+                }
+                return filterByStartsWith(WYREffectHandler.getManagedEffects().stream()
+                        .filter(wyrEffect -> wyrEffect.getPlayer().equals(plr))
+                        .map(wyrEffect -> wyrEffect.getClass().getSimpleName())
+                        .toList(), args[3]);
+            }
+        }
+        if (args[1].equalsIgnoreCase("CheckActiveEffects")) {
+            return filterByStartsWith(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[2]);
+        }
+        return List.of();
     }
 
     private List<String> filterByStartsWith(List<String> list, String filter) {

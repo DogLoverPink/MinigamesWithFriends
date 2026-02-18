@@ -52,7 +52,7 @@ public class Schizophrenia extends WYREffect {
         if (NumberUtils.chanceOf(0.000325)) {
             doFakeChatMessage();
         }
-        Block target = getPlayer().getTargetBlock(null, 30);
+        Block target = getPlayer().getTargetBlock(null, 35);
         if (isReadyForDiamondTroll-- <= 0 && (target.getType() == Material.STONE || target.getType() == Material.DEEPSLATE)) {
             if (target.getLocation().distanceSquared(getPlayer().getLocation()) > 37) {
                 sendFakeDiamonds(target);
