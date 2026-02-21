@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public class WYRInventoryEvents implements Listener {
 
@@ -38,6 +39,16 @@ public class WYRInventoryEvents implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+        if (WYREventHandler.isActive()) {
+            for (WYREffect effect : WYREventHandler.getEffectsForEvent(event)) {
+                effect.onPlayerSwapHandItems(event);
+            }
+        }
+    }
+
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {

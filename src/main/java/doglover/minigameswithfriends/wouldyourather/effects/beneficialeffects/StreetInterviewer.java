@@ -8,36 +8,32 @@ import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
-import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.time.Duration;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 
 public class StreetInterviewer extends WYREffect {
-
 
 
     static {
         WYREffectHandler.registerBeneficialWYREffect(StreetInterviewer.class);
     }
+
     List<Player> alreadyPicked = new ArrayList<>();
     Map<String, Consumer<Player>> positiveEffects = new HashMap<>();
     Map<String, Consumer<Player>> negativeEffects = new HashMap<>();
@@ -50,11 +46,12 @@ public class StreetInterviewer extends WYREffect {
 
     String goodEffect = "a";
     String badEffect = "b";
+    UUID affectedPlayer = null;
 
     int intensity = 1;
     ArrayDeque<Player> plrQueue = new ArrayDeque<>();
 
-        @Override
+    @Override
     public String getDescriptionBlurb() {
         return "Get approached by a street interviewer.";
     }
@@ -62,28 +59,43 @@ public class StreetInterviewer extends WYREffect {
     public StreetInterviewer(Player player) {
         super(player);
         setRepeatable(true);
+        subscribeToEvent(PlayerRespawnEvent.class);
 
     }
 
-
+    @Override
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        if (affectedPlayer == null || !affectedPlayer.equals(event.getPlayer().getUniqueId())) {
+            return;
+        }
+        Player plr = event.getPlayer();
+        Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
+            if (goodEffect.startsWith("Gain permanent")) {
+                positiveEffects.get(goodEffect).accept(plr);
+            }
+            if (badEffect.startsWith("Gain permanent")) {
+                negativeEffects.get(badEffect).accept(plr);
+            }
+        }, 2);
+    }
 
     public String formatEffect(String effect, boolean good) {
-            if (effect.toUpperCase().contains("HEARTS")) {
-                return effect.replace("%1$", intensity * 2 + "");
-            }
+        if (effect.toUpperCase().contains("HEARTS")) {
+            return effect.replace("%1$", intensity * 2 + "");
+        }
         return effect.replace("%2$", good ? goodPotionEffect.getName() : badPotionEffect.getName()).replace("%1$", intensity + "");
     }
 
     public String getRandomGoodEffect() {
-            int rand = Game.getRandom().nextInt(0, positiveEffects.size());
-            String effect =  positiveEffects.keySet().toArray(String[]::new)[rand];
-            goodPotionEffect = positivePotionEffects.get(Game.getRandom().nextInt(0, positivePotionEffects.size()));
-            return effect;
+        int rand = Game.getRandom().nextInt(0, positiveEffects.size());
+        String effect = positiveEffects.keySet().toArray(String[]::new)[rand];
+        goodPotionEffect = positivePotionEffects.get(Game.getRandom().nextInt(0, positivePotionEffects.size()));
+        return effect;
     }
 
     public String getRandomBadEffect() {
         int rand = Game.getRandom().nextInt(0, negativeEffects.size());
-        String effect =  negativeEffects.keySet().toArray(String[]::new)[rand];
+        String effect = negativeEffects.keySet().toArray(String[]::new)[rand];
         badPotionEffect = negativePotionEffects.get(Game.getRandom().nextInt(0, negativePotionEffects.size()));
         return effect;
     }
@@ -148,8 +160,10 @@ public class StreetInterviewer extends WYREffect {
 
         positiveEffects.get(goodEffect).accept(p);
         negativeEffects.get(badEffect).accept(p);
+        affectedPlayer = p.getUniqueId();
 
     }
+
     private void chooseOptionTwo(Audience aud) {
         UUID uuid = aud.get(Identity.UUID).get();
 
@@ -186,12 +200,11 @@ public class StreetInterviewer extends WYREffect {
     }
 
 
-
-
     private void givePositivePotionEffect(Player plr) {
         plr.addPotionEffect(new PotionEffect(goodPotionEffect, -1, intensity - 1));
         plr.sendMessage(mm.deserialize("<yellow>You've gained permanent</yellow> <green>" + goodPotionEffect.getName() + "</green><yellow>!</yellow>"));
     }
+
     private void gainBeneficialWYREffect(Player plr) {
         for (int i = 0; i < intensity; i++) {
 
@@ -209,21 +222,21 @@ public class StreetInterviewer extends WYREffect {
 
     }
 
-    NamespacedKey interviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_"+getUniqueNumber());
+    NamespacedKey positiveInterviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_positive_" + getUniqueNumber());
+    NamespacedKey negativeinterviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_negative_" + getUniqueNumber());
 
     private void gainMaxHearts(Player plr) {
-        interviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_"+getUniqueNumber());
-        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(interviewerKey, intensity * 4.0, AttributeModifier.Operation.ADD_NUMBER));
+        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(positiveInterviewerKey, intensity * 4.0, AttributeModifier.Operation.ADD_NUMBER));
         plr.sendMessage(mm.deserialize("<yellow>You have <green>gained</green> <dark_red>" + intensity * 2 + "</dark_red> max hearts!</yellow>"));
     }
+
     private void giveNegativePotionEffect(Player plr) {
         plr.addPotionEffect(new PotionEffect(badPotionEffect, -1, intensity - 1));
         plr.sendMessage(mm.deserialize("<yellow>You've gained permanent</yellow> <red>" + badPotionEffect.getName() + "</red><yellow>!</yellow>"));
     }
 
     private void loseMaxHearts(Player plr) {
-        interviewerKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "wyr_street_interviewer_"+getUniqueNumber());
-        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(interviewerKey, intensity * -4.0, AttributeModifier.Operation.ADD_NUMBER));
+        plr.getAttribute(Attribute.MAX_HEALTH).addModifier(new AttributeModifier(negativeinterviewerKey, intensity * -4.0, AttributeModifier.Operation.ADD_NUMBER));
         plr.sendMessage(mm.deserialize("<yellow>You have <red>lost</red> <dark_red>" + intensity * 2 + "</dark_red> max hearts!</yellow>"));
     }
 
@@ -243,13 +256,20 @@ public class StreetInterviewer extends WYREffect {
         }
 
     }
+
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        for (Player plr : Bukkit.getOnlinePlayers()) {
-            for (AttributeModifier modifier : plr.getAttribute(Attribute.MAX_HEALTH).getModifiers()) {
-                if (modifier.getName().startsWith("wyr_street_interviewer")) {
-                    plr.getAttribute(Attribute.MAX_HEALTH).removeModifier(modifier);
+        if (affectedPlayer != null) {
+            Player plr = Bukkit.getPlayer(affectedPlayer);
+            if (plr != null) {
+                plr.getAttribute(Attribute.MAX_HEALTH).removeModifier(positiveInterviewerKey);
+                plr.getAttribute(Attribute.MAX_HEALTH).removeModifier(negativeinterviewerKey);
+                if (goodEffect.startsWith("Gain permanent")) {
+                    plr.removePotionEffect(goodPotionEffect);
+                }
+                if (badEffect.startsWith("Gain permanent")) {
+                    plr.removePotionEffect(badPotionEffect);
                 }
             }
         }

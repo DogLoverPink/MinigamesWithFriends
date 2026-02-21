@@ -50,7 +50,9 @@ public class Pokeball extends WYREffect {
 
     @Override
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        ItemStack item = getPlayer().getInventory().getItemInMainHand();
+        ItemStack item = getPlayer().getInventory().getItemInMainHand().getPersistentDataContainer().has(pokeOwnerKey) ?
+                getPlayer().getInventory().getItemInMainHand() :
+                getPlayer().getInventory().getItemInOffHand();
         if (!item.getPersistentDataContainer().has(pokeOwnerKey)) {
             return;
         }
@@ -73,6 +75,7 @@ public class Pokeball extends WYREffect {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void onProjectileHit(ProjectileHitEvent event) {
+        getPlayer().sendMessage("trigger hit: " + event.getHitEntity() + ":" + event.getHitBlock());
         Projectile entity = event.getEntity();
         if (!entity.getPersistentDataContainer().has(pokeOwnerKey)) {
             return;
@@ -83,7 +86,7 @@ public class Pokeball extends WYREffect {
         }
         String storedUUID = entity.getPersistentDataContainer().get(pokeStoredKey, PersistentDataType.STRING);
         if (storedUUID != null) {
-            entity.getWorld().dropItem(entity.getLocation(),getPokeball(1));
+            entity.getWorld().dropItem(entity.getLocation(), getPokeball(1));
             Entity entityToSpawn = pokeballEntities.remove(storedUUID);
             if (entityToSpawn != null) {
                 entityToSpawn.copy(entity.getLocation());
@@ -97,7 +100,7 @@ public class Pokeball extends WYREffect {
             hurtEntity.remove();
             return;
         }
-        entity.getWorld().dropItem(entity.getLocation(),getPokeball(1));
+        entity.getWorld().dropItem(entity.getLocation(), getPokeball(1));
     }
 
     Map<String, Entity> pokeballEntities = new HashMap<>();
@@ -105,7 +108,7 @@ public class Pokeball extends WYREffect {
     MiniMessage mm = MiniMessage.miniMessage();
 
 
-    Component propertyOfLabel = Component.text("Property of "+getPlayer().getName()).decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY);
+    Component propertyOfLabel = Component.text("Property of " + getPlayer().getName()).decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY);
 
     @SuppressWarnings("UnstableApiUsage")
     private ItemStack getFilledPokeball(int amount, Entity entity) {

@@ -263,4 +263,16 @@ public abstract class WYREffect {
     public void onPlayerItemDamage(PlayerItemDamageEvent event) {
 
     }
+
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+    }
+
+    public void onEntityPickupItem(EntityPickupItemEvent event) {
+
+    }
+
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+
+    }
 }

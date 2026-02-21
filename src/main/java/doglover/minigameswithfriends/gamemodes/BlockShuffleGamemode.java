@@ -21,7 +21,9 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     static File bannedBlocksFile = new File(MinigamesWithFriends.getGamePlugin().getDataFolder(), "banned-blockshuffle-blocks.yml");
     static FileConfiguration bannedBlocks = YamlConfiguration.loadConfiguration(bannedBlocksFile);
     static List<String> bannedBlocksStringList = bannedBlocks.getStringList("banned-blocks");
-    /** Used purely for tab completion */
+    /**
+     * Used purely for tab completion
+     */
     static List<Material> unbannedBlocksList = new ArrayList<>();
     static List<String> unbannedBlocksStringList = new ArrayList<>();
 
@@ -87,7 +89,6 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     }
 
 
-
     static void saveBannedBlocksFile() {
         try {
             bannedBlocks.set("banned-blocks", bannedBlocksStringList);
@@ -134,22 +135,23 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     public void notifyBlockSteppedOn(Player player) {
         Material block = playerBlocks.get(player.getUniqueId());
-        if (block != null) {
-            if (getGame().getConfig().getBlockShuffleConfig().shouldGivePointsAtEndOfRound()) {
-                playersWhoHaveSteppedOnBlock.add(player.getUniqueId());
-                playerBlocks.remove(player.getUniqueId());
-                getGame().broadcast("§b" + player.getName() + "§a has found their block!");
-            } else {
-                getGame().addPointsToPlayer(player, getGame().getConfig().getBlockShuffleConfig().getPointsPerSuccessfulBlockStep());
-                getGame().broadcast("§b" + player.getName() + "§a has found their block!");
-                playerBlocks.remove(player.getUniqueId());
-            }
-            if (playerBlocks.isEmpty()) {
-                onTimeEventTrigger();
-                this.setTickGoal(getNextComputedTime());
-            }
+        if (block == null) {
+            return;
         }
-        for (Player plr: getGame().getPlayers()) {
+        if (getGame().getConfig().getBlockShuffleConfig().shouldGivePointsAtEndOfRound()) {
+            playersWhoHaveSteppedOnBlock.add(player.getUniqueId());
+            playerBlocks.remove(player.getUniqueId());
+            getGame().broadcast("§b" + player.getName() + "§a has found their block!");
+        } else {
+            getGame().addPointsToPlayer(player, getGame().getConfig().getBlockShuffleConfig().getPointsPerSuccessfulBlockStep());
+            getGame().broadcast("§b" + player.getName() + "§a has found their block!");
+            playerBlocks.remove(player.getUniqueId());
+        }
+        if (playerBlocks.isEmpty()) {
+            onTimeEventTrigger();
+            this.setTickGoal(getNextComputedTime());
+        }
+        for (Player plr : getGame().getPlayers()) {
             if (plr.equals(player)) {
                 plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             } else {
@@ -202,6 +204,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
                 Player player = Bukkit.getPlayer(entry.getKey());
                 if (i > 4) {
                     getGame().addScoreboardContribution("§dAnd " + (playerBlocks.size() - 5) + " more...");
+                    break;
                 }
                 if (player != null) {
                     getGame().addScoreboardContribution("§d" + player.getName() + "'s Block: §b" + entry.getValue().name());

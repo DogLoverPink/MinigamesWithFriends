@@ -59,6 +59,9 @@ public class DeathListener implements Listener {
             if (config.shouldKeepInventoryOnSwapRelatedDeath() && swapper != null) {
                 event.setKeepInventory(true);
             }
+            if (swapper == null) {
+                return;
+            }
             int pointsToGive = config.getPointsPerImpressiveDeath();
             if (event.getDamageSource().getDamageType() == DamageType.FALL
                     || event.getDamageSource().getDamageType() == DamageType.LAVA

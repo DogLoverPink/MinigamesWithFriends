@@ -2,8 +2,8 @@ package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -31,17 +31,18 @@ public class EatingGivesRandomEffect extends WYREffect {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
         if (!player.equals(getPlayer())) {
             return;
         }
-        if (event.getItem().getType().isEdible()) {
+        if (event.getItem().hasData(DataComponentTypes.FOOD)) {
             giveRandomEffect();
         }
     }
 
-    private static final Random random= new Random();
+    private static final Random random = new Random();
 
     private void giveRandomEffect() {
         List<PotionEffectType> availableEffects = new ArrayList<>(effects);

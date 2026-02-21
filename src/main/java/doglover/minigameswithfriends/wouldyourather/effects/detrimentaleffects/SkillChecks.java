@@ -6,11 +6,13 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 import java.time.Duration;
 import java.util.Random;
@@ -52,7 +54,8 @@ public class SkillChecks extends WYREffect {
     private void giveSkillCheckWarning() {
         skillCheckProgress = -20;
         getPlayer().playSound(getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1.5f);
-        getGame().sendActionBar("skillChecks", Component.text("Press SPACE at the correct time"), getPlayer(), 30);
+        Component message = MiniMessage.miniMessage().deserialize("Press <key:key.swapOffhand> at the correct time");
+        getGame().sendActionBar("skillChecks", message, getPlayer(), 30);
     }
 
     int skillCheckProgress = 0;
@@ -100,8 +103,9 @@ public class SkillChecks extends WYREffect {
     }
 
 
+
     @Override
-    public void onPlayerJump(PlayerJumpEvent event) {
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
         if (!event.getPlayer().equals(getPlayer()) || !isInSkillCheck) {
             return;
         }
@@ -111,13 +115,12 @@ public class SkillChecks extends WYREffect {
         } else {
             onSkillCheckFail();
         }
-
     }
 
     public SkillChecks(Player player) {
         super(player);
         setRepeatable(false);
-        subscribeToEvent(PlayerJumpEvent.class);
+        subscribeToEvent(PlayerSwapHandItemsEvent.class);
     }
 
     @Override

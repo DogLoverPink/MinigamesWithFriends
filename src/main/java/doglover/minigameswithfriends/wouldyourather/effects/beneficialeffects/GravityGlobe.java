@@ -69,6 +69,7 @@ public class GravityGlobe extends WYREffect {
        }
        isGravityInverted = true;
        getPlayer().setAllowFlight(true);
+       getPlayer().damage(2);
        double strength = -2 * getPlayer().getAttribute(Attribute.GRAVITY).getValue();
        getPlayer().getAttribute(Attribute.GRAVITY).addModifier(new AttributeModifier(gravityGlobeAttributeKey, strength, AttributeModifier.Operation.ADD_NUMBER));
     }
