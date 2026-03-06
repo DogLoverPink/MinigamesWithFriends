@@ -18,6 +18,22 @@ import java.util.logging.Logger;
 
 public class WorldFileUtils {
 
+    private static File getUniqueDirectory(File parentDirectory, String desiredName) {
+        File candidate = new File(parentDirectory, desiredName);
+        if (!candidate.exists()) {
+            return candidate;
+        }
+
+        int suffix = 2;
+        while (true) {
+            File suffixedCandidate = new File(parentDirectory, desiredName + "_" + suffix);
+            if (!suffixedCandidate.exists()) {
+                return suffixedCandidate;
+            }
+            suffix++;
+        }
+    }
+
     private static void findNestedWorldFolderAndMove(File destinationDirectory, File folder) {
         if (!folder.exists() || !folder.isDirectory()) {
             return;
@@ -31,8 +47,11 @@ public class WorldFileUtils {
                 continue;
             }
             try {
-                MinigamesWithFriends.getGamePlugin().getLogger().info("Found nested world folder: " + folder.getName() + ", moving it to saved world folders");
-                FileUtils.moveDirectoryToDirectory(folder, destinationDirectory, true);
+                File destinationFolder = getUniqueDirectory(destinationDirectory, folder.getName());
+                MinigamesWithFriends.getGamePlugin().getLogger().info(
+                        "Found nested world folder: " + folder.getName() + ", moving it to " + destinationFolder.getName()
+                );
+                FileUtils.moveDirectory(folder, destinationFolder);
             } catch (IOException e) {
                 e.printStackTrace();
             }

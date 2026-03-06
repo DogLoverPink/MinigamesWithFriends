@@ -194,7 +194,6 @@ public class Schizophrenia extends WYREffect {
     private void doFakeChatMessage() {
         List<Player> applicablePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         if (applicablePlayers.isEmpty()) {
-            getPlayer().sendMessage("womp womp (debug message)");
             return;
         }
         String randomName = applicablePlayers.get(random.nextInt(applicablePlayers.size())).getName();

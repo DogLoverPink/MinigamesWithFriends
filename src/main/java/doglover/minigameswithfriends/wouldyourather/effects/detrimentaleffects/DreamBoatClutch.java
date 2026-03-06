@@ -52,6 +52,11 @@ public class DreamBoatClutch extends WYREffect {
         triggered = true;
         event.setDamage(0.0);
         Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
+            for (ItemStack item : getPlayer().getInventory().getContents()) {
+                if (item != null) {
+                    getPlayer().dropItem(item);
+                }
+            }
             getPlayer().getInventory().setContents(inventoryBackup);
             getPlayer().sendMessage("Hehe, just kidding :3");
             Location anvilSpawnLoc = getPlayer().getLocation().clone().add(0, 15, 0);
@@ -64,19 +69,28 @@ public class DreamBoatClutch extends WYREffect {
     public void onTick() {
         counter++;
         if (counter == 20) {
-            getPlayer().sendMessage("3");
-        }
-        if (counter == 40) {
-            getPlayer().sendMessage("2");
+            getPlayer().sendMessage("There's a crafting table on the top of it");
         }
         if (counter == 60) {
+            getPlayer().sendMessage("All you have to do to save yourself is craft a boat while you're in the air, and place and enter it on the ground");
+        }
+        if (counter == 100) {
+            getPlayer().sendMessage("Sounds easy, right?");
+        }
+        if (counter == 120) {
+            getPlayer().sendMessage("3");
+        }
+        if (counter == 140) {
+            getPlayer().sendMessage("2");
+        }
+        if (counter == 160) {
             getPlayer().sendMessage("1");
         }
-        if (counter == 80) {
+        if (counter == 180) {
             getPlayer().sendMessage("GO!!");
             getPlayer().teleport(teleportLocation);
         }
-        if (counter == 220) {
+        if (counter == 320) {
             this.selfDestruct();
         }
     }
@@ -89,7 +103,7 @@ public class DreamBoatClutch extends WYREffect {
         super.onEffectInitiate();
         inventoryBackup = getPlayer().getInventory().getContents();
         getPlayer().getInventory().clear();
-        getPlayer().sendMessage("Okay, ready?");
+        getPlayer().sendMessage("Okay, you see tower up there?");
         ItemUtils.giveItemsToPlayer(getPlayer(), new ItemStack(Material.OAK_PLANKS, 5));
         Location surfaceBlockLocation = getPlayer().getWorld().getHighestBlockAt(getPlayer().getLocation()).getLocation().add(0.5, 0, 0.5);
         teleportLocation = surfaceBlockLocation.clone().add(0, 60, 0);
@@ -114,6 +128,11 @@ public class DreamBoatClutch extends WYREffect {
     public void onEffectDecompose() {
         super.onEffectDecompose();
         if (!triggered) {
+            for (ItemStack item : getPlayer().getInventory().getContents()) {
+                if (item != null) {
+                    getPlayer().dropItem(item);
+                }
+            }
             getPlayer().getInventory().setContents(inventoryBackup);
         }
     }

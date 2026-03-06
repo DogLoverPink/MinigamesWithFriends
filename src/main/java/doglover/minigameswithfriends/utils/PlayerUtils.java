@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.utils;
 
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -14,7 +15,7 @@ public class PlayerUtils {
      */
     public static void resetPlayer(Player plr) {
         plr.getInventory().clear();
-        plr.setHealth(20);
+        plr.setHealth(plr.getAttribute(Attribute.MAX_HEALTH).getValue());
         plr.setFoodLevel(20);
         plr.clearActivePotionEffects();
     }

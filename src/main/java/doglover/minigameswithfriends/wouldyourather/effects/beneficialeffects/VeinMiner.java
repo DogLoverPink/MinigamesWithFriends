@@ -34,7 +34,6 @@ public class VeinMiner extends WYREffect {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        getPlayer().sendMessage(Bukkit.getCurrentTick()+"");
         if (!event.getPlayer().equals(getPlayer())) {
             return;
         }

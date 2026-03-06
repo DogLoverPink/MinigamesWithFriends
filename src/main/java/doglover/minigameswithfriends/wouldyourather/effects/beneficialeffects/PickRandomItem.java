@@ -71,8 +71,14 @@ public class PickRandomItem extends WYREffect {
         if (event.getWhoClicked() != getPlayer()) {
             return;
         }
+        if (!inventory.equals(event.getClickedInventory())) {
+            return;
+        }
         if (isPicking) {
             ItemStack item = event.getCurrentItem();
+            if (item == null) {
+                return;
+            }
             ItemUtils.giveItemsToPlayer(getPlayer(), item);
             event.setCancelled(true);
             isPicking = false;
@@ -98,9 +104,9 @@ public class PickRandomItem extends WYREffect {
     public void showGuiToPlayer() {
         inventory = Bukkit.createInventory(null, 27, Component.text("Pick One!"));
         for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack item = new ItemStack(matList.get(random.nextInt(0, matList.size())));
+            int amount = random.nextInt(1, 6);
+            ItemStack item = new ItemStack(matList.get(random.nextInt(0, matList.size())), amount);
             randomlyEnchantItemStack(item);
-            item.setAmount(random.nextInt(1, 6));
             inventory.setItem(i, item);
         }
         getPlayer().openInventory(inventory);

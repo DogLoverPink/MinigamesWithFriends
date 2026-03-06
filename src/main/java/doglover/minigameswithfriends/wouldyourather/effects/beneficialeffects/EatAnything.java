@@ -11,10 +11,14 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import javax.xml.crypto.Data;
 
 public class EatAnything extends WYREffect {
 
@@ -31,8 +35,19 @@ public class EatAnything extends WYREffect {
     public EatAnything(Player player) {
         super(player);
         setRepeatable(false);
-        subscribeToEvent(EntityPickupItemEvent.class);
+        subscribeToEvent(PlayerItemHeldEvent.class);
 
+    }
+
+    @Override
+    //Not necesary, but just speeds it up
+    public void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        if (!event.getPlayer().equals(getPlayer())) {
+            return;
+        }
+        ItemStack newItem = getPlayer().getInventory().getItem(event.getNewSlot());
+        if (newItem == null) return;
+        getPlayer().getInventory().setItem(event.getNewSlot(), makeItemEdible(newItem));
     }
 
     @Override
@@ -46,21 +61,36 @@ public class EatAnything extends WYREffect {
     @Override
     public void onEffectInitiate() {
         super.onEffectInitiate();
-        makeInventoryEdible();
 
     }
 
-    public void makeInventoryEdible() {
-        Player p = getPlayer();
-        for (int i = 0; i < p.getInventory().getSize(); i++) {
-            ItemStack item = p.getInventory().getItem(i);
+    @Override
+    public void on4HertzTick() {
+        super.on4HertzTick();
+        for (int i = 0; i < getPlayer().getInventory().getSize(); i++) {
+            ItemStack item = getPlayer().getInventory().getItem(i);
             if (item == null) {
                 continue;
             }
-            p.getInventory().setItem(i, makeItemEdible(item));
-
+            getPlayer().getInventory().setItem(i, makeItemNotEdible(item));
+        }
+        //Can't fully detect if inventory is open, so this is the best possible way
+        if (getPlayer().getOpenInventory().getType() == InventoryType.CRAFTING) {
+            ItemStack itemInMainHand = getPlayer().getInventory().getItemInMainHand();
+            getPlayer().getInventory().setItemInMainHand(makeItemEdible(itemInMainHand));
         }
     }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private ItemStack makeItemNotEdible(ItemStack item) {
+        if (!item.hasData(DataComponentTypes.FOOD) || item.getType().isEdible()) {
+            return item;
+        }
+        item.unsetData(DataComponentTypes.CONSUMABLE);
+        item.unsetData(DataComponentTypes.FOOD);
+        return item;
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     private ItemStack makeItemEdible(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
@@ -101,11 +131,6 @@ public class EatAnything extends WYREffect {
         return 4.0f;
     }
 
-    @Override
-    public void on4HertzTick() {
-        super.on4HertzTick();
-        makeInventoryEdible();
-    }
 
     @Override
     public void onEffectDecompose() {

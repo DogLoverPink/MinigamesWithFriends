@@ -144,7 +144,9 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             world.setGameRule(GameRules.BLOCK_DROPS, true);
             world.setGameRule(GameRules.FALL_DAMAGE, true);
             plr.setFallDistance(0);
-            plr.teleport(BlockUtils.findSafeBlock(world.getSpawnLocation()));
+            Location teleportLoc = BlockUtils.findSafeBlock(world.getSpawnLocation());
+            BlockUtils.createSafePlatformIfNotExist(teleportLoc, 1);
+            plr.teleport(teleportLoc);
         }
         for (Player plr : this.getGame().getPlayers()) {
             plr.removePotionEffect(PotionEffectType.RESISTANCE);

@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -96,7 +97,7 @@ public class Phoenix extends WYREffect {
 
 
         getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60 * 20, 0, false, false));
-        getPlayer().setHealth(10.0);
+        getPlayer().setHealth(getPlayer().getAttribute(Attribute.MAX_HEALTH).getValue() / 2.0);
         isInPhoenixMode = true;
         inventoryBackup = getPlayer().getInventory().getContents().clone();
         getPlayer().getInventory().clear();

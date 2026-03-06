@@ -5,6 +5,7 @@ import doglover.minigameswithfriends.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -19,6 +20,16 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
     public void tick() {
         super.tick();
         this.getGame().addScoreboardContribution("§dDeath Swap in: §b" + getFormattedTimeRemaining());
+        if (getTickGoal() == 200) {
+            for (Player player : getGame().getPlayers()) {
+                player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 1f, 2f);
+            }
+        }
+        if (getTickGoal() <= 60 && getTickGoal() % 20 == 0) {
+            for (Player player : getGame().getPlayers()) {
+                player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 1f, 1f);
+            }
+        }
     }
 
     @Override
@@ -62,6 +73,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
     }
 
     BukkitTask lastTask;
+
 
     @Override
     public void onTimeEventTrigger() {

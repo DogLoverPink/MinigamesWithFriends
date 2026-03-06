@@ -28,12 +28,30 @@ public class ReallyStrongGravity extends WYREffect {
     NamespacedKey gravKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "moreGravity"+getUniqueNumber());
     NamespacedKey jumpKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "moreGravityCompensation"+getUniqueNumber());
 
+    boolean modsRemoved = false;
 
     private void addModifier() {
         AttributeModifier gravMod = new AttributeModifier(gravKey, 1, AttributeModifier.Operation.ADD_NUMBER);
         AttributeModifier jumpMod = new AttributeModifier(jumpKey, 1, AttributeModifier.Operation.ADD_NUMBER);
         getPlayer().getAttribute(Attribute.GRAVITY).addModifier(gravMod);
         getPlayer().getAttribute(Attribute.JUMP_STRENGTH).addModifier(jumpMod);
+    }
+
+    private void removeModifier() {
+        getPlayer().getAttribute(Attribute.GRAVITY).removeModifier(gravKey);
+        getPlayer().getAttribute(Attribute.JUMP_STRENGTH).removeModifier(jumpKey);
+    }
+
+    @Override
+    public void on4HertzTick() {
+        if (!modsRemoved && getPlayer().isInWater()) {
+            removeModifier();
+            modsRemoved = true;
+        }
+        if (modsRemoved && !getPlayer().isInWater()) {
+            addModifier();
+            modsRemoved = false;
+        }
     }
 
     @Override
@@ -45,7 +63,6 @@ public class ReallyStrongGravity extends WYREffect {
     @Override
     public void onEffectDecompose() {
         super.onEffectDecompose();
-        getPlayer().getAttribute(Attribute.GRAVITY).removeModifier(gravKey);
-        getPlayer().getAttribute(Attribute.JUMP_STRENGTH).removeModifier(jumpKey);
+        removeModifier();
     }
 }

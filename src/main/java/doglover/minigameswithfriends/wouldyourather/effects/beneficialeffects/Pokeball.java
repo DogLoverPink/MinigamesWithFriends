@@ -75,7 +75,6 @@ public class Pokeball extends WYREffect {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void onProjectileHit(ProjectileHitEvent event) {
-        getPlayer().sendMessage("trigger hit: " + event.getHitEntity() + ":" + event.getHitBlock());
         Projectile entity = event.getEntity();
         if (!entity.getPersistentDataContainer().has(pokeOwnerKey)) {
             return;

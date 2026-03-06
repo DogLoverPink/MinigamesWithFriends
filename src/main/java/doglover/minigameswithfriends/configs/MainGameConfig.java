@@ -43,8 +43,8 @@ public class MainGameConfig extends GamemodeConfig {
         registerConfigValue("PointsToWin", Integer.class, 1);
         registerConfigValue("PointsPerDeathmatchWin", Integer.class, 1);
         registerConfigValue("KeepInventoryOnDeath", Boolean.class, false);
-        registerConfigValue("SetToDayOnStart", Boolean.class, true);
-        registerConfigValue("ResetAdvancementsOnGameStart", Boolean.class, false);
+        registerConfigValue("SetToDayOnGameStart", Boolean.class, true);
+        registerConfigValue("ResetAdvancementsOnGameStart", Boolean.class, true);
         registerConfigValue("TeleportPlayersToWorldSpawnOnGameStart", Boolean.class, true);
     }
 
@@ -62,8 +62,8 @@ public class MainGameConfig extends GamemodeConfig {
         };
     }
 
-    public boolean shouldSetToDayOnStart() {
-        return getBoolean("SetToDayOnStart");
+    public boolean shouldSetToDayOnGameStart() {
+        return getBoolean("SetToDayOnGameStart");
     }
 
     public int getPointsPerDeathmatchWin() {
