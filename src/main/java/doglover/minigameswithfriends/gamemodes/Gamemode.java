@@ -54,4 +54,15 @@ public abstract class Gamemode {
     public static List<String> getGamemodeList() {
         return List.of("DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather", "Deathmatch");
     }
+
+    public static List<Class<? extends Gamemode>> getGamemodeClassList() {
+        return List.of(DeathSwapGamemode.class, DimensionSwapGamemode.class, RandomizerGamemode.class, BlockShuffleGamemode.class, WouldYouRatherGamemode.class, DeathmatchGamemode.class);
+    }
+
+    public static String getGamemodeNameFromClass(Class<? extends Gamemode> gamemodeClass) {
+        if (gamemodeClass == null) {
+            return "";
+        }
+        return gamemodeClass.getSimpleName().replace("Gamemode", "");
+    }
 }

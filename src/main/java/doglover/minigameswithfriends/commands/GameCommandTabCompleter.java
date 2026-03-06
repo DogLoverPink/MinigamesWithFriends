@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.commands;
 
+import doglover.minigameswithfriends.Game;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.GamemodeConfig;
 import doglover.minigameswithfriends.gamemodes.BlockShuffleGamemode;
@@ -10,6 +11,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -23,7 +25,7 @@ public class GameCommandTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return filterByStartsWith(List.of("help", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle", "wouldyourather", "dimensionswap"), args[0]);
+            return filterByStartsWith(List.of("help", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle", "wouldyourather", "dimensionswap", "Pause", "Unpause"), args[0]);
         }
         String minigameCommand = args[0];
         if (minigameCommand.equalsIgnoreCase("config")) {
@@ -31,7 +33,7 @@ public class GameCommandTabCompleter implements TabCompleter {
         } else if (minigameCommand.equalsIgnoreCase("wouldyourather")) {
                 return handleWouldYouRatherTagComplete(args);
         } else if (minigameCommand.equalsIgnoreCase("EnableGamemode")) {
-            return filterByStartsWith(Gamemode.getGamemodeList(), args[1]);
+            return unEnabledGamemodeList(args[1]);
         } else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
             return filterByStartsWith(MinigamesWithFriends.getGame().getGamemodesAsString(), args[1]);
         }
@@ -56,6 +58,15 @@ public class GameCommandTabCompleter implements TabCompleter {
         }
 
         return null;
+    }
+
+    private List<String> unEnabledGamemodeList(String input) {
+        Game game = MinigamesWithFriends.getGame();
+        List<String> gamemodes = Gamemode.getGamemodeClassList().stream()
+                .filter(gamemode -> !game.isGamemodeActive(gamemode))
+                .map(Gamemode::getGamemodeNameFromClass)
+                .toList();
+        return filterByStartsWith(gamemodes, input);
     }
 
     private List<String> handleWouldYouRatherTagComplete(String[] args) {
