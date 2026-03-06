@@ -224,4 +224,38 @@ public class BlockUtils {
         }
     }
 
+    public static void createSafePlatformIfNotExist(Location loc, int radius) {
+        if (loc == null || loc.getWorld() == null || radius < 0) {
+            return;
+        }
+
+        World world = loc.getWorld();
+        int centerX = loc.getBlockX();
+        int centerY = loc.getBlockY();
+        int centerZ = loc.getBlockZ();
+
+        int minY = world.getMinHeight();
+        int platformY = centerY - 5;
+
+        if (platformY < minY || platformY >= world.getMaxHeight()) {
+            return;
+        }
+
+        for (int x = centerX - radius; x <= centerX + radius; x++) {
+            for (int z = centerZ - radius; z <= centerZ + radius; z++) {
+                boolean hasSolidBelow = false;
+
+                for (int y = centerY - 1; y >= minY; y--) {
+                    if (world.getBlockAt(x, y, z).getType().isSolid()) {
+                        hasSolidBelow = true;
+                        break;
+                    }
+                }
+
+                if (!hasSolidBelow) {
+                    world.getBlockAt(x, platformY, z).setType(Material.GLASS);
+                }
+            }
+        }
+    }
 }

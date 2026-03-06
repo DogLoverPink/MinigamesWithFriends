@@ -11,6 +11,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -213,7 +214,7 @@ public class Game {
         aliveDeathMatchPlayers.clear();
         deadDeathMatchPlayers.clear();
 
-        if (getConfig().shouldSetToDayOnStart()) {
+        if (getConfig().shouldSetToDayOnGameStart()) {
             for (Player player : getPlayers()) {
                 player.getWorld().setTime(1000);
             }
@@ -311,11 +312,12 @@ public class Game {
         Location loc = BlockUtils.findSafeBlock(randomPlayer.getWorld().getSpawnLocation());
         deathmatchWorld = loc.getWorld();
         BlockUtils.createWallsAroundLocation(loc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
+        BlockUtils.createSafePlatformIfNotExist(loc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
         BlockUtils.createHollowBoxAroundLocation(loc);
         for (Player player : getPlayers()) {
             previousLocations.put(player.getUniqueId(), player.getLocation());
             player.teleport(loc);
-            player.setHealth(20.0);
+            player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
             player.setFoodLevel(20);
             player.sendMessage("§c§lDeathmatch Started!");
             player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 12 * 20, 5, true, false));
@@ -378,7 +380,7 @@ public class Game {
 
         for (Player plr : getPlayers()) {
             plr.sendMessage("§a" + winnerName + " won deathmatch! ");
-            plr.setHealth(20.0);
+            plr.setHealth(plr.getAttribute(Attribute.MAX_HEALTH).getValue());
             Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
                 Location loc = previousLocations.get(plr.getUniqueId());
                 plr.setGameMode(GameMode.SURVIVAL);
