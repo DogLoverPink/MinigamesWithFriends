@@ -81,7 +81,7 @@ public class Game {
     public List<String> getGamemodesAsString() {
         List<String> gamemodeNames = new ArrayList<>();
         for (Gamemode gamemode : gamemodes) {
-            gamemodeNames.add(gamemode.getClass().getSimpleName().replace("Gamemode", ""));
+            gamemodeNames.add(Gamemode.getGamemodeNameFromClass(gamemode.getClass()));
         }
         return gamemodeNames;
     }
@@ -464,6 +464,14 @@ public class Game {
 
     private final Map<String, TimedActionBar> actionBars = new LinkedHashMap<>();
 
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
     private record TimedActionBar(String key, Component text, int serverTickEndTime, Player player) {
 
     }
@@ -477,7 +485,13 @@ public class Game {
         actionBars.put(key, new TimedActionBar(key, text, durationTicks, player));
     }
 
+    private boolean paused = false;
+
+
     public void tick() {
+        if (isPaused()) {
+            return;
+        }
         for (Player plr : getPlayers()) {
             Component actionBarString = Component.empty();
             List<TimedActionBar> actionBarList = actionBars.values().stream().filter(actionBar -> actionBar.player.equals(plr)).toList();

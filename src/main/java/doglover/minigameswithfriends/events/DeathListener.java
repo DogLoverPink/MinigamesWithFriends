@@ -18,7 +18,7 @@ public class DeathListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
-        if (!MinigamesWithFriends.getGame().isRunning()) {
+        if (!MinigamesWithFriends.getGame().isRunning() || MinigamesWithFriends.getGame().isPaused()) {
             return;
         }
 

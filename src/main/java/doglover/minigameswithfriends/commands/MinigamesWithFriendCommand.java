@@ -18,6 +18,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,9 +33,6 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
         if (args.length == 0) {
             commandSender.sendMessage("§cPlease specify a subcommand.");
-            commandSender.sendMessage("The options are:\n" +
-                    "§b start\n" +
-                    "§b config <config> <key> <value>\n");
             return true;
         }
 
@@ -48,10 +46,9 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             plr.teleport(BlockUtils.findSafeBlock(plr.getLocation()));
         } else if (minigameCommand.equalsIgnoreCase("dimensionswap")) {
             handleDimensionSwapCommand(commandSender, args);
-        }
-        else if (minigameCommand.equalsIgnoreCase("help")) {
+        } else if (minigameCommand.equalsIgnoreCase("help")) {
             handleHelpCommand(commandSender, args);
-        }else if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
+        } else if (minigameCommand.equalsIgnoreCase("launchToSpawn")) {
             Player plr = (Player) commandSender;
             PlayerUtils.launchPlayerToLoc(plr, plr.getWorld().getSpawnLocation());
         } else if (minigameCommand.equalsIgnoreCase("DisableGamemode")) {
@@ -66,14 +63,15 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             }
             MinigamesWithFriends.getGame().startGame();
             commandSender.sendMessage("§aGame started.");
-        } else if (minigameCommand.equalsIgnoreCase("fling")) {
-            Player plr = (Player) commandSender;
-            Game.launchPlayerSideways(plr, 10);
         } else if (minigameCommand.equalsIgnoreCase("stop")) {
             MinigamesWithFriends.getGame().endGame();
             commandSender.sendMessage("§cGame stopped.");
         } else if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
             handleBlockShuffleCommand(commandSender, args);
+        } else if (minigameCommand.equalsIgnoreCase("Pause")) {
+            handlePause(commandSender);
+        } else if (minigameCommand.equalsIgnoreCase("Unpause")) {
+            handleUnpause(commandSender);
         } else if (minigameCommand.equalsIgnoreCase("wouldyourather")) {
             handleWouldYouRatherCommand(commandSender, args);
         } else if (minigameCommand.equalsIgnoreCase("config")) {
@@ -100,6 +98,39 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
         return false;
     }
 
+    private void handlePause(CommandSender commandSender) {
+        Game game = MinigamesWithFriends.getGame();
+        if (game.isPaused()) {
+            commandSender.sendMessage(Component.text("Already paused!").color(NamedTextColor.RED));
+            return;
+        }
+        game.setPaused(true);
+        if (game.isGamemodeActive(WouldYouRatherGamemode.class)) {
+            WYREventHandler.setActive(false);
+        }
+        game.getPlayers().forEach(player -> {
+            player.sendMessage(Component.text("Game Paused!").color(NamedTextColor.GREEN));
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0.8f);
+        });
+        commandSender.sendMessage(Component.text("Timers have been paused, but note that pausing is not fully supported by every part of this plugin").color(NamedTextColor.YELLOW));
+    }
+
+    private void handleUnpause(CommandSender commandSender) {
+        Game game = MinigamesWithFriends.getGame();
+        if (!game.isPaused()) {
+            commandSender.sendMessage(Component.text("Game not currently paused!").color(NamedTextColor.RED));
+            return;
+        }
+        game.setPaused(false);
+        if (game.isGamemodeActive(WouldYouRatherGamemode.class)) {
+            WYREventHandler.setActive(true);
+        }
+        game.getPlayers().forEach(player -> {
+            player.sendMessage(Component.text("Game Unpaused!").color(NamedTextColor.GREEN));
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0.8f);
+        });
+    }
+
     private void handleHelpCommand(CommandSender commandSender, String[] args) {
         Component message = MiniMessage.miniMessage().deserialize(
                 "<yellow>For help with the plugin, refer to <click:open_url:'https://REPLACEMEWITHDOCSLINK.com'><u><aqua>the documentation</aqua></u></click></yellow>"
@@ -115,8 +146,9 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
         }
         if (args[1].equalsIgnoreCase("PreLoadSavedDimensionSwapWorlds")) {
             DimensionSwapGamemode.preLoadSavedWorlds(commandSender);
+        } else {
+            commandSender.sendMessage("§cInvalid subcommand!");
         }
-        commandSender.sendMessage("§cInvalid subcommand!");
     }
 
     private void handleWouldYouRatherCommand(CommandSender commandSender, String[] args) {

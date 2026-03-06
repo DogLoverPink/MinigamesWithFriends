@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather;
 
+import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
