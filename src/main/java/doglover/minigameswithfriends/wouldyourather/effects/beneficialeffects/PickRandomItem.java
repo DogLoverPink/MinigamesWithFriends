@@ -83,7 +83,7 @@ public class PickRandomItem extends WYREffect {
             event.setCancelled(true);
             isPicking = false;
             inventory.close();
-            getPlayer().sendMessage(Component.text("§aYou picked §b" + item.getAmount() + " §e" + item.getType().toString() + "§a!"));
+            getPlayer().sendMessage(Component.text("§aYou picked §b" + item.getAmount() + " §e" + item.getType() + "§a!"));
             this.selfDestruct();
         }
     }

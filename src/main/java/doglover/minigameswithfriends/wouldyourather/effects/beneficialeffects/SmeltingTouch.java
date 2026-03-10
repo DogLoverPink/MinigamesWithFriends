@@ -61,6 +61,7 @@ public class SmeltingTouch extends WYREffect {
         while (recipes.hasNext()) {
             Recipe recipe = recipes.next();
             if (recipe instanceof FurnaceRecipe furnace) {
+                furnace.getInputChoice().test(input);
                 if (furnace.getInput().getType() == input.getType()) {
                     return new ItemStack(furnace.getResult().getType(), input.getAmount());
                 }

@@ -1,12 +1,12 @@
 package doglover.minigameswithfriends.utils;
 
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class EnchantUtils {
 
@@ -14,7 +14,7 @@ public class EnchantUtils {
 
     public static void enchantItemRandomly(ItemStack item) {
         List<Enchantment> applicable = new ArrayList<>();
-        for (Enchantment enchant : Enchantment.values()) {
+        for (Enchantment enchant : RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)) {
             if (enchant.canEnchantItem(item)) {
                 applicable.add(enchant);
             }

@@ -107,7 +107,7 @@ public class HauntingMobs extends WYREffect {
         super.onEffectDecompose();
     }
 
-    private class HauntingMob {
+    private static class HauntingMob {
         private final EntityType type;
         private final Location location;
         private int counter;

@@ -59,8 +59,8 @@ public class StealItemFromPlayer extends WYREffect {
                     event.getInventory().remove(item);
                     event.getInventory().close();
                     if (randPlayer != null) {
-                        getPlayer().sendMessage(Component.text("§aYou took §b" + item.getAmount() + " §e" + item.getType().toString() + "§a from §9" + randPlayer.getName() + "!"));
-                        randPlayer.sendMessage(Component.text("§9" + getPlayer().getName() + "§c took §b" + item.getAmount() + " §e" + item.getType().toString() + " §cfrom you!"));
+                        getPlayer().sendMessage(Component.text("§aYou took §b" + item.getAmount() + " §e" + item.getType() + "§a from §9" + randPlayer.getName() + "!"));
+                        randPlayer.sendMessage(Component.text("§9" + getPlayer().getName() + "§c took §b" + item.getAmount() + " §e" + item.getType() + " §cfrom you!"));
                     }
 
                     this.selfDestruct();

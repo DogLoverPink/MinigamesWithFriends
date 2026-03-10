@@ -9,7 +9,7 @@ public class TextUtils {
         StringBuilder formattedName = new StringBuilder();
 
         for (String word : words) {
-            if (formattedName.length() > 0) {
+            if (!formattedName.isEmpty()) {
                 formattedName.append(" ");
             }
             formattedName.append(Character.toUpperCase(word.charAt(0)))

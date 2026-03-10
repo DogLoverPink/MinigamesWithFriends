@@ -117,7 +117,7 @@ public class Pokeball extends WYREffect {
             pdc.set(pokeStoredKey, PersistentDataType.STRING, entity.getUniqueId().toString());
         });
         stack.editMeta(meta -> {
-                    meta.displayName(mm.deserialize("<red>Poke</red>Ball <red>[</red>" + entity.getType().toString() + "<red>]</red>").decoration(TextDecoration.ITALIC, false));
+                    meta.displayName(mm.deserialize("<red>Poke</red>Ball <red>[</red>" + entity.getType() + "<red>]</red>").decoration(TextDecoration.ITALIC, false));
                     meta.lore(List.of(propertyOfLabel));
                 }
         );

@@ -42,7 +42,6 @@ public class TakeMoreKnockback extends WYREffect {
         if (!event.getEntity().equals(getPlayer())) {
             return;
         }
-        getPlayer().sendMessage("meow13");
         Vector knockBack = event.getKnockback();
         knockBack = knockBack.multiply(new Vector(3.5, 1.25, 3.5));
 //        knockBack = knockBack.multiply(2);

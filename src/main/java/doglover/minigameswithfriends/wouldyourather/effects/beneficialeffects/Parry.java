@@ -1,11 +1,9 @@
 package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
-import com.destroystokyo.paper.MaterialTags;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.Tag;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -77,7 +75,7 @@ public class Parry extends WYREffect {
             return;
         }
         ItemStack handItem = getPlayer().getInventory().getItemInMainHand();
-        if (handItem.isEmpty() || !MaterialTags.SWORDS.isTagged(handItem.getType())) {
+        if (handItem.isEmpty() || !Tag.ITEMS_SWORDS.isTagged(handItem.getType())) {
             return;
         }
         getPlayer().getWorld().playSound(getPlayer().getLocation(), Sound.ITEM_SHIELD_BLOCK, 1, 1);

@@ -61,11 +61,14 @@ public class EvilPresence extends WYREffect {
 
     @Override
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        onDamage(event.getDamager(), event.getDamage());
+        Entity damager = event.getDamager();
+        onDamage(damager, event.getDamage());
         if (!event.getEntity().equals(getPlayer())) {
             return;
         }
-        event.setDamage(event.getDamage() * 2);
+        if (damager.equals(phantomTop) || damager.equals(phantomBottom)) {
+            event.setDamage(event.getDamage() * 2);
+        }
     }
 
     @Override
