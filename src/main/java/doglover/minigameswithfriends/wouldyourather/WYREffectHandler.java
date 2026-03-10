@@ -49,7 +49,7 @@ public class WYREffectHandler {
             }
             return effectClass.getDeclaredConstructor(Player.class).newInstance(player);
         } catch (Exception e) {
-            e.printStackTrace();
+            MinigamesWithFriends.getGamePlugin().getLogger().warning(e.getMessage());
             return null;
         }
     }

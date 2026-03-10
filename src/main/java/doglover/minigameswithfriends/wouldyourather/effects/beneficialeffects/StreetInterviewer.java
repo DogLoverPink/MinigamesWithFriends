@@ -7,7 +7,6 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
-import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;

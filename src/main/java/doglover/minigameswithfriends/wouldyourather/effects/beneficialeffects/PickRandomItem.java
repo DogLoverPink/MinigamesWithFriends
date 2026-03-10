@@ -14,15 +14,12 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ItemType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class PickRandomItem extends WYREffect {
 
@@ -94,9 +91,7 @@ public class PickRandomItem extends WYREffect {
             return;
         }
         if (isPicking) {
-            Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
-                getPlayer().openInventory(inventory);
-            }, 1);
+            Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> getPlayer().openInventory(inventory), 1);
 
         }
     }

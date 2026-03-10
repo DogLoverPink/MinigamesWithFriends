@@ -1,6 +1,5 @@
 package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
-import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.EntityUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
@@ -11,9 +10,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.metadata.MetadataValueAdapter;
 import org.bukkit.util.Vector;
 
 import java.util.*;

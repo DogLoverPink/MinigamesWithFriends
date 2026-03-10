@@ -128,9 +128,7 @@ public class Pokeball extends WYREffect {
     @SuppressWarnings("UnstableApiUsage")
     private ItemStack getPokeball(int amount) {
         ItemStack stack = new ItemStack(Material.SNOWBALL, amount);
-        stack.editPersistentDataContainer(pdc -> {
-            pdc.set(pokeOwnerKey, PersistentDataType.STRING, getPlayer().getUniqueId().toString());
-        });
+        stack.editPersistentDataContainer(pdc -> pdc.set(pokeOwnerKey, PersistentDataType.STRING, getPlayer().getUniqueId().toString()));
         stack.editMeta(meta -> {
                     meta.displayName(mm.deserialize("<red>Poke</red>Ball").decoration(TextDecoration.ITALIC, false));
                     meta.lore(List.of(propertyOfLabel));

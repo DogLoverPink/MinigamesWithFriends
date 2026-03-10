@@ -176,9 +176,7 @@ public class EvilPresence extends WYREffect {
         phantomTop.setRotation(0, 0);
         ItemStack cthulhuSkull = getSkull("http://textures.minecraft.net/texture/2551c2fc174d1018bdaa9bc20d9cfae023e523157a606f2ba9f3e691713b2806");
 
-        display = getPlayer().getWorld().spawn(phantomBottom.getLocation(), ItemDisplay.class, entity -> {
-            entity.setItemStack(cthulhuSkull);
-        });
+        display = getPlayer().getWorld().spawn(phantomBottom.getLocation(), ItemDisplay.class, entity -> entity.setItemStack(cthulhuSkull));
 
         phantomBottom.addPassenger(display);
 
