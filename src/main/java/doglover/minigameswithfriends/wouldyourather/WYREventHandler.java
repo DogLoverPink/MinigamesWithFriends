@@ -1,9 +1,7 @@
 package doglover.minigameswithfriends.wouldyourather;
 
-import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.events.*;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,7 +15,7 @@ public class WYREventHandler {
     private static final Map<Class<? extends Event>, List<WYREffectWithPriority>> eventMappings = new HashMap<>();
 
     public static List<WYREffect> getEffectsForEvent(Event event) {
-        return eventMappings.getOrDefault(event.getClass(), new ArrayList<>()).stream().map(WYREffectWithPriority::getEffect).toList();
+        return eventMappings.getOrDefault(event.getClass(), new ArrayList<>()).stream().map(WYREffectWithPriority::effect).toList();
     }
 
     public static void registerEvents(JavaPlugin plugin) {
@@ -39,7 +37,7 @@ public class WYREventHandler {
     private static void addEventClassInCorrectOrder(Class<? extends Event> eventClass, WYREffectWithPriority effectWithPriority) {
         List<WYREffectWithPriority> effects = eventMappings.computeIfAbsent(eventClass, k -> new ArrayList<>());
         int index = 0;
-        while (index < effects.size() && effects.get(index).getPriority().ordinal() >= effectWithPriority.getPriority().ordinal()) {
+        while (index < effects.size() && effects.get(index).priority().ordinal() >= effectWithPriority.priority().ordinal()) {
             index++;
         }
         effects.add(index, effectWithPriority);
@@ -53,7 +51,7 @@ public class WYREventHandler {
 
     public static void unsubscribe(WYREffect effect) {
         for (List<WYREffectWithPriority> effects : eventMappings.values()) {
-            effects.removeIf(e -> e.getEffect().equals(effect));
+            effects.removeIf(e -> e.effect().equals(effect));
         }
     }
 
@@ -68,25 +66,10 @@ public class WYREventHandler {
     }
 
     public static void unsubscribe(Class<? extends Event> eventClass, WYREffect effect) {
-        eventMappings.get(eventClass).removeIf(e -> e.getEffect().equals(effect));
+        eventMappings.get(eventClass).removeIf(e -> e.effect().equals(effect));
     }
 
-    static class WYREffectWithPriority {
-        private final EventPriority priority;
-        private final WYREffect effect;
-
-        public WYREffectWithPriority(WYREffect effect, EventPriority priority) {
-            this.priority = priority;
-            this.effect = effect;
-        }
-
-        public EventPriority getPriority() {
-            return priority;
-        }
-
-        public WYREffect getEffect() {
-            return effect;
-        }
+    record WYREffectWithPriority(WYREffect effect, EventPriority priority) {
     }
 
 }

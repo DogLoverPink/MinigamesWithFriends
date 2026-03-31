@@ -29,7 +29,7 @@ public class MoreHealthForEachHoe extends WYREffect {
     public MoreHealthForEachHoe(Player player) {
         super(player);
         setRepeatable(true);
-        List<Material> materials = new ArrayList<Material>(HEALTH_GAIN.keySet());
+        List<Material> materials = new ArrayList<>(HEALTH_GAIN.keySet());
         targetMaterial = materials.get(random.nextInt(materials.size()));
     }
 

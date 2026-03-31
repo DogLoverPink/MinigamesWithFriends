@@ -46,7 +46,7 @@ public class Hallucinate extends WYREffect {
 
     };
 
-    ArrayList<String> effectList = new ArrayList<String>(Arrays.asList(effects));
+    ArrayList<String> effectList = new ArrayList<>(Arrays.asList(effects));
 
     static {
         WYREffectHandler.registerDetrimentalWYREffect(Hallucinate.class);

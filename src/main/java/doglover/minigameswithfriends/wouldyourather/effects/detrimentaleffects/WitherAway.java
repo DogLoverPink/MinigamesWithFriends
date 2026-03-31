@@ -20,7 +20,7 @@ public class WitherAway extends WYREffect {
         WYREffectHandler.registerDetrimentalWYREffect(WitherAway.class);
     }
 
-    Map<Material, Material> replacementMap = new HashMap<Material, Material>();
+    Map<Material, Material> replacementMap = new HashMap<>();
 
     @Override
     public String getDescriptionBlurb() {

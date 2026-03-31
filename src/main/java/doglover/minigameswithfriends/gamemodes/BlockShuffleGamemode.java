@@ -2,8 +2,10 @@ package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.BlockUtils;
+import doglover.minigameswithfriends.utils.ParticleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -138,6 +140,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
         if (block == null) {
             return;
         }
+        ParticleUtils.createParticleCloud(player.getLocation(), 3, Particle.FIREWORK, 75);
         if (getGame().getConfig().getBlockShuffleConfig().shouldGivePointsAtEndOfRound()) {
             playersWhoHaveSteppedOnBlock.add(player.getUniqueId());
             playerBlocks.remove(player.getUniqueId());

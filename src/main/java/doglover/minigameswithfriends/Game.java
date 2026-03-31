@@ -135,8 +135,8 @@ public class Game {
 
     public <T extends Gamemode> T getGamemode(Class<T> gamemodeClass) {
         for (Gamemode gamemode : gamemodes) {
-            if (gamemode.getClass() == gamemodeClass) {
-                return (T) gamemode;
+            if (gamemodeClass.isInstance(gamemode)) {
+                return gamemodeClass.cast(gamemode);
             }
         }
         return null;

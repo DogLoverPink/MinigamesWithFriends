@@ -223,7 +223,7 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             return;
         }
         if (args[1].equalsIgnoreCase("preLoadSavedDimensionSwapWorlds")) {
-            DimensionSwapGamemode.preLoadSavedWorlds((Player) commandSender);
+            DimensionSwapGamemode.preLoadSavedWorlds(commandSender);
             commandSender.sendMessage("§aPreloaded saved worlds.");
         } else if (args[1].equalsIgnoreCase("launchToSpawn")) {
             Player plr = (Player) commandSender;

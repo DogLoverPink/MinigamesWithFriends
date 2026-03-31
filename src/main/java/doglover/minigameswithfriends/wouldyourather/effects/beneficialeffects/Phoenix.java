@@ -157,7 +157,7 @@ public class Phoenix extends WYREffect {
     }
 
     public static Set<Block> sphereAround(Location location, int radius) {
-        Set<Block> sphere = new HashSet<Block>();
+        Set<Block> sphere = new HashSet<>();
         Block center = location.getBlock();
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
