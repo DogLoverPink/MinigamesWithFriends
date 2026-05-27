@@ -19,13 +19,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GameCommandTabCompleter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return filterByStartsWith(List.of("help", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle", "wouldyourather", "dimensionswap", "Pause", "Unpause"), args[0]);
+            return filterByStartsWith(List.of("help", "start", "stop", "config", "EnableGamemode", "DisableGamemode", "ClearGamemodes", "blockshuffle", "wouldyourather", "dimensionswap", "Pause", "Unpause", "AddSpectator", "RemoveSpectator"), args[0]);
         }
         String minigameCommand = args[0];
         if (minigameCommand.equalsIgnoreCase("config")) {
@@ -55,6 +57,12 @@ public class GameCommandTabCompleter implements TabCompleter {
                 return List.of();
             }
 
+        } else if (minigameCommand.equalsIgnoreCase("addspectator")) {
+            Set<Player> allPlayers = new HashSet<>(Bukkit.getOnlinePlayers());
+            allPlayers.removeAll(MinigamesWithFriends.getGame().getSpectators());
+            return allPlayers.stream().map(Player::getName).toList();
+        } else if (minigameCommand.equalsIgnoreCase("removespectator")) {
+            return MinigamesWithFriends.getGame().getSpectators().stream().map(Player::getName).toList();
         }
 
         return null;

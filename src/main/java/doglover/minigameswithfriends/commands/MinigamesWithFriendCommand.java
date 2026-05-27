@@ -92,10 +92,58 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             if (args.length == 4) {
                 handleSettingConfigValue(commandSender, args[1], args[2], args[3]);
             }
-        } else {
+        }
+        else if (minigameCommand.equalsIgnoreCase("addspectator")) {
+            addSpectator(commandSender, args);
+
+        } else if (minigameCommand.equalsIgnoreCase("removespectator")) {
+            removeSpectator(commandSender, args);
+        }
+        else {
             commandSender.sendMessage(Component.text("Invalid command!").color(NamedTextColor.RED));
         }
         return false;
+    }
+
+    private void removeSpectator(CommandSender sender, String[] args) {
+        if  (args.length == 1) {
+            sender.sendMessage("§cPlease specify a player!");
+            return;
+        }
+        Player plr = Bukkit.getPlayer(args[1]);
+        if (plr == null) {
+            sender.sendMessage("§cPlease specify a valid player!");
+            return;
+        }
+        if (!MinigamesWithFriends.getGame().getSpectators().contains(plr)) {
+            sender.sendMessage("§cThat player is not a spectator!");
+            return;
+        }
+        MinigamesWithFriends.getGame().removeSpectator(plr);
+        sender.sendMessage("§aMade §b"+plr.getName()+"§a no longer a spectator!");
+    }
+
+    private void addSpectator(CommandSender sender, String[] args) {
+        if  (args.length == 1) {
+            sender.sendMessage("§cPlease specify a player!");
+            return;
+        }
+        Player plr = Bukkit.getPlayer(args[1]);
+        if (plr == null) {
+            sender.sendMessage("§cPlease specify a valid player!");
+            return;
+        }
+        if (MinigamesWithFriends.getGame().getSpectators().contains(plr)) {
+            sender.sendMessage("§cThat player is already a spectator!");
+            return;
+        }
+        MinigamesWithFriends.getGame().addSpectator(plr);
+        if (!sender.equals(plr)) {
+            sender.sendMessage("§aMade §b"+plr.getName()+"§a a spectator!");
+        }
+        if (!MinigamesWithFriends.getGame().isRunning()) {
+            plr.sendMessage("§aYou have been set to spectate the next game!");
+        }
     }
 
     private void handlePause(CommandSender commandSender) {

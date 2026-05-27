@@ -53,6 +53,9 @@ public class PickRandomItem extends WYREffect {
         matList.removeIf(item -> {
             String matName = item.toString();
             for (String word: names) {
+                if (!item.isItem()) {
+                    return true;
+                }
                 if (matName.toLowerCase().contains(word)) {
                     return false;
                 }
@@ -99,8 +102,9 @@ public class PickRandomItem extends WYREffect {
     public void showGuiToPlayer() {
         inventory = Bukkit.createInventory(null, 27, Component.text("Pick One!"));
         for (int i = 0; i < inventory.getSize(); i++) {
-            int amount = random.nextInt(1, 6);
-            ItemStack item = new ItemStack(matList.get(random.nextInt(0, matList.size())), amount);
+            ItemStack item = new ItemStack(matList.get(random.nextInt(0, matList.size())), 1);
+            int amount = random.nextInt(1, item.getMaxStackSize() + 1);
+            item.setAmount(amount);
             randomlyEnchantItemStack(item);
             inventory.setItem(i, item);
         }

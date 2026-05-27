@@ -18,10 +18,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Game {
     private final Set<UUID> players = new HashSet<>();
+    private final Set<UUID> spectators = new HashSet<>();
     private final Map<Player, Integer> points = new HashMap<>();
     private int pointsToWin = 2;
 
@@ -50,7 +53,24 @@ public class Game {
 
     private final Map<UUID, FastBoard> boards = new HashMap<>();
 
+    public Set<Player> getPlayersAndSpectators() {
+        return Stream.concat(getPlayers().stream(), getSpectators().stream()).collect(Collectors.toSet());
+    }
+
+    private void invalidateCaches() {
+        getPlayersAndSpectators().clear();
+        getSpectators().clear();
+        getPlayersCache = null;
+        getSpectatorsCache = null;
+    }
+
+    private Set<Player> getPlayersCache = null;
+    private Set<Player> getSpectatorsCache = null;
+
     public Set<Player> getPlayers() {
+        if (getPlayersCache != null) {
+            return getPlayersCache;
+        }
         Set<Player> onlinePlayers = new HashSet<>();
         for (UUID uuid : players) {
             Player player = Bukkit.getPlayer(uuid);
@@ -58,21 +78,59 @@ public class Game {
                 onlinePlayers.add(player);
             }
         }
-        return onlinePlayers;
+        getPlayersCache = onlinePlayers;
+        return getPlayersCache;
+    }
+
+    public Set<Player> getSpectators() {
+        if (getSpectatorsCache != null) {
+            return getSpectatorsCache;
+        }
+        Set<Player> spectatorsList = new HashSet<>();
+        for (UUID uuid : spectators) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null && player.isOnline()) {
+                spectatorsList.add(player);
+            }
+        }
+        getSpectatorsCache = spectatorsList;
+        return getSpectatorsCache;
+    }
+
+    public boolean isPlayerInGame(Player plr) {
+        return !players.contains(plr.getUniqueId());
     }
 
     public void addPlayer(Player player) {
         this.players.add(player.getUniqueId());
     }
 
+    public void addSpectator(Player player) {
+        if (isRunning) {
+            for (Player plr : getPlayersAndSpectators()) {
+                plr.sendMessage("§b" + player.getName() + "§a is now spectating!");
+            }
+            player.setGameMode(GameMode.SPECTATOR);
+            MinigamesWithFriends.getGame().removePlayer(player);
+        }
+        this.spectators.add(player.getUniqueId());
+        invalidateCaches();
+    }
+
     public void removePlayer(Player player) {
         this.players.remove(player.getUniqueId());
-        FastBoard board = boards.get(player.getUniqueId());
-        if (board != null) {
-            board.delete();
-            boards.remove(player.getUniqueId());
-        }
+//        points.remove(player);
     }
+
+    public void removeSpectator(Player player) {
+        this.spectators.remove(player.getUniqueId());
+        addPlayer(player);
+        if (isRunning) {
+            player.setGameMode(GameMode.SURVIVAL);
+        }
+        invalidateCaches();
+    }
+
 
     public List<Gamemode> getGamemodes() {
         return gamemodes;
@@ -207,6 +265,7 @@ public class Game {
 
         if (players.isEmpty()) {
             players.addAll(Bukkit.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).toList());
+            players.removeAll(spectators);
         }
         pointsToWin = config.getPointsToWin();
         isRunning = true;
@@ -233,21 +292,33 @@ public class Game {
             }
 
             points.put(player, 0);
-            FastBoard board = new FastBoard(player);
 
-
-            boards.put(player.getUniqueId(), board);
-            board.updateTitle("§b§lMinigames with Friends");
-            board.updateLines(new ArrayList<>());
 
             PlayerUtils.resetPlayer(player);
             player.setGameMode(GameMode.SURVIVAL);
             if (getConfig().shouldTeleportPlayersToWorldSpawnOnGameStart()) {
                 player.teleport(player.getWorld().getSpawnLocation());
             }
-            player.sendMessage("§a§lGame Started!");
-            player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
 
+
+        }
+
+        for (Player everyone : getPlayersAndSpectators()) {
+
+            FastBoard board = new FastBoard(everyone);
+
+
+            boards.put(everyone.getUniqueId(), board);
+            board.updateTitle("§b§lMinigames with Friends");
+            board.updateLines(new ArrayList<>());
+            everyone.sendMessage("§a§lGame Started!");
+            everyone.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
+
+        }
+
+        for (Player spectator : getSpectators()) {
+            spectator.setGameMode(GameMode.SPECTATOR);
+            spectator.sendMessage("§eYou are §bspectating");
         }
         for (Gamemode gamemode : gamemodes) {
             gamemode.onGameStart();
@@ -259,7 +330,7 @@ public class Game {
         for (Gamemode gamemode : gamemodes) {
             gamemode.onGameEnd();
         }
-        for (Player player : getPlayers()) {
+        for (Player player : getPlayersAndSpectators()) {
             FastBoard board = boards.get(player.getUniqueId());
             if (board != null) {
                 board.delete();
@@ -301,6 +372,21 @@ public class Game {
     World deathmatchWorld;
 
     public void startDeathMatch() {
+
+        if (getPlayers().size() <= 1) {
+            getPlayersAndSpectators().forEach(player -> {
+                player.sendMessage("§cNot enough players for deathmatch! Skipping");
+                player.playSound(player, Sound.ENTITY_VILLAGER_NO, 1, 1);
+            });
+            if (getPlayers().size() == 1) {
+                deathmatchWorld = getPlayers().stream().toList().getFirst().getWorld();
+            } else {
+                deathmatchWorld = Bukkit.getWorld("world");
+            }
+            endDeathMatch(null);
+            return;
+        }
+
         inDeathMatch = true;
         aliveDeathMatchPlayers.clear();
         aliveDeathMatchPlayers.addAll(players);
@@ -320,8 +406,8 @@ public class Game {
             player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
             player.setFoodLevel(20);
             player.sendMessage("§c§lDeathmatch Started!");
-            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 12 * 20, 5, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 5 * 20, 5, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 12 * 20, 4, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 5 * 20, 9, true, false));
             BukkitRunnable runnable = new BukkitRunnable() {
                 int i = 5;
 
@@ -454,8 +540,9 @@ public class Game {
 
 
     private void displayOnBoard(List<String> lines) {
-        for (UUID uuid : players) {
-            FastBoard board = boards.get(uuid);
+        for (Player plr : getPlayersAndSpectators()) {
+
+            FastBoard board = boards.get(plr.getUniqueId());
             if (board != null) {
                 board.updateLines(lines);
             }
@@ -492,6 +579,10 @@ public class Game {
         if (isPaused()) {
             return;
         }
+        if (getPlayers().isEmpty()) {
+            invalidateCaches();
+            return;
+        }
         for (Player plr : getPlayers()) {
             Component actionBarString = Component.empty();
             List<TimedActionBar> actionBarList = actionBars.values().stream().filter(actionBar -> actionBar.player.equals(plr)).toList();
@@ -523,6 +614,7 @@ public class Game {
             scoreboardContributions.add("§b" + player.getName() + ": §d" + getPointsFromPlayer(player));
         }
         displayOnBoard(scoreboardContributions);
+        invalidateCaches();
     }
 
 
