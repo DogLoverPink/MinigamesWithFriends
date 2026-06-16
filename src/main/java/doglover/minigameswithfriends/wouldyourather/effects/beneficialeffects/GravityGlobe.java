@@ -52,26 +52,28 @@ public class GravityGlobe extends WYREffect {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-       if (!event.getPlayer().equals(getPlayer())) {
-           return;
-       }
-       if (event.getItem() == null || !event.getItem().getType().equals(Material.RECOVERY_COMPASS)) {
-           return;
-       }
-       if (Boolean.FALSE.equals(event.getItem().getPersistentDataContainer().get(gravityGlobeOwnerKey, PersistentDataType.BOOLEAN))) {
-           return;
-       }
-       if (isGravityInverted) {
-           getPlayer().getAttribute(Attribute.GRAVITY).removeModifier(gravityGlobeAttributeKey);
-           getPlayer().setAllowFlight(false);
-           isGravityInverted = false;
-           return;
-       }
-       isGravityInverted = true;
-       getPlayer().setAllowFlight(true);
-       getPlayer().damage(2);
-       double strength = -2 * getPlayer().getAttribute(Attribute.GRAVITY).getValue();
-       getPlayer().getAttribute(Attribute.GRAVITY).addModifier(new AttributeModifier(gravityGlobeAttributeKey, strength, AttributeModifier.Operation.ADD_NUMBER));
+        if (!event.getPlayer().equals(getPlayer())) {
+            return;
+        }
+        if (event.getItem() == null || !event.getItem().getType().equals(Material.RECOVERY_COMPASS)) {
+            return;
+        }
+        if (Boolean.FALSE.equals(event.getItem().getPersistentDataContainer().get(gravityGlobeOwnerKey, PersistentDataType.BOOLEAN))) {
+            return;
+        }
+        if (isGravityInverted) {
+            getPlayer().getAttribute(Attribute.GRAVITY).removeModifier(gravityGlobeAttributeKey);
+            getPlayer().setAllowFlight(false);
+            isGravityInverted = false;
+            return;
+        }
+        isGravityInverted = true;
+        getPlayer().setAllowFlight(true);
+        getPlayer().damage(2);
+        double strength = -2 * getPlayer().getAttribute(Attribute.GRAVITY).getValue();
+        if (getPlayer().getAttribute(Attribute.GRAVITY).getModifier(gravityGlobeAttributeKey) == null) {
+            getPlayer().getAttribute(Attribute.GRAVITY).addModifier(new AttributeModifier(gravityGlobeAttributeKey, strength, AttributeModifier.Operation.ADD_NUMBER));
+        }
     }
 
     NamespacedKey gravityGlobeAttributeKey = new NamespacedKey(MinigamesWithFriends.getGamePlugin(), "gravity_globe_key" + getUniqueNumber());
@@ -85,7 +87,7 @@ public class GravityGlobe extends WYREffect {
                     meta.displayName(miniMessage.deserialize("<#FF2864>Gravity Globe").decoration(TextDecoration.ITALIC, false));
                     meta.lore(List.of(
                             miniMessage.deserialize("<gray>Right click to change gravity").decoration(TextDecoration.ITALIC, false),
-                            miniMessage.deserialize("<gray>Property of "+getPlayer().getName()).decoration(TextDecoration.ITALIC, false)
+                            miniMessage.deserialize("<gray>Property of " + getPlayer().getName()).decoration(TextDecoration.ITALIC, false)
                     ));
                 }
         );

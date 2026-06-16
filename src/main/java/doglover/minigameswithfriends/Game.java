@@ -107,11 +107,14 @@ public class Game {
 
     public void addSpectator(Player player) {
         if (isRunning) {
-            for (Player plr : getPlayersAndSpectators()) {
-                plr.sendMessage("§b" + player.getName() + "§a is now spectating!");
+            if (!spectators.contains(player.getUniqueId())) {
+                for (Player plr : getPlayersAndSpectators()) {
+                    plr.sendMessage("§b" + player.getName() + "§a is now spectating!");
+                }
             }
             player.setGameMode(GameMode.SPECTATOR);
             MinigamesWithFriends.getGame().removePlayer(player);
+            System.out.println(scoreboardContributions.toString());
         }
         this.spectators.add(player.getUniqueId());
         invalidateCaches();
@@ -242,12 +245,14 @@ public class Game {
 
     public void reportPlayerJoin(Player player) {
         if (isRunning && players.contains(player.getUniqueId())) {
-            FastBoard board = new FastBoard(player);
-            boards.put(player.getUniqueId(), board);
-            board.updateTitle("§b§lMinigames with Friends");
-            board.updateLines(new ArrayList<>());
+            setupBoardForPlayer(player);
             player.sendMessage("§aContinued game in progress!");
             player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
+        } else if (isRunning) {
+            setupBoardForPlayer(player);
+            addSpectator(player);
+            player.sendMessage("§eA game is in progress, you are now spectating!");
+            player.sendMessage("§eIf you wish to play the game instead, have you or an admin run §b/§amg RemoveSpectator " + player.getName());
         }
     }
 
@@ -263,10 +268,12 @@ public class Game {
     public void startGame() {
 
 
-        if (players.isEmpty()) {
-            players.addAll(Bukkit.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).toList());
-            players.removeAll(spectators);
-        }
+        players.clear();
+        players.addAll(Bukkit.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).toList());
+        players.removeAll(spectators);
+        invalidateCaches();
+
+
         pointsToWin = config.getPointsToWin();
         isRunning = true;
         inDeathMatch = false;
@@ -305,12 +312,7 @@ public class Game {
 
         for (Player everyone : getPlayersAndSpectators()) {
 
-            FastBoard board = new FastBoard(everyone);
-
-
-            boards.put(everyone.getUniqueId(), board);
-            board.updateTitle("§b§lMinigames with Friends");
-            board.updateLines(new ArrayList<>());
+            setupBoardForPlayer(everyone);
             everyone.sendMessage("§a§lGame Started!");
             everyone.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
 
@@ -323,6 +325,13 @@ public class Game {
         for (Gamemode gamemode : gamemodes) {
             gamemode.onGameStart();
         }
+    }
+
+    private void setupBoardForPlayer(Player plr) {
+        FastBoard board = new FastBoard(plr);
+        boards.put(plr.getUniqueId(), board);
+        board.updateTitle("§b§lMinigames with Friends");
+        board.updateLines(new ArrayList<>());
     }
 
     public void endGame() {
@@ -341,6 +350,7 @@ public class Game {
             BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
         }
         players.clear();
+        spectators.clear();
         boards.clear();
         points.clear();
         gamemodes.clear();
@@ -406,13 +416,15 @@ public class Game {
             player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
             player.setFoodLevel(20);
             player.sendMessage("§c§lDeathmatch Started!");
-            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 12 * 20, 4, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 10 * 20, 4, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 5 * 20, 9, true, false));
             BukkitRunnable runnable = new BukkitRunnable() {
                 int i = 5;
 
                 @Override
                 public void run() {
+
+
                     if (i == 0) {
                         player.clearTitle();
                         launchPlayerSideways(player, 8.5);

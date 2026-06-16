@@ -44,7 +44,7 @@ public class ProneToMeteors extends WYREffect {
     @Override
     public void on4HertzTick() {
         boolean isAboveSeaLevel = getPlayer().getLocation().getBlockY() + 5 > getPlayer().getWorld().getSeaLevel();
-        if (NumberUtils.chanceOf(0.0325) && isAboveSeaLevel) {
+        if (NumberUtils.chanceOf(0.03) && isAboveSeaLevel) {
             spawnMeteor();
         }
         playSoundsAroundMeteors();

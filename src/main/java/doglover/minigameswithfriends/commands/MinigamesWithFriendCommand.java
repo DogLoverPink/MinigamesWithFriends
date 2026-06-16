@@ -92,21 +92,19 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             if (args.length == 4) {
                 handleSettingConfigValue(commandSender, args[1], args[2], args[3]);
             }
-        }
-        else if (minigameCommand.equalsIgnoreCase("addspectator")) {
+        } else if (minigameCommand.equalsIgnoreCase("addspectator")) {
             addSpectator(commandSender, args);
 
         } else if (minigameCommand.equalsIgnoreCase("removespectator")) {
             removeSpectator(commandSender, args);
-        }
-        else {
+        } else {
             commandSender.sendMessage(Component.text("Invalid command!").color(NamedTextColor.RED));
         }
         return false;
     }
 
     private void removeSpectator(CommandSender sender, String[] args) {
-        if  (args.length == 1) {
+        if (args.length == 1) {
             sender.sendMessage("§cPlease specify a player!");
             return;
         }
@@ -120,11 +118,11 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             return;
         }
         MinigamesWithFriends.getGame().removeSpectator(plr);
-        sender.sendMessage("§aMade §b"+plr.getName()+"§a no longer a spectator!");
+        sender.sendMessage("§aMade §b" + plr.getName() + "§a no longer a spectator!");
     }
 
     private void addSpectator(CommandSender sender, String[] args) {
-        if  (args.length == 1) {
+        if (args.length == 1) {
             sender.sendMessage("§cPlease specify a player!");
             return;
         }
@@ -139,7 +137,7 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
         }
         MinigamesWithFriends.getGame().addSpectator(plr);
         if (!sender.equals(plr)) {
-            sender.sendMessage("§aMade §b"+plr.getName()+"§a a spectator!");
+            sender.sendMessage("§aMade §b" + plr.getName() + "§a a spectator!");
         }
         if (!MinigamesWithFriends.getGame().isRunning()) {
             plr.sendMessage("§aYou have been set to spectate the next game!");
