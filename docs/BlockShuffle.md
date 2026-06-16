@@ -5,8 +5,22 @@ Blockshuffle is a gamemode where players are tasked with finding specific blocks
 ## Blockshuffle Command
 Usage: `/mg blockshuffle (BanBlock/UnbanBlock/ListBannedBlocks/Skip) [Block]"`
 <br>
-`/mg blockshuffle BanBlock BLOCK_NAME`
-The banblock subcommand bans a block from appearing as a option in blockshuffle. Use UPPER_SNAKE_CASE for the material name. (Ex. AMETHYST_BLOCK)
+>`/mg blockshuffle BanBlock BLOCK_NAME`
+> <br>
+> Bans a block from appearing as a option in blockshuffle. Use UPPER_SNAKE_CASE for the material name. (Ex. AMETHYST_BLOCK)
+
+
+>`/mg blockshuffle UnbanBlock BLOCK_NAME`
+> <br>
+> Unbans an already banned block. Use UPPER_SNAKE_CASE for the material name. (Ex. AMETHYST_BLOCK)
+
+> `/mg blockshuffle ListBannedBlocks`
+> <br>
+> Lists all of the blocks currently banned from blockshuffle.
+
+> `/mg blockshuffle Skip`
+> <br>
+> Changes the current block that players are trying to find to another randomly generated one. Can only be used while in game.
 
 
 ## Config
