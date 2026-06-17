@@ -9,6 +9,7 @@ import doglover.minigameswithfriends.utils.PlayerUtils;
 import fr.mrmicky.fastboard.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -103,6 +104,12 @@ public class Game {
 
     public void addPlayer(Player player) {
         this.players.add(player.getUniqueId());
+        invalidateCaches();
+        if (isRunning) {
+            for (Gamemode gamemode : gamemodes) {
+                gamemode.onPlayerJoin(player);
+            }
+        }
     }
 
     public void addSpectator(Player player) {
@@ -114,15 +121,33 @@ public class Game {
             }
             player.setGameMode(GameMode.SPECTATOR);
             MinigamesWithFriends.getGame().removePlayer(player);
-            System.out.println(scoreboardContributions.toString());
+
+            this.spectators.add(player.getUniqueId());
+            invalidateCaches();
+
+            //Remove "ghost" scoreboard contribution, as the game won't tick anymore to remove it
+            if (scoreboardContributions.size() >= 2 && getPlayers().isEmpty()) {
+                if (scoreboardContributions.get(scoreboardContributions.size() - 2).startsWith("§dPoints:")) {
+                    scoreboardContributions.removeLast();
+                    scoreboardContributions.removeLast();
+                    displayOnBoard(scoreboardContributions);
+
+                }
+            }
+        } else {
+            this.spectators.add(player.getUniqueId());
+            invalidateCaches();
         }
-        this.spectators.add(player.getUniqueId());
-        invalidateCaches();
     }
 
     public void removePlayer(Player player) {
         this.players.remove(player.getUniqueId());
-//        points.remove(player);
+        invalidateCaches();
+        if (isRunning) {
+            for (Gamemode gamemode : gamemodes) {
+                gamemode.onPlayerLeave(player);
+            }
+        }
     }
 
     public void removeSpectator(Player player) {
@@ -243,16 +268,23 @@ public class Game {
         }
     }
 
+    MiniMessage miniMessage = MiniMessage.miniMessage();
+
     public void reportPlayerJoin(Player player) {
-        if (isRunning && players.contains(player.getUniqueId())) {
+        if (!isRunning) {
+            return;
+        }
+        if (players.contains(player.getUniqueId())) {
             setupBoardForPlayer(player);
             player.sendMessage("§aContinued game in progress!");
             player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
-        } else if (isRunning) {
+        } else {
             setupBoardForPlayer(player);
             addSpectator(player);
-            player.sendMessage("§eA game is in progress, you are now spectating!");
-            player.sendMessage("§eIf you wish to play the game instead, have you or an admin run §b/§amg RemoveSpectator " + player.getName());
+            player.sendMessage("§bA game is in progress, you are now spectating!");
+            String name = player.getName();
+            Component message = miniMessage.deserialize("<yellow>If you wish to play the game instead, have you or an admin run</yellow> <hover:show_text:'<aqua>Click to join game!</aqua>'><click:run_command:'/mg RemoveSpectator " + name + "'><aqua>/</aqua><green>mg RemoveSpectator " + name + "</green><aqua> (Click me)</aqua></click></hover>");
+            player.sendMessage(message);
         }
     }
 
@@ -331,7 +363,7 @@ public class Game {
         FastBoard board = new FastBoard(plr);
         boards.put(plr.getUniqueId(), board);
         board.updateTitle("§b§lMinigames with Friends");
-        board.updateLines(new ArrayList<>());
+        board.updateLines(scoreboardContributions);
     }
 
     public void endGame() {

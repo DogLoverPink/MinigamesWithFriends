@@ -185,6 +185,26 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     }
 
     @Override
+    public void onPlayerJoin(Player plr) {
+        if (getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
+            Material newBlock = getUnbannedBlock();
+            playerBlocks.put(plr.getUniqueId(), newBlock);
+        } else {
+            if (playerBlocks.isEmpty()) {
+                assignNewBlocks();
+                return;
+            }
+            Material currentMaterial = (Material) playerBlocks.values().toArray()[0];
+            playerBlocks.put(plr.getUniqueId(), currentMaterial);
+        }
+    }
+
+    @Override
+    public void onPlayerLeave(Player plr) {
+        playerBlocks.remove(plr.getUniqueId());
+    }
+
+    @Override
     public void tick() {
         super.tick();
         for (Player player : getGame().getPlayers()) {

@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.Game;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -11,6 +12,14 @@ public abstract class Gamemode {
     public abstract void onGameEnd();
 
     public abstract void onGameStart();
+
+    public void onPlayerJoin(Player plr) {
+
+    }
+
+    public  void onPlayerLeave(Player plr) {
+
+    }
 
     public void onDeathMatchEnd() {
 

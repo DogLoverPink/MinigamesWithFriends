@@ -239,6 +239,11 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     }
 
     @Override
+    public void onPlayerJoin(Player plr) {
+        currentlyAppliedBenefitsAndDetriments.putIfAbsent(plr.getUniqueId(), new ArrayList<>());
+    }
+
+    @Override
     public String toString() {
         return "WouldYouRather";
     }
