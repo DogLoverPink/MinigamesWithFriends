@@ -5,9 +5,11 @@ Dimension swap is a simple but unique gamemode that is yet to be seen in a minec
 ## Setup
 Tip: try to get at minimum 2-3 maps per player for the best experience. (ex. if you are running a 5 player game, at minimum make sure to have 10-15 maps)
 
-**This setup only needs to be done one time! You do NOT have to redownload the maps or run the `PreLoadSavedDimensionSwapWorlds` command every time you want to play this game**
+**This setup only needs to be done one time per server version\*! You do NOT have to redownload the maps or run the `PreLoadSavedDimensionSwapWorlds` command every time you want to play this game**
+\*Everytime you update your server to a new major version of minecraft, it is recommeded to rerun the command
+
 1. Download an assortment of maps from the internet. I highly recommend  [minecraftmaps.com](https://www.minecraftmaps.com/), but any other website such as [planetminecraft.com](https://www.planetminecraft.com/projects/) or [minecraft-schematics.com](https://www.minecraft-schematics.com/) will work as well. It doesn't really matter what kind of maps it is. Worlds from any minecraft version should work, and the worlds can be just builds, puzzle maps, or full-blown cities. Alternatively, if you have worlds that you've made yourself, you can use those as well.
-2. Move all unzipped world folders into the directory `plugins\MinigamesWithFriends\savedDimensionTPWorlds`. All worlds in this folder must be unzipped (you must extract all .zip files), but having invalid or duplicate world names, or being improperly nested is fixed automatically by the plugin.
+2. Move all unzipped world folders into the directory `world/dimensions/minecraft/saveddimensionswapworlds`. All worlds in this folder must be unzipped (you must extract all .zip files), but having invalid or duplicate world names, or being improperly nested is fixed automatically by the plugin.
 3. After, while the server is running, run the command `/mg dimensionswap PreLoadSavedDimensionSwapWorlds`. This command only needs to be run once, but will massively improve performance during the actual game. From a technical standpoint, this command loads and unloads every saved world, as updating worlds to higher versions is very slow and resource intensive, so doing it once beforehand instead of mid-game, every game, is far more efficient.
 4. Restart your server.
 
