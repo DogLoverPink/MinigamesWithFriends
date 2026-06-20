@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -39,11 +38,11 @@ public class WorldFileUtils {
             return;
         }
         for (File subFile : folder.listFiles()) {
-            if (subFile.isDirectory()) {
+            if (subFile.isDirectory() && !subFile.getName().equals("poi")) {
                 findNestedWorldFolderAndMove(destinationDirectory, subFile);
                 continue;
             }
-            if (!subFile.getName().equals("level.dat")) {
+            if (!subFile.isDirectory() || !subFile.getName().equals("poi")) {
                 continue;
             }
             try {
@@ -67,7 +66,7 @@ public class WorldFileUtils {
     public static void loadAllWorldsInFolder(File worldsFolder, Audience playerToNotify) {
         final List<File> worlds = new ArrayList<>();
         for (File file : worldsFolder.listFiles()) {
-            if (!file.isDirectory() || file.list() == null && !Arrays.asList(file.list()).contains("level.dat")) {
+            if (!file.isDirectory() || file.list() == null || !new File(file, "poi").isDirectory()) {
                 continue;
             }
             File worldToLoad = new File(worldsFolder.getPath() + "/" + file.getName());
@@ -84,7 +83,9 @@ public class WorldFileUtils {
             File file = worlds.removeFirst();
             playerToNotify.sendMessage(Component.text("§eLoading world: §a" + file.getName()));
             MinigamesWithFriends.getGamePlugin().getLogger().info("Loading world: " + file.getName());
-            World world = Bukkit.createWorld(new WorldCreator(file.getPath().replace("\\", "/")));
+            String filePath = file.getPath().replace("\\", "/");
+            String worldPath = filePath.replace("world/dimensions/minecraft/", "");
+            World world = Bukkit.createWorld(new WorldCreator(worldPath));
             playerToNotify.sendMessage(Component.text("§aComplete. §eUnloading §a" + world.getName()));
             Bukkit.unloadWorld(world, true);
             playerToNotify.sendMessage(Component.text("§aCompleted (" + (worldsCount - worlds.size()) + "/" + worldsCount + ")"));
@@ -107,8 +108,7 @@ public class WorldFileUtils {
                 deletedFiles.append(file.getName()).append(", ");
                 continue;
             }
-            List<String> files = Arrays.asList(file.list());
-            if (!files.contains("level.dat")) {
+            if (!new File(file, "poi").isDirectory()) {
                 try {
                     findNestedWorldFolderAndMove(directoryWithTheWorlds, file);
                     FileUtils.deleteDirectory(file);

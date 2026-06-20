@@ -29,8 +29,8 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
 
     public static void initialize() {
-        savedWorldsFolder = new File(MinigamesWithFriends.getGamePlugin().getDataFolder() + "/" + "savedDimensionTPWorlds");
-        activeWorldsFolder = new File(MinigamesWithFriends.getGamePlugin().getDataFolder() + "/" + "activeDimensionTPWorlds");
+        savedWorldsFolder = new File( "world/dimensions/minecraft/saveddimensionswapworlds");
+        activeWorldsFolder = new File("world/dimensions/minecraft/activedimensionswapworlds");
         if (!savedWorldsFolder.exists() || !activeWorldsFolder.exists()) {
             savedWorldsFolder.mkdirs();
             activeWorldsFolder.mkdirs();
@@ -96,7 +96,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             getGame().broadcast(Component.text("No eligible dimensionswap worlds found! Disabling gamemode...").color(NamedTextColor.RED));
             getGame().broadcast(MiniMessage.miniMessage().deserialize(
                     "<red>Tell the server owner to add unzipped minecraft maps/worlds to </red>"
-                    +"<yellow>/plugins/MinigamesWithFriends/savedDimensionTPWorlds/</yellow><red>!</red>"
+                    +"<yellow>/world/dimensions/minecraft/saveddimensiontpworlds</yellow><red>!</red>"
             ));
             Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), ()-> getGame().removeGamemode(DimensionSwapGamemode.class), 0);
         } else {
@@ -131,7 +131,8 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
                 refreshWorldFolders();
             }
             File originalWorld = new File(savedWorldsFolder.getPath() + "/" + newWorld);
-            File newWorldFolder = new File(activeWorldsFolder.getPath() + "/" + newWorld);
+            //paper changed this to look startings from the world/dimensions/minecraft/plugins/minigameswithfriends dir
+            File newWorldFolder = new File(activeWorldsFolder + "/" + newWorld);
             try {
                 FileUtils.copyDirectory(originalWorld, newWorldFolder);
             } catch (IOException e) {
@@ -139,7 +140,8 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
                 e.printStackTrace();
             }
             MinigamesWithFriends.getGamePlugin().getLogger().info("name: " + newWorldFolder.getPath().replace("\\", "/"));
-            World world = Bukkit.createWorld(new WorldCreator(newWorldFolder.getPath().replace("\\", "/")));
+            String newWorldPath = new File("activedimensionswapworlds" + "/" + newWorld).getPath().replace("\\", "/");
+            World world = Bukkit.createWorld(new WorldCreator(newWorldPath));
             world.setDifficulty(Difficulty.NORMAL);
             world.setGameRule(GameRules.BLOCK_DROPS, true);
             world.setGameRule(GameRules.FALL_DAMAGE, true);
