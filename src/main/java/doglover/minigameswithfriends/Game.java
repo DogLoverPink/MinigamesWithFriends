@@ -154,6 +154,7 @@ public class Game {
         this.spectators.remove(player.getUniqueId());
         addPlayer(player);
         if (isRunning) {
+            player.teleport(player.getWorld().getSpawnLocation());
             player.setGameMode(GameMode.SURVIVAL);
         }
         invalidateCaches();

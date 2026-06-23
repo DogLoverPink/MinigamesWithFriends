@@ -57,6 +57,10 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             MinigamesWithFriends.getGame().clearGamemodes();
             commandSender.sendMessage("§aCleared all gamemodes.");
         } else if (minigameCommand.equalsIgnoreCase("start")) {
+            if (MinigamesWithFriends.getGame().isRunning()) {
+                commandSender.sendMessage("§cGame already started!");
+                return true;
+            }
             if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
                 commandSender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
                 return true;
@@ -64,6 +68,10 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             MinigamesWithFriends.getGame().startGame();
             commandSender.sendMessage("§aGame started.");
         } else if (minigameCommand.equalsIgnoreCase("stop")) {
+            if (!MinigamesWithFriends.getGame().isRunning()) {
+                commandSender.sendMessage("§cNo game currently in progress!");
+                return true;
+            }
             MinigamesWithFriends.getGame().endGame();
             commandSender.sendMessage("§cGame stopped.");
         } else if (minigameCommand.equalsIgnoreCase("blockshuffle")) {
