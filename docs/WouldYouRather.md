@@ -3,8 +3,21 @@
 WouldYouRather is a gamemode where, every x amount of time, players are presented with a "Would you rather..." prompt containing two choices. Each choice pairs a beneficial effect with a detrimental effect. Players must pick one of the two options, applying both the good and bad effect attached to it. Over the course of the game, players accumulate an amount of buffs and debuffs that alter their gameplay. If a player fails to pick before time runs out, the first option is chosen automatically. No points are gained in this gamemode, and it works best when paired when the deathmatch gamemode. With that said, it is also very fun on its own if you are doing your own challenge, such as trying to beat the game with the gamemode active.
 
 ## Prompt Examples
-[image.jpg]
-[image2.jpg]
+<details>
+  <summary>Example Prompt #1</summary>
+  
+  ![WYR Example Prompt #1](https://cdn.modrinth.com/data/cached_images/283af593f466316393f4b1a82490f6323693002c.png)
+  </details>
+  <details>
+  <summary>Example Prompt  #2</summary>
+
+  ![WYR Prompt Example #2](https://cdn.modrinth.com/data/cached_images/ca3976d7df64294e51485548d35c79bd0e9525b2.png)
+  </details>
+  <details>
+  <summary>Example Prompt  #3</summary>
+
+  ![WYR Example Prompt #3](https://cdn.modrinth.com/data/cached_images/3e04efa00f67611359ff82047ab3eefcfa069991.png)
+  </details>
 
 ## WouldYouRather Command
 Usage: `/mg wouldyourather (RemoveEffect/CheckActiveEffects/SendNewPrompt) [Player] [Effect]`
