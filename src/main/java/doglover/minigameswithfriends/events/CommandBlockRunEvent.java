@@ -14,7 +14,7 @@ public class CommandBlockRunEvent implements Listener {
             return;
         }
         BlockCommandSender blockCommandSender = (BlockCommandSender) event.getSender();
-        if (blockCommandSender.getBlock().getWorld().getName().contains("activeDimensionTPWorlds")) {
+        if (blockCommandSender.getBlock().getWorld().getName().contains("activedimensionswapworlds")) {
             event.setCancelled(true);
         }
     }

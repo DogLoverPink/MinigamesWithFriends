@@ -80,7 +80,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
         refreshWorldFolders();
         try {
             for (World world : Bukkit.getWorlds()) {
-                if (world.getName().contains("activeDimensionTPWorlds")) {
+                if (world.getName().contains("activedimensionswapworlds")) {
                     for (Player plr : world.getPlayers()) {
                         plr.teleport(Bukkit.getWorld("world").getSpawnLocation());
                     }
