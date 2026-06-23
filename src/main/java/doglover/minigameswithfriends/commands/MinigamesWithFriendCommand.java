@@ -57,12 +57,7 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             MinigamesWithFriends.getGame().clearGamemodes();
             commandSender.sendMessage("§aCleared all gamemodes.");
         } else if (minigameCommand.equalsIgnoreCase("start")) {
-            if (MinigamesWithFriends.getGame().isRunning()) {
-                commandSender.sendMessage("§cGame already started!");
-                return true;
-            }
-            if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
-                commandSender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
+            if (!canStart(commandSender)) {
                 return true;
             }
             MinigamesWithFriends.getGame().startGame();
@@ -109,6 +104,22 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             commandSender.sendMessage(Component.text("Invalid command!").color(NamedTextColor.RED));
         }
         return false;
+    }
+
+    private boolean canStart(CommandSender sender) {
+        if (MinigamesWithFriends.getGame().isRunning()) {
+            sender.sendMessage("§cGame already started!");
+            return false;
+        }
+        if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
+            sender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
+            return false;
+        }
+        if (MinigamesWithFriends.getGame().getSpectators().size() == Bukkit.getOnlinePlayers().size()) {
+            sender.sendMessage("§cYou need some non-spectator players to start the game you silly goose!");
+            return false;
+        }
+        return true;
     }
 
     private void removeSpectator(CommandSender sender, String[] args) {
