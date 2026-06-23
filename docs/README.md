@@ -24,6 +24,21 @@ Minigames With Friends is a unique minecraft plugin that bundles together 6 diff
   
   https://github.com/user-attachments/assets/9c9fb934-8adc-4bb1-a74a-8bfeba48b617
   </details>
+  <details>
+  <summary>Example Prompt #1</summary>
+  
+  ![WYR Example Prompt #1](https://cdn.modrinth.com/data/cached_images/283af593f466316393f4b1a82490f6323693002c.png)
+  </details>
+  <details>
+  <summary>Example Prompt  #2</summary>
+
+  ![WYR Prompt Example #2](https://cdn.modrinth.com/data/cached_images/ca3976d7df64294e51485548d35c79bd0e9525b2.png)
+  </details>
+  <details>
+  <summary>Example Prompt  #3</summary>
+
+  ![WYR Example Prompt #3](https://cdn.modrinth.com/data/cached_images/3e04efa00f67611359ff82047ab3eefcfa069991.png)
+  </details>
 
 ## Getting Started
 To get Minigames With Friends up and running, here and the steps you need to follow.
