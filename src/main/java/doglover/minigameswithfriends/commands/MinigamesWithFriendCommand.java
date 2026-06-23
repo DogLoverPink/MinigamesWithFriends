@@ -169,6 +169,10 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
             commandSender.sendMessage(Component.text("Already paused!").color(NamedTextColor.RED));
             return;
         }
+        if (!game.isRunning()) {
+            commandSender.sendMessage(Component.text("Game not in progress").color(NamedTextColor.RED));
+            return;
+        }
         game.setPaused(true);
         if (game.isGamemodeActive(WouldYouRatherGamemode.class)) {
             WYREventHandler.setActive(false);
@@ -182,6 +186,10 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
 
     private void handleUnpause(CommandSender commandSender) {
         Game game = MinigamesWithFriends.getGame();
+        if (!game.isRunning()) {
+            commandSender.sendMessage(Component.text("Game not in progress").color(NamedTextColor.RED));
+            return;
+        }
         if (!game.isPaused()) {
             commandSender.sendMessage(Component.text("Game not currently paused!").color(NamedTextColor.RED));
             return;
@@ -198,9 +206,9 @@ public class MinigamesWithFriendCommand implements CommandExecutor {
 
     private void handleHelpCommand(CommandSender commandSender, String[] args) {
         Component message = MiniMessage.miniMessage().deserialize(
-                "<yellow>For help with the plugin, refer to <click:open_url:'https://REPLACEMEWITHDOCSLINK.com'><u><aqua>the documentation</aqua></u></click></yellow>"
+                "<yellow>Wiki Link: <click:open_url:'https://github.com/DogLoverPink/MinigamesWithFriends/wiki'><hover:show_text:'<aqua>Wiki Link</aqua>'><aqua>HERE</aqua></hover></click></yellow>\n" +
+                        "<yellow>Discord Link: <click:open_url:'https://discord.gg/KcGdBFUVZD'><hover:show_text:'<aqua>Join for fast support!</aqua>'><aqua>HERE</aqua></hover></click></yellow>"
         );
-        message = message.hoverEvent(Component.text("Click to open the documentation.").color(NamedTextColor.AQUA));
         commandSender.sendMessage(message);
     }
 
