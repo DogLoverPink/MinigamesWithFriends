@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.WorldFileUtils;
 import net.kyori.adventure.audience.Audience;
@@ -9,6 +10,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -19,7 +21,33 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.filterByStartsWith;
+
 public class DimensionSwapGamemode extends TimeEventBasedGamemode {
+
+    static {
+        CommandHandler.registerCommand(
+                "DimensionSwap",
+                DimensionSwapGamemode::handleDimensionSwapCommand,
+                DimensionSwapGamemode::handleDimensionSwapCompletions);
+    }
+
+    private static void handleDimensionSwapCommand(CommandSender commandSender, String[] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("PreLoadSavedDimensionSwapWorlds")) {
+            DimensionSwapGamemode.preLoadSavedWorlds(commandSender);
+        } else {
+            commandSender.sendMessage("§cInvalid subcommand!");
+        }
+    }
+
+    private static List<String> handleDimensionSwapCompletions(String[] args) {
+        return filterByStartsWith(List.of("PreLoadSavedDimensionSwapWorlds"), args[1]);
+    }
+
 
     static File savedWorldsFolder;
     static File activeWorldsFolder;

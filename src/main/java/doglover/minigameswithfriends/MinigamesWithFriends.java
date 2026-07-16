@@ -1,10 +1,13 @@
 package doglover.minigameswithfriends;
 
+import doglover.minigameswithfriends.commands.BuiltInCommandDefinitions;
+import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.commands.MinigamesWithFriendCommand;
 import doglover.minigameswithfriends.commands.GameCommandTabCompleter;
 import doglover.minigameswithfriends.events.*;
 import doglover.minigameswithfriends.gamemodes.DimensionSwapGamemode;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
+import doglover.minigameswithfriends.utils.JarUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -27,6 +30,11 @@ public final class MinigamesWithFriends extends JavaPlugin {
     public void onEnable() {
         this.getLogger().info("Plugin is starting up!");
         PluginCommand minigameCommand = this.getCommand("minigames");
+        BuiltInCommandDefinitions.registerCommands();
+
+        //Run all static blocks, to make sure any registered commands are ran on startup (this isn't an ai slop comment I swear)
+        JarUtils.initalizeClassesInPackage("doglover.minigameswithfriends.gamemodes");
+
         minigameCommand.setExecutor(new MinigamesWithFriendCommand());
         minigameCommand.setTabCompleter(new GameCommandTabCompleter());
         this.getServer().getPluginManager().registerEvents(new DeathListener(), this);

@@ -3,17 +3,14 @@ package doglover.minigameswithfriends.utils;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class JarUtils {
 
     //this isn't malware I swear, I just hate having to register 59 different classes manually
-    public static void initalizeWouldYouRatherClasses(String packageName) {
+    public static void initalizeClassesInPackage(String packageName) {
         String packagePath = packageName.replace(".", "/");
         try {
             String jarName = new File(MinigamesWithFriends.class.getProtectionDomain()

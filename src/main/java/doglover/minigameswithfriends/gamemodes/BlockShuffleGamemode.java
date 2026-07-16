@@ -1,12 +1,14 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -14,7 +16,78 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.*;
 
+import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.filterByStartsWith;
+
 public class BlockShuffleGamemode extends TimeEventBasedGamemode {
+
+
+    static {
+        CommandHandler.registerCommand(
+                "BlockShuffle",
+                BlockShuffleGamemode::handleBlockShuffleCommand,
+                BlockShuffleGamemode::handleBlockShuffleCompletions);
+    }
+
+    private static void handleBlockShuffleCommand(CommandSender commandSender, String[] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("BanBlock")) {
+            if (args.length == 3) {
+                String blockName = args[2];
+                Material block = Material.getMaterial(blockName);
+                if (block == null) {
+                    commandSender.sendMessage("§cInvalid block name. Must be uppercase enum style");
+                    return;
+                }
+                BlockShuffleGamemode.banBlock(block);
+                commandSender.sendMessage("§aBlock " + blockName + " banned.");
+            } else {
+                commandSender.sendMessage("§cPlease specify a block name.");
+            }
+        } else if (args[1].equalsIgnoreCase("UnbanBlock")) {
+            if (args.length == 3) {
+                String blockName = args[2];
+                Material block = Material.getMaterial(blockName);
+                if (block == null) {
+                    commandSender.sendMessage("§cInvalid block name. Must be uppercase enum style");
+                    return;
+                }
+                BlockShuffleGamemode.unbanBlock(block);
+                commandSender.sendMessage("§aBlock " + blockName + " unbanned.");
+            } else {
+                commandSender.sendMessage("§cPlease specify a block name.");
+            }
+        } else if (args[1].equalsIgnoreCase("ListBannedBlocks")) {
+            commandSender.sendMessage("§eBanned blocks: §b");
+            for (String materialName : BlockShuffleGamemode.getBannedBlocksStringList()) {
+                commandSender.sendMessage("§b" + materialName);
+            }
+        } else if (args[1].equalsIgnoreCase("skip")) {
+            if (!MinigamesWithFriends.getGame().isRunning() || !MinigamesWithFriends.getGame().isGamemodeActive(BlockShuffleGamemode.class)) {
+                return;
+            }
+            MinigamesWithFriends.getGame().getGamemode(BlockShuffleGamemode.class).skip();
+        }
+    }
+
+    private static List<String> handleBlockShuffleCompletions(String[] args) {
+        if (args.length == 2) {
+            return filterByStartsWith(List.of("BanBlock", "UnbanBlock", "ListBannedBlocks", "Skip"), args[1]);
+        }
+        String blockshuffleCommand = args[1];
+        if (blockshuffleCommand.equalsIgnoreCase("UnbanBlock")) {
+            return filterByStartsWith(BlockShuffleGamemode.getBannedBlocksStringList(), args[2]);
+        } else if (blockshuffleCommand.equalsIgnoreCase("BanBlock")) {
+            return filterByStartsWith(BlockShuffleGamemode.getUnbannedBlocksStringList(), args[2]);
+        } else if (blockshuffleCommand.equalsIgnoreCase("ListBannedBlocks")) {
+            return BlockShuffleGamemode.getBannedBlocksStringList();
+        } else {
+            return List.of();
+        }
+    }
+
     @Override
     public void onGameEnd() {
 

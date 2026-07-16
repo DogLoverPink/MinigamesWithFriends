@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.JarUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
@@ -8,6 +9,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,15 +25,115 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.filterByStartsWith;
+
 public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
+    static {
+        CommandHandler.registerCommand("WouldYouRather",
+                WouldYouRatherGamemode::handleWouldYouRatherCommand,
+                WouldYouRatherGamemode::handleWouldYouRatherCompletions);
+
+    }
+
+
+    private static void handleWouldYouRatherCommand(CommandSender commandSender, String[] args) {
+        if (args.length == 1) {
+            commandSender.sendMessage("§cPlease specify a subcommand.");
+            return;
+        }
+        if (args[1].equalsIgnoreCase("RemoveEffect")) {
+            if (args.length < 4) {
+                commandSender.sendMessage("§cInvalid usage! Do §e/mg wouldyourather removeEffect <player> <effect>");
+                return;
+            }
+            Player plr = Bukkit.getPlayer(args[2]);
+            if (plr == null) {
+                commandSender.sendMessage("§cUnknown player §e" + args[2]);
+                return;
+            }
+            String effectToRemove = args[3];
+            Iterator<WYREffect> effectIterator = WYREffectHandler.getManagedEffects().iterator();
+            while (effectIterator.hasNext()) {
+                WYREffect effect = effectIterator.next();
+                if (effect.getPlayer().equals(plr) && effect.getClass().getSimpleName().equalsIgnoreCase(effectToRemove)) {
+                    effect.selfDestruct();
+                    commandSender.sendMessage("§aRemoved §e" + effectToRemove + "§a from §e" + plr.getName());
+                    effectIterator.remove();
+                    return;
+                }
+            }
+            commandSender.sendMessage("§cEffect not found!");
+        }
+        if (args[1].equalsIgnoreCase("CheckActiveEffects")) {
+            Player plr;
+            if (args.length < 3 && commandSender instanceof Player) {
+                plr = (Player) commandSender;
+            } else if (args.length >= 3) {
+                plr = Bukkit.getPlayer(args[2]);
+                if (plr == null) {
+                    commandSender.sendMessage("§cUnknown player §e" + args[2]);
+                    return;
+                }
+            } else {
+                commandSender.sendMessage("§cUnknown player");
+                return;
+            }
+            if (!WYREventHandler.isActive() || WYREffectHandler.getManagedEffects().isEmpty()) {
+                commandSender.sendMessage("§e" + plr.getName() + "§c has no active effects.");
+                return;
+            }
+            commandSender.sendMessage("§eActive effects on §b" + plr.getName() + "§e:");
+            for (WYREffect effect : WYREffectHandler.getManagedEffects()) {
+                if (effect.getPlayer().equals(plr)) {
+                    NamedTextColor color = WYREffectHandler.isEffectBeneficial(effect) ? NamedTextColor.GREEN : NamedTextColor.RED;
+                    TextComponent effectComponent = Component.text(" - ").color(NamedTextColor.YELLOW);
+                    effectComponent = effectComponent.append(Component.text(effect.getClass().getSimpleName()).color(color));
+                    effectComponent = effectComponent.hoverEvent(Component.text(effect.getDescriptionBlurb()).color(color));
+                    commandSender.sendMessage(effectComponent);
+                }
+            }
+        }
+        if (args[1].equalsIgnoreCase("SendNewPrompt")) {
+            if (!WYREventHandler.isActive() || !MinigamesWithFriends.getGame().isGamemodeActive(WouldYouRatherGamemode.class)) {
+                commandSender.sendMessage("§cThe Would You Rather gamemode is not active!");
+                return;
+            }
+            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).onTimeEventTrigger();
+        }
+    }
+
+    private static List<String> handleWouldYouRatherCompletions(String[] args) {
+        if (args.length == 2) {
+            return filterByStartsWith(List.of("RemoveEffect", "SendNewPrompt", "CheckActiveEffects"), args[1]);
+        }
+        if (args[1].equalsIgnoreCase("RemoveEffect")) {
+            if (args.length == 3) {
+                return filterByStartsWith(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[2]);
+            }
+            if (args.length == 4) {
+                Player plr = Bukkit.getPlayer(args[2]);
+                if (!WYREventHandler.isActive() || plr == null) {
+                    return List.of();
+                }
+                return filterByStartsWith(WYREffectHandler.getManagedEffects().stream()
+                        .filter(wyrEffect -> wyrEffect.getPlayer().equals(plr))
+                        .map(wyrEffect -> wyrEffect.getClass().getSimpleName())
+                        .toList(), args[3]);
+            }
+        }
+        if (args[1].equalsIgnoreCase("CheckActiveEffects")) {
+            return filterByStartsWith(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[2]);
+        }
+        return List.of();
+    }
     public final Map<UUID, List<Class<? extends WYREffect>>> currentlyAppliedBenefitsAndDetriments = new HashMap<>();
 
 
     public static void initialize() {
-        JarUtils.initalizeWouldYouRatherClasses("doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects");
-        JarUtils.initalizeWouldYouRatherClasses("doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects");
-        JarUtils.initalizeWouldYouRatherClasses("doglover.minigameswithfriends.wouldyourather.effects.simple");
+        JarUtils.initalizeClassesInPackage("doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects");
+        JarUtils.initalizeClassesInPackage("doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects");
+        JarUtils.initalizeClassesInPackage("doglover.minigameswithfriends.wouldyourather.effects.simple");
         WYREffectHandler.sendEffectCounts();
     }
 

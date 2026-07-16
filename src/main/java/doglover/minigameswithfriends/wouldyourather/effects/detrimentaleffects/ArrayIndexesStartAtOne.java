@@ -47,6 +47,9 @@ public class ArrayIndexesStartAtOne extends WYREffect {
         if (!player.equals(getPlayer()) || event.getSlot() > 35 || event.getCurrentItem() == null) {
             return;
         }
+        if (event.isCancelled()) {
+            return;
+        }
         if (event.getClick() != ClickType.LEFT) {
             return;
         }
