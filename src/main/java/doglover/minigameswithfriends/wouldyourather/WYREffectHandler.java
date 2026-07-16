@@ -28,7 +28,7 @@ public class WYREffectHandler {
         return getRandomEffectFromList(player, effcopy);
     }
 
-    private static final List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of(Gambling.class, ArrayIndexesStartAtOne.class));
+    private static final List<Class<? extends WYREffect>> TESTING_EFFECTS_TO_GET_FIRST = new ArrayList<>(List.of());
     private static WYREffect getRandomEffectFromList(Player player, List<Class<? extends WYREffect>> classes) {
         if (!TESTING_EFFECTS_TO_GET_FIRST.isEmpty()) {
             return constructWYREffectFromClass(TESTING_EFFECTS_TO_GET_FIRST.removeFirst(), player);
