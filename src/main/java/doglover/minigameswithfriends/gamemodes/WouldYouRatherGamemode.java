@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.gamemodes;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.JarUtils;
+import doglover.minigameswithfriends.utils.TextUtils;
 import doglover.minigameswithfriends.configs.WouldYouRatherConfig;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
@@ -65,17 +66,17 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     private static void handleWouldYouRatherCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            commandSender.sendMessage("§cPlease specify a subcommand.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a subcommand."));
             return;
         }
         if (args[1].equalsIgnoreCase("RemoveEffect")) {
             if (args.length < 4) {
-                commandSender.sendMessage("§cInvalid usage! Do §e/mg wouldyourather removeEffect <player> <effect>");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid usage! Do <yellow>/mg wouldyourather removeEffect \\<player\\> \\<effect\\>"));
                 return;
             }
             Player plr = Bukkit.getPlayer(args[2]);
             if (plr == null) {
-                commandSender.sendMessage("§cUnknown player §e" + args[2]);
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Unknown player <yellow>" + TextUtils.MINI_MESSAGE.escapeTags(args[2])));
                 return;
             }
             String effectToRemove = args[3];
@@ -84,12 +85,12 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
                 WYREffect effect = effectIterator.next();
                 if (effect.getPlayer().equals(plr) && effect.getClass().getSimpleName().equalsIgnoreCase(effectToRemove)) {
                     effect.selfDestruct();
-                    commandSender.sendMessage("§aRemoved §e" + effectToRemove + "§a from §e" + plr.getName());
+                    commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Removed <yellow>" + TextUtils.MINI_MESSAGE.escapeTags(effectToRemove) + "<green> from <yellow>" + plr.getName()));
                     effectIterator.remove();
                     return;
                 }
             }
-            commandSender.sendMessage("§cEffect not found!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Effect not found!"));
         }
         if (args[1].equalsIgnoreCase("CheckActiveEffects")) {
             Player plr;
@@ -98,18 +99,18 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
             } else if (args.length >= 3) {
                 plr = Bukkit.getPlayer(args[2]);
                 if (plr == null) {
-                    commandSender.sendMessage("§cUnknown player §e" + args[2]);
+                    commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Unknown player <yellow>" + TextUtils.MINI_MESSAGE.escapeTags(args[2])));
                     return;
                 }
             } else {
-                commandSender.sendMessage("§cUnknown player");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Unknown player"));
                 return;
             }
             if (!isWouldYouRatherActive() || WYREffectHandler.getManagedEffects().isEmpty()) {
-                commandSender.sendMessage("§e" + plr.getName() + "§c has no active effects.");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>" + plr.getName() + "<red> has no active effects."));
                 return;
             }
-            commandSender.sendMessage("§eActive effects on §b" + plr.getName() + "§e:");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Active effects on <aqua>" + plr.getName() + "<yellow>:"));
             for (WYREffect effect : WYREffectHandler.getManagedEffects()) {
                 if (effect.getPlayer().equals(plr)) {
                     NamedTextColor color = WYREffectHandler.isEffectBeneficial(effect) ? NamedTextColor.GREEN : NamedTextColor.RED;
@@ -122,7 +123,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         }
         if (args[1].equalsIgnoreCase("SendNewPrompt")) {
             if (!isWouldYouRatherActive()) {
-                commandSender.sendMessage("§cThe Would You Rather gamemode is not active!");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>The Would You Rather gamemode is not active!"));
                 return;
             }
             MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).onTimeEventTrigger();
@@ -334,7 +335,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (isPlayerCurrentlyChoosing(event.getPlayer())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("§cTsk Tsk, I know what you're up to...");
+            event.getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Tsk Tsk, I know what you're up to..."));
         }
     }
 

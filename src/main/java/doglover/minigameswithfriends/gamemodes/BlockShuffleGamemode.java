@@ -5,6 +5,7 @@ import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.configs.BlockShuffleConfig;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
+import doglover.minigameswithfriends.utils.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -39,7 +40,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     private static void handleBlockShuffleCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            commandSender.sendMessage("§cPlease specify a subcommand.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a subcommand."));
             return;
         }
         if (args[1].equalsIgnoreCase("BanBlock")) {
@@ -47,31 +48,31 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
                 String blockName = args[2];
                 Material block = Material.getMaterial(blockName);
                 if (block == null) {
-                    commandSender.sendMessage("§cInvalid block name. Must be uppercase enum style");
+                    commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid block name. Must be uppercase enum style"));
                     return;
                 }
                 BlockShuffleGamemode.banBlock(block);
-                commandSender.sendMessage("§aBlock " + blockName + " banned.");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Block " + blockName + " banned."));
             } else {
-                commandSender.sendMessage("§cPlease specify a block name.");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a block name."));
             }
         } else if (args[1].equalsIgnoreCase("UnbanBlock")) {
             if (args.length == 3) {
                 String blockName = args[2];
                 Material block = Material.getMaterial(blockName);
                 if (block == null) {
-                    commandSender.sendMessage("§cInvalid block name. Must be uppercase enum style");
+                    commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid block name. Must be uppercase enum style"));
                     return;
                 }
                 BlockShuffleGamemode.unbanBlock(block);
-                commandSender.sendMessage("§aBlock " + blockName + " unbanned.");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Block " + blockName + " unbanned."));
             } else {
-                commandSender.sendMessage("§cPlease specify a block name.");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a block name."));
             }
         } else if (args[1].equalsIgnoreCase("ListBannedBlocks")) {
-            commandSender.sendMessage("§eBanned blocks: §b");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Banned blocks: <aqua>"));
             for (String materialName : BlockShuffleGamemode.getBannedBlocksStringList()) {
-                commandSender.sendMessage("§b" + materialName);
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + materialName));
             }
         } else if (args[1].equalsIgnoreCase("skip")) {
             if (!MinigamesWithFriends.getGame().isRunning() || !MinigamesWithFriends.getGame().isGamemodeActive(BlockShuffleGamemode.class)) {
@@ -190,7 +191,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     }
 
     public void skip() {
-        getGame().broadcast("§aSkipping...");
+        getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<green>Skipping..."));
         onTimeEventTrigger();
         this.setTickGoal(getNextComputedTime());
     }
@@ -226,10 +227,10 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
         if (getConfig().shouldGivePointsAtEndOfRound()) {
             playersWhoHaveSteppedOnBlock.add(player.getUniqueId());
             playerBlocks.remove(player.getUniqueId());
-            getGame().broadcast("§b" + player.getName() + "§a has found their block!");
+            getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + player.getName() + "<green> has found their block!"));
         } else {
             getGame().addPointsToPlayer(player, getConfig().getPointsPerSuccessfulBlockStep());
-            getGame().broadcast("§b" + player.getName() + "§a has found their block!");
+            getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + player.getName() + "<green> has found their block!"));
             playerBlocks.remove(player.getUniqueId());
         }
         if (playerBlocks.isEmpty()) {
@@ -258,12 +259,12 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
                 playerBlocks.put(player.getUniqueId(), newBlock);
             }
         }
-        getGame().broadcast("§aBlocks have been shuffled");
-        getGame().broadcast("§e----------------------------");
+        getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<green>Blocks have been shuffled"));
+        getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<yellow>----------------------------"));
         for (Player player : getGame().getPlayers()) {
-            getGame().broadcast("§e" + player.getName() + ": §b" + playerBlocks.get(player.getUniqueId()).name());
+            getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<yellow>" + player.getName() + ": <aqua>" + playerBlocks.get(player.getUniqueId()).name()));
         }
-        getGame().broadcast("§e----------------------------");
+        getGame().broadcast(TextUtils.MINI_MESSAGE.deserialize("<yellow>----------------------------"));
     }
 
     @Override

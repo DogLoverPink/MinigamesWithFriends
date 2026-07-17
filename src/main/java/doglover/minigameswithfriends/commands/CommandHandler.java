@@ -1,5 +1,6 @@
 package doglover.minigameswithfriends.commands;
 
+import doglover.minigameswithfriends.utils.TextUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public class CommandHandler {
         if (commandMap.containsKey(commandName)) {
             commandMap.get(commandName).accept(sender, args);
         } else {
-            sender.sendMessage("§cCommand not found!");
+            sender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Command not found!"));
         }
     }
 }

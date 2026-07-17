@@ -3,10 +3,9 @@ package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
+import doglover.minigameswithfriends.utils.TextUtils;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -63,7 +62,7 @@ public class Phoenix extends WYREffect {
         ItemStack item = event.getItem();
         if (item.getType() == Material.MAGMA_CREAM && item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(new NamespacedKey("minigameswithfriends", "phoenix_essence"))) {
             getPlayer().getInventory().remove(item);
-            getPlayer().sendMessage(Component.text("§6§lYou feel the warmth of the phoenix's fire overtake you...").color(NamedTextColor.GOLD));
+            getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<gold><bold>You feel the warmth of the phoenix's fire overtake you..."));
             activatePhoenixMode();
         }
     }
@@ -71,10 +70,10 @@ public class Phoenix extends WYREffect {
     public ItemStack getFireItem(int amount) {
         ItemStack fire = new ItemStack(Material.BLAZE_POWDER);
         fire.editMeta(meta -> {
-            meta.customName(Component.text("§6§lPhoenix's Fire"));
+            meta.customName(TextUtils.MINI_MESSAGE.deserialize("<gold><bold>Phoenix's Fire"));
             meta.lore(Arrays.asList(
-                    Component.text("§cThe charred remains of what was once your hand..."),
-                    MiniMessage.miniMessage().deserialize("<gray>Property of "+getPlayer().getName()).decoration(TextDecoration.ITALIC, false)
+                    TextUtils.MINI_MESSAGE.deserialize("<red>The charred remains of what was once your hand..."),
+                    TextUtils.MINI_MESSAGE.deserialize("<gray>Property of "+getPlayer().getName()).decoration(TextDecoration.ITALIC, false)
             ));
         });
         fire.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
@@ -136,7 +135,7 @@ public class Phoenix extends WYREffect {
                 event.setCancelled(true);
                 lastLocation = getPlayer().getLocation().clone();
 //                getPlayer().spigot().respawn();
-                getPlayer().sendMessage(Component.text("§6§lYour ashes rise from the dead!").color(NamedTextColor.GOLD));
+                getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<gold><bold>Your ashes rise from the dead!"));
                 activatePhoenixMode();
                 Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
                     getPlayer().teleport(lastLocation);
@@ -182,9 +181,9 @@ public class Phoenix extends WYREffect {
         super.onEffectInitiate();
 
         ItemStack item = new ItemStack(Material.MAGMA_CREAM);
-        List<Component> lore = Arrays.asList(Component.text("§eRight click to use (One time use)"), Component.text("§cWill trigger automatically on death, bringing you back to life"));
+        List<Component> lore = Arrays.asList(TextUtils.MINI_MESSAGE.deserialize("<yellow>Right click to use (One time use)"), TextUtils.MINI_MESSAGE.deserialize("<red>Will trigger automatically on death, bringing you back to life"));
         item.editMeta(meta -> {
-            meta.customName(Component.text("§4§lPhoenix's Essence"));
+            meta.customName(TextUtils.MINI_MESSAGE.deserialize("<dark_red><bold>Phoenix's Essence"));
             meta.lore(lore);
             meta.getPersistentDataContainer().set(new NamespacedKey("minigameswithfriends", "phoenix_essence"), PersistentDataType.STRING, "phoenix_essence");
         });

@@ -2,7 +2,6 @@ package doglover.minigameswithfriends.utils;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -75,20 +74,20 @@ public class WorldFileUtils {
         int worldsCount = worlds.size();
         Bukkit.getScheduler().runTaskTimer(MinigamesWithFriends.getGamePlugin(), (task) -> {
             if (worlds.isEmpty()) {
-                playerToNotify.sendMessage(Component.text("§a§lPreloading complete!."));
-                playerToNotify.sendMessage(Component.text("§aIt is highly recomended that you restart your server!"));
+                playerToNotify.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green><bold>Preloading complete!."));
+                playerToNotify.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>It is highly recomended that you restart your server!"));
                 task.cancel();
                 return;
             }
             File file = worlds.removeFirst();
-            playerToNotify.sendMessage(Component.text("§eLoading world: §a" + file.getName()));
+            playerToNotify.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Loading world: <green>" + file.getName()));
             MinigamesWithFriends.getGamePlugin().getLogger().info("Loading world: " + file.getName());
             String filePath = file.getPath().replace("\\", "/");
             String worldPath = filePath.replace("world/dimensions/minecraft/", "");
             World world = Bukkit.createWorld(new WorldCreator(worldPath));
-            playerToNotify.sendMessage(Component.text("§aComplete. §eUnloading §a" + world.getName()));
+            playerToNotify.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Complete. <yellow>Unloading <green>" + world.getName()));
             Bukkit.unloadWorld(world, true);
-            playerToNotify.sendMessage(Component.text("§aCompleted (" + (worldsCount - worlds.size()) + "/" + worldsCount + ")"));
+            playerToNotify.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Completed (" + (worldsCount - worlds.size()) + "/" + worldsCount + ")"));
         }, 0, 20);
     }
 

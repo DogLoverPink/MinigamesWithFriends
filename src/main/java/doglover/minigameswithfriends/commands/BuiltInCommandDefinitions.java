@@ -4,9 +4,9 @@ import doglover.minigameswithfriends.Game;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.GamemodeConfig;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.utils.TextUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -63,19 +63,19 @@ public class BuiltInCommandDefinitions {
         if (args.length == 2) {
             String moduleName = args[1];
             if (!Gamemode.isValidGamemode(moduleName)) {
-                commandSender.sendMessage("§cInvalid gamemode name.");
-                commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid gamemode name."));
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
                 return;
             }
             if (MinigamesWithFriends.getGame().isGamemodeActive(Gamemode.getGamemodeFromName(moduleName).getClass())) {
-                commandSender.sendMessage("§cGamemode " + moduleName + " is already enabled.");
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Gamemode " + moduleName + " is already enabled."));
                 return;
             }
             MinigamesWithFriends.getGame().addGamemode(Gamemode.getGamemodeFromName(moduleName));
-            commandSender.sendMessage("§aGamemode " + moduleName + " enabled.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Gamemode " + moduleName + " enabled."));
         } else {
-            commandSender.sendMessage("§cPlease specify a module name.");
-            commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a module name."));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
         }
     }
 
@@ -92,7 +92,7 @@ public class BuiltInCommandDefinitions {
 
     private static void handleClearGamemodesCommand(CommandSender commandSender, String[] args) {
         MinigamesWithFriends.getGame().clearGamemodes();
-        commandSender.sendMessage("§aCleared all gamemodes.");
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Cleared all gamemodes."));
     }
 
     private static void handleStartCommand(CommandSender commandSender, String[] args) {
@@ -100,29 +100,29 @@ public class BuiltInCommandDefinitions {
             return;
         }
         MinigamesWithFriends.getGame().startGame();
-        commandSender.sendMessage("§aGame started.");
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Game started."));
     }
 
     private static void handleStopCommand(CommandSender commandSender, String[] args) {
         if (!MinigamesWithFriends.getGame().isRunning()) {
-            commandSender.sendMessage("§cNo game currently in progress!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>No game currently in progress!"));
             return;
         }
         MinigamesWithFriends.getGame().endGame();
-        commandSender.sendMessage("§cGame stopped.");
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Game stopped."));
     }
 
     private static boolean canStart(CommandSender sender) {
         if (MinigamesWithFriends.getGame().isRunning()) {
-            sender.sendMessage("§cGame already started!");
+            sender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Game already started!"));
             return false;
         }
         if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
-            sender.sendMessage("§cNo gamemodes enabled. Add some by doing §e/minigames EnableGamemode <gamemodeName>.");
+            sender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>No gamemodes enabled. Add some by doing <yellow>/minigames EnableGamemode \\<gamemodeName\\>."));
             return false;
         }
         if (MinigamesWithFriends.getGame().getSpectators().size() == Bukkit.getOnlinePlayers().size()) {
-            sender.sendMessage("§cYou need some non-spectator players to start the game you silly goose!");
+            sender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>You need some non-spectator players to start the game you silly goose!"));
             return false;
         }
         return true;
@@ -164,7 +164,7 @@ public class BuiltInCommandDefinitions {
     }
 
     private static void handleHelpCommand(CommandSender commandSender, String[] args) {
-        Component message = MiniMessage.miniMessage().deserialize(
+        Component message = TextUtils.MINI_MESSAGE.deserialize(
                 "<yellow>Wiki Link: <click:open_url:'https://github.com/DogLoverPink/MinigamesWithFriends/wiki'><hover:show_text:'<aqua>Wiki Link</aqua>'><aqua>HERE</aqua></hover></click></yellow>\n" +
                         "<yellow>Discord Link: <click:open_url:'https://discord.gg/KcGdBFUVZD'><hover:show_text:'<aqua>Join for fast support!</aqua>'><aqua>HERE</aqua></hover></click></yellow>"
         );
@@ -175,15 +175,15 @@ public class BuiltInCommandDefinitions {
         if (args.length == 2) {
             String moduleName = args[1];
             if (!Gamemode.isValidGamemode(moduleName)) {
-                commandSender.sendMessage("§cInvalid gamemode name.");
-                commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid gamemode name."));
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
                 return;
             }
             MinigamesWithFriends.getGame().removeGamemode(Gamemode.getGamemodeFromName(moduleName).getClass());
-            commandSender.sendMessage("§aGamemode " + moduleName + " disabled.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Gamemode " + moduleName + " disabled."));
         } else {
-            commandSender.sendMessage("§cPlease specify a module name.");
-            commandSender.sendMessage("§eValid options are: §b" + Gamemode.getGamemodeListString());
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a module name."));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
         }
     }
 
@@ -193,8 +193,8 @@ public class BuiltInCommandDefinitions {
 
     private static void handleConfigCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            commandSender.sendMessage("§cSpecify a gamemode and a config key.");
-            commandSender.sendMessage("§eEx.: /dimensionSwap config dimensionSwap canVisitSameWorldTwice true");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Specify a gamemode and a config key."));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Ex.: /dimensionSwap config dimensionSwap canVisitSameWorldTwice true"));
             return;
         }
         if (args.length == 2) {
@@ -253,15 +253,15 @@ public class BuiltInCommandDefinitions {
         }
         Class<?> type = conf.getConfigValues().get(configKey);
         if (type == null) {
-            commandSender.sendMessage("§cConfig key not found.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Config key not found."));
             return;
         }
         boolean wasValid = conf.validateAndSetValue(configKey, value);
         if (!wasValid) {
-            commandSender.sendMessage("§cInvalid value type. Expected: " + type.getSimpleName());
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid value type. Expected: " + type.getSimpleName()));
             return;
         }
-        commandSender.sendMessage("§aConfig: " + configKey + " set to " + value);
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Config: " + configKey + " set to " + TextUtils.MINI_MESSAGE.escapeTags(value)));
         MinigamesWithFriends.getGame().updateConfig();
     }
 
@@ -273,17 +273,17 @@ public class BuiltInCommandDefinitions {
         }
         String value = conf.getString(configKey);
         if (value == null) {
-            commandSender.sendMessage("§cConfig key not found.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Config key not found."));
             return;
         }
-        commandSender.sendMessage("§aConfig: " + configKey + " = " + value);
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Config: " + configKey + " = " + TextUtils.MINI_MESSAGE.escapeTags(value)));
     }
 
     private static void sendValidGamemodeNames(CommandSender commandSender) {
-        commandSender.sendMessage("""
-                §cGamemode not found,valid options are:
-                §dmainGame
-                §ddimensionSwap""");
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("""
+                <red>Gamemode not found,valid options are:
+                <light_purple>mainGame
+                <light_purple>dimensionSwap"""));
     }
 
     private static void handleConfig2Args(CommandSender commandSender, String configName) {
@@ -292,34 +292,34 @@ public class BuiltInCommandDefinitions {
             sendValidGamemodeNames(commandSender);
             return;
         }
-        commandSender.sendMessage("§eValid config values:");
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid config values:"));
         for (String configKey : conf.getConfigValues().keySet()) {
             String type = conf.getConfigValues().get(configKey).getSimpleName();
             String value = conf.getString(configKey);
-            commandSender.sendMessage("§d" + configKey + " = " + value + " §e: " + type);
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<light_purple>" + configKey + " = " + TextUtils.MINI_MESSAGE.escapeTags(value) + " <yellow>: " + type));
         }
     }
 
     private static void handleAddSpectatorCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            commandSender.sendMessage("§cPlease specify a player!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a player!"));
             return;
         }
         Player plr = Bukkit.getPlayer(args[1]);
         if (plr == null) {
-            commandSender.sendMessage("§cPlease specify a valid player!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a valid player!"));
             return;
         }
         if (MinigamesWithFriends.getGame().getSpectators().contains(plr)) {
-            commandSender.sendMessage("§cThat player is already a spectator!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>That player is already a spectator!"));
             return;
         }
         MinigamesWithFriends.getGame().addSpectator(plr);
         if (!commandSender.equals(plr)) {
-            commandSender.sendMessage("§aMade §b" + plr.getName() + "§a a spectator!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Made <aqua>" + plr.getName() + "<green> a spectator!"));
         }
         if (!MinigamesWithFriends.getGame().isRunning()) {
-            plr.sendMessage("§aYou have been set to spectate the next game!");
+            plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>You have been set to spectate the next game!"));
         }
     }
 
@@ -331,20 +331,20 @@ public class BuiltInCommandDefinitions {
 
     private static void handleRemoveSpectatorCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            commandSender.sendMessage("§cPlease specify a player!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a player!"));
             return;
         }
         Player plr = Bukkit.getPlayer(args[1]);
         if (plr == null) {
-            commandSender.sendMessage("§cPlease specify a valid player!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a valid player!"));
             return;
         }
         if (!MinigamesWithFriends.getGame().getSpectators().contains(plr)) {
-            commandSender.sendMessage("§cThat player is not a spectator!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>That player is not a spectator!"));
             return;
         }
         MinigamesWithFriends.getGame().removeSpectator(plr);
-        commandSender.sendMessage("§aMade §b" + plr.getName() + "§a no longer a spectator!");
+        commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Made <aqua>" + plr.getName() + "<green> no longer a spectator!"));
     }
 
     private static List<String> handleRemoveSpectatorCompletions(String[] args) {

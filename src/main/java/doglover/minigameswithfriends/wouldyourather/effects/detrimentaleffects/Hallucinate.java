@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
+import doglover.minigameswithfriends.utils.TextUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.audience.Audience;
@@ -107,8 +108,8 @@ public class Hallucinate extends WYREffect {
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, 1);
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, .8f);
         getPlayer().playSound(getPlayer().getLocation(), Sound.AMBIENT_CAVE, 1, .9f);
-        getPlayer().sendMessage(Component.text("§cYou swear you can recall a mysterious question being asked, but no such inquiry truly existed..."));
-        getPlayer().sendMessage(Component.text("§cYou fall deeper into mental despair..."));
+        getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>You swear you can recall a mysterious question being asked, but no such inquiry truly existed..."));
+        getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>You fall deeper into mental despair..."));
     }
 
     private void sendWYREffectChoice(Player plr, int choice) {

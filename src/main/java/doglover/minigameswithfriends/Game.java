@@ -7,10 +7,10 @@ import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
 import doglover.minigameswithfriends.utils.PlayerUtils;
+import doglover.minigameswithfriends.utils.TextUtils;
 import fr.mrmicky.fastboard.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -117,7 +117,7 @@ public class Game {
         if (isRunning) {
             if (!spectators.contains(player.getUniqueId())) {
                 for (Player plr : getPlayersAndSpectators()) {
-                    plr.sendMessage("§b" + player.getName() + "§a is now spectating!");
+                    plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + player.getName() + "<green> is now spectating!"));
                 }
             }
             player.setGameMode(GameMode.SPECTATOR);
@@ -184,7 +184,7 @@ public class Game {
         if (isRunning) {
             gamemode.registerSubscribedEvents();
             gamemode.onGameStart();
-            broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been enabled.");
+            broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + gamemode.getClass().getSimpleName() + " <green>has been enabled."));
         }
     }
 
@@ -194,7 +194,7 @@ public class Game {
                 if (isRunning) {
                     gamemode.onGameEnd();
                     gamemode.unregisterSubscribedEvents();
-                    broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been disabled");
+                    broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + gamemode.getClass().getSimpleName() + " <green>has been disabled"));
                 }
                 this.gamemodes.remove(gamemode);
                 gamemode.setGame(null);
@@ -240,7 +240,7 @@ public class Game {
         }
         if (this.points.get(player) >= pointsToWin) {
             for (Player p : getPlayers()) {
-                p.sendMessage("§a§l" + player.getName() + " has won the game!");
+                p.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green><bold>" + player.getName() + " has won the game!"));
                 p.playSound(p, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                 ParticleUtils.createParticleCloud(p.getLocation(), 3, Particle.FIREWORK, 30);
                 p.showTitle(Title.title(Component.text(player.getName() + " won!!").color(NamedTextColor.GOLD), Component.empty(), 8, 50, 20));
@@ -272,22 +272,20 @@ public class Game {
         }
     }
 
-    MiniMessage miniMessage = MiniMessage.miniMessage();
-
     public void reportPlayerJoin(Player player) {
         if (!isRunning) {
             return;
         }
         if (players.contains(player.getUniqueId())) {
             setupBoardForPlayer(player);
-            player.sendMessage("§aContinued game in progress!");
-            player.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
+            player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Continued game in progress!"));
+            player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Enabled gamemodes: <aqua>" + this.getGamemodes().toString().replace("[", "").replace("]", "")));
         } else {
             setupBoardForPlayer(player);
             addSpectator(player);
-            player.sendMessage("§bA game is in progress, you are now spectating!");
+            player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<aqua>A game is in progress, you are now spectating!"));
             String name = player.getName();
-            Component message = miniMessage.deserialize("<yellow>If you wish to play the game instead, have you or an admin run</yellow> <hover:show_text:'<aqua>Click to join game!</aqua>'><click:run_command:'/mg RemoveSpectator " + name + "'><aqua>/</aqua><green>mg RemoveSpectator " + name + "</green><aqua> (Click me)</aqua></click></hover>");
+            Component message = TextUtils.MINI_MESSAGE.deserialize("<yellow>If you wish to play the game instead, have you or an admin run</yellow> <hover:show_text:'<aqua>Click to join game!</aqua>'><click:run_command:'/mg RemoveSpectator " + name + "'><aqua>/</aqua><green>mg RemoveSpectator " + name + "</green><aqua> (Click me)</aqua></click></hover>");
             player.sendMessage(message);
         }
     }
@@ -349,14 +347,14 @@ public class Game {
         for (Player everyone : getPlayersAndSpectators()) {
 
             setupBoardForPlayer(everyone);
-            everyone.sendMessage("§a§lGame Started!");
-            everyone.sendMessage("§aEnabled gamemodes: §b" + this.getGamemodes().toString().replace("[", "").replace("]", ""));
+            everyone.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green><bold>Game Started!"));
+            everyone.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Enabled gamemodes: <aqua>" + this.getGamemodes().toString().replace("[", "").replace("]", "")));
 
         }
 
         for (Player spectator : getSpectators()) {
             spectator.setGameMode(GameMode.SPECTATOR);
-            spectator.sendMessage("§eYou are §bspectating");
+            spectator.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>You are <aqua>spectating"));
         }
         for (Gamemode gamemode : gamemodes) {
             gamemode.registerSubscribedEvents();
@@ -423,7 +421,7 @@ public class Game {
 
         if (getPlayers().size() <= 1) {
             getPlayersAndSpectators().forEach(player -> {
-                player.sendMessage("§cNot enough players for deathmatch! Skipping");
+                player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Not enough players for deathmatch! Skipping"));
                 player.playSound(player, Sound.ENTITY_VILLAGER_NO, 1, 1);
             });
             if (getPlayers().size() == 1) {
@@ -453,7 +451,7 @@ public class Game {
             player.teleport(loc);
             player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
             player.setFoodLevel(20);
-            player.sendMessage("§c§lDeathmatch Started!");
+            player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red><bold>Deathmatch Started!"));
             player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 10 * 20, 4, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 5 * 20, 9, true, false));
             BukkitRunnable runnable = new BukkitRunnable() {
@@ -469,7 +467,9 @@ public class Game {
                         this.cancel();
                         return;
                     }
-                    player.showTitle(Title.title(Component.text("§a" + i), Component.text("§eGet Ready!")));
+                    player.showTitle(Title.title(
+                            TextUtils.MINI_MESSAGE.deserialize("<green>" + i),
+                            TextUtils.MINI_MESSAGE.deserialize("<yellow>Get Ready!")));
                     i--;
                 }
 
@@ -515,7 +515,7 @@ public class Game {
 
 
         for (Player plr : getPlayers()) {
-            plr.sendMessage("§a" + winnerName + " won deathmatch! ");
+            plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>" + winnerName + " won deathmatch! "));
             plr.setHealth(plr.getAttribute(Attribute.MAX_HEALTH).getValue());
             Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> {
                 Location loc = previousLocations.get(plr.getUniqueId());
@@ -525,7 +525,7 @@ public class Game {
                     plr.setGameMode(GameMode.SURVIVAL);
                 }
             }, 59);
-            plr.sendMessage("§c§lDeathmatch Ended!");
+            plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red><bold>Deathmatch Ended!"));
         }
 
         for (Gamemode gamemode : gamemodes) {
@@ -541,7 +541,7 @@ public class Game {
         aliveDeathMatchPlayers.remove(player.getUniqueId());
         deadDeathMatchPlayers.add(player.getUniqueId());
         for (Player p : getPlayers()) {
-            p.sendMessage("§4☠§c" + player.getName() + " has died!");
+            p.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<dark_red>☠<red>" + player.getName() + " has died!"));
         }
         if (aliveDeathMatchPlayers.size() == 1) {
             Player winner = Bukkit.getPlayer(aliveDeathMatchPlayers.getFirst());
@@ -575,7 +575,7 @@ public class Game {
                 }
                 PlayerUtils.launchPlayerToLoc(player, worldSpawn);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * 3, 1, true, false));
-                player.sendMessage("§cnuh uh uh");
+                player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>nuh uh uh"));
             }
         }
         for (UUID uuid : deadDeathMatchPlayers) {

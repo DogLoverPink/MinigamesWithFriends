@@ -2,9 +2,9 @@ package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.ItemUtils;
+import doglover.minigameswithfriends.utils.TextUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -58,8 +58,8 @@ public class StealItemFromPlayer extends WYREffect {
                     event.getInventory().remove(item);
                     event.getInventory().close();
                     if (randPlayer != null) {
-                        getPlayer().sendMessage(Component.text("§aYou took §b" + item.getAmount() + " §e" + item.getType() + "§a from §9" + randPlayer.getName() + "!"));
-                        randPlayer.sendMessage(Component.text("§9" + getPlayer().getName() + "§c took §b" + item.getAmount() + " §e" + item.getType() + " §cfrom you!"));
+                        getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>You took <aqua>" + item.getAmount() + " <yellow>" + item.getType() + "<green> from <blue>" + randPlayer.getName() + "!"));
+                        randPlayer.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<blue>" + getPlayer().getName() + "<red> took <aqua>" + item.getAmount() + " <yellow>" + item.getType() + " <red>from you!"));
                     }
 
                     this.selfDestruct();

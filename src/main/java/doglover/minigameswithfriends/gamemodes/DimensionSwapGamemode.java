@@ -4,6 +4,7 @@ import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.configs.DimensionSwapConfig;
 import doglover.minigameswithfriends.utils.BlockUtils;
+import doglover.minigameswithfriends.utils.TextUtils;
 import doglover.minigameswithfriends.utils.WorldFileUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -43,13 +44,13 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
     private static void handleDimensionSwapCommand(CommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            commandSender.sendMessage("§cPlease specify a subcommand.");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a subcommand."));
             return;
         }
         if (args[1].equalsIgnoreCase("PreLoadSavedDimensionSwapWorlds")) {
             DimensionSwapGamemode.preLoadSavedWorlds(commandSender);
         } else {
-            commandSender.sendMessage("§cInvalid subcommand!");
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid subcommand!"));
         }
     }
 
@@ -173,7 +174,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
             try {
                 FileUtils.copyDirectory(originalWorld, newWorldFolder);
             } catch (IOException e) {
-                plr.sendMessage("§cError: IOException trying to copy world: " + newWorld + "!");
+                plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Error: IOException trying to copy world: " + newWorld + "!"));
                 e.printStackTrace();
             }
             MinigamesWithFriends.getGamePlugin().getLogger().info("name: " + newWorldFolder.getPath().replace("\\", "/"));

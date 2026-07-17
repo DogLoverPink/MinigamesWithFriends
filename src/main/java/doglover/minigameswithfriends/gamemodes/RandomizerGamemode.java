@@ -38,7 +38,6 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     public RandomizerGamemode() {
         subscribeToEvent(BlockBreakEvent.class);
-        subscribeToEvent(PlayerDeathEvent.class);
     }
 
     public ItemStack getBlockItem(Material material) {
@@ -50,11 +49,6 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
         Block block = event.getBlock();
         event.setDropItems(false);
         block.getWorld().dropItemNaturally(block.getLocation(), getBlockItem(block.getType()));
-    }
-
-    @Override
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Bukkit.broadcast(Component.text("Normal priority event"));
     }
 
     @Override

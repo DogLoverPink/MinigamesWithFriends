@@ -3,7 +3,7 @@ package doglover.minigameswithfriends.gamemodes;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.DeathSwapConfig;
 import doglover.minigameswithfriends.utils.PlayerUtils;
-import net.kyori.adventure.text.Component;
+import doglover.minigameswithfriends.utils.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -37,8 +37,10 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
 
     @Override
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Bukkit.broadcast(Component.text("High priority event"));
         if (getGame().isInDeathMatch()) {
+            return;
+        }
+        if (event.isCancelled()) {
             return;
         }
         DeathSwapConfig config = getConfig();
@@ -86,7 +88,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
         super.onGameStart();
         for (Player plr : this.getGame().getPlayers()) {
             PlayerUtils.resetPlayer(plr);
-            plr.sendMessage("§eDeath Swap has begun!");
+            plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Death Swap has begun!"));
             this.getGame().addScoreboardContribution("§dDeath Swap in: §b" + (int) (this.getTickGoal() / 20) + " seconds");
         }
     }
@@ -132,12 +134,12 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
             Player plr = plrs.get(i);
             swapMap.put(plr, plrs.get(i + 1));
             plr.teleport(plrs.get(i + 1).getLocation());
-            plr.sendMessage(Component.text("§eTeleporting to " + plrs.get(i + 1).getName()));
+            plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Teleporting to " + plrs.get(i + 1).getName()));
         }
         Player lastPlayer = plrs.getLast();
         swapMap.put(lastPlayer, plrs.getFirst());
         lastPlayer.teleport(loc1);
-        lastPlayer.sendMessage(Component.text("§eTeleporting to " + plrs.getFirst().getName()));
+        lastPlayer.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Teleporting to " + plrs.getFirst().getName()));
 
     }
     @Override

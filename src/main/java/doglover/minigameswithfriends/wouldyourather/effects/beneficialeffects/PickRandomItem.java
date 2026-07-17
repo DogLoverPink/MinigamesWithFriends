@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 import com.google.common.collect.Lists;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.utils.ItemUtils;
+import doglover.minigameswithfriends.utils.TextUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import io.papermc.paper.registry.RegistryAccess;
@@ -83,7 +84,7 @@ public class PickRandomItem extends WYREffect {
             event.setCancelled(true);
             isPicking = false;
             inventory.close();
-            getPlayer().sendMessage(Component.text("§aYou picked §b" + item.getAmount() + " §e" + item.getType() + "§a!"));
+            getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>You picked <aqua>" + item.getAmount() + " <yellow>" + item.getType() + "<green>!"));
             this.selfDestruct();
         }
     }
@@ -114,7 +115,7 @@ public class PickRandomItem extends WYREffect {
             if (isPicking) {
                 isPicking = false;
                 inventory.close();
-                getPlayer().sendMessage(Component.text("§cYou ran out of time! Picking one at random..."));
+                getPlayer().sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>You ran out of time! Picking one at random..."));
                 ItemStack randItem = inventory.getItem(random.nextInt(inventory.getSize()));
                 ItemUtils.giveItemsToPlayer(getPlayer(), randItem);
                 this.selfDestruct();
