@@ -5,7 +5,6 @@ import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.JarUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
-import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
@@ -19,6 +18,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,6 +34,19 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
                 WouldYouRatherGamemode::handleWouldYouRatherCommand,
                 WouldYouRatherGamemode::handleWouldYouRatherCompletions);
 
+    }
+
+    public WouldYouRatherGamemode() {
+        subscribeToEvent(PlayerDropItemEvent.class);
+    }
+
+    /**
+     * Whether the Would You Rather gamemode is currently live (game running and gamemode enabled).
+     * Replaces the old {@code WYREventHandler.isActive()} check.
+     */
+    private static boolean isWouldYouRatherActive() {
+        return MinigamesWithFriends.getGame().isRunning()
+                && MinigamesWithFriends.getGame().isGamemodeActive(WouldYouRatherGamemode.class);
     }
 
 
@@ -79,7 +92,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
                 commandSender.sendMessage("§cUnknown player");
                 return;
             }
-            if (!WYREventHandler.isActive() || WYREffectHandler.getManagedEffects().isEmpty()) {
+            if (!isWouldYouRatherActive() || WYREffectHandler.getManagedEffects().isEmpty()) {
                 commandSender.sendMessage("§e" + plr.getName() + "§c has no active effects.");
                 return;
             }
@@ -95,7 +108,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
             }
         }
         if (args[1].equalsIgnoreCase("SendNewPrompt")) {
-            if (!WYREventHandler.isActive() || !MinigamesWithFriends.getGame().isGamemodeActive(WouldYouRatherGamemode.class)) {
+            if (!isWouldYouRatherActive()) {
                 commandSender.sendMessage("§cThe Would You Rather gamemode is not active!");
                 return;
             }
@@ -113,7 +126,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
             }
             if (args.length == 4) {
                 Player plr = Bukkit.getPlayer(args[2]);
-                if (!WYREventHandler.isActive() || plr == null) {
+                if (!isWouldYouRatherActive() || plr == null) {
                     return List.of();
                 }
                 return filterByStartsWith(WYREffectHandler.getManagedEffects().stream()
@@ -305,8 +318,15 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
 
     @Override
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        if (isPlayerCurrentlyChoosing(event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage("§cTsk Tsk, I know what you're up to...");
+        }
+    }
+
+    @Override
     public void onGameEnd() {
-        WYREventHandler.setActive(false);
         currentlyAppliedBenefitsAndDetriments.clear();
         WYREffectHandler.clearAndDecomposeManagedEffects();
         for (Player plr : getGame().getPlayers()) {
@@ -330,7 +350,6 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameStart() {
-        WYREventHandler.setActive(true);
         updateConfig();
         super.onGameStart();
         if (this.getGame().getConfig().getWouldYouRatherConfig().shouldStartGameWithAChoicePrompt()) {

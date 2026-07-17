@@ -8,7 +8,6 @@ import doglover.minigameswithfriends.events.*;
 import doglover.minigameswithfriends.gamemodes.DimensionSwapGamemode;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.JarUtils;
-import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
@@ -39,13 +38,11 @@ public final class MinigamesWithFriends extends JavaPlugin {
         minigameCommand.setTabCompleter(new GameCommandTabCompleter());
         this.getServer().getPluginManager().registerEvents(new DeathListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandBlockRunEvent(), this);
-        this.getServer().getPluginManager().registerEvents(new BreakBlockEvent(), this);
         this.getServer().getPluginManager().registerEvents(new JoinLeaveEvent(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerInventoryDropItemEvent(), this);
         DimensionSwapGamemode.initialize();
         WouldYouRatherGamemode.initialize();
 
-        WYREventHandler.registerEvents(this);
+        GameEventHandler.registerListeners(this);
 
         game = new Game();
         Bukkit.getScheduler().runTaskTimer(this, () -> {

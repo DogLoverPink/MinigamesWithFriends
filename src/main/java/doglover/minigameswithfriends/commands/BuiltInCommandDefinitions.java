@@ -4,8 +4,6 @@ import doglover.minigameswithfriends.Game;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.GamemodeConfig;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
-import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
-import doglover.minigameswithfriends.wouldyourather.WYREventHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -141,9 +139,6 @@ public class BuiltInCommandDefinitions {
             return;
         }
         game.setPaused(true);
-        if (game.isGamemodeActive(WouldYouRatherGamemode.class)) {
-            WYREventHandler.setActive(false);
-        }
         game.getPlayers().forEach(player -> {
             player.sendMessage(Component.text("Game Paused!").color(NamedTextColor.GREEN));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0.8f);
@@ -162,9 +157,6 @@ public class BuiltInCommandDefinitions {
             return;
         }
         game.setPaused(false);
-        if (game.isGamemodeActive(WouldYouRatherGamemode.class)) {
-            WYREventHandler.setActive(true);
-        }
         game.getPlayers().forEach(player -> {
             player.sendMessage(Component.text("Game Unpaused!").color(NamedTextColor.GREEN));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0.8f);

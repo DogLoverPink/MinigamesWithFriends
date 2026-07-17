@@ -1,11 +1,12 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.Game;
+import doglover.minigameswithfriends.events.EventSubscriber;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public abstract class Gamemode {
+public abstract class Gamemode extends EventSubscriber {
 
     public abstract void tick();
 

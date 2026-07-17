@@ -181,6 +181,7 @@ public class Game {
         this.gamemodes.add(gamemode);
         gamemode.setGame(this);
         if (isRunning) {
+            gamemode.registerSubscribedEvents();
             gamemode.onGameStart();
             broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been enabled.");
         }
@@ -191,6 +192,7 @@ public class Game {
             if (gamemode.getClass() == gamemodeClazz) {
                 if (isRunning) {
                     gamemode.onGameEnd();
+                    gamemode.unregisterSubscribedEvents();
                     broadcast("§b" + gamemode.getClass().getSimpleName() + " §ahas been disabled");
                 }
                 this.gamemodes.remove(gamemode);
@@ -356,6 +358,7 @@ public class Game {
             spectator.sendMessage("§eYou are §bspectating");
         }
         for (Gamemode gamemode : gamemodes) {
+            gamemode.registerSubscribedEvents();
             gamemode.onGameStart();
         }
     }
@@ -371,6 +374,7 @@ public class Game {
         isRunning = false;
         for (Gamemode gamemode : gamemodes) {
             gamemode.onGameEnd();
+            gamemode.unregisterSubscribedEvents();
         }
         for (Player player : getPlayersAndSpectators()) {
             FastBoard board = boards.get(player.getUniqueId());

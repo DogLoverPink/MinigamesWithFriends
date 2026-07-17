@@ -1,11 +1,15 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import com.google.common.collect.Lists;
-import doglover.minigameswithfriends.MinigamesWithFriends;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -20,8 +24,25 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     static Random random = new Random();
 
+    public RandomizerGamemode() {
+        subscribeToEvent(BlockBreakEvent.class);
+        subscribeToEvent(PlayerDeathEvent.class);
+    }
+
     public ItemStack getBlockItem(Material material) {
         return blockMap.get(material);
+    }
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        event.setDropItems(false);
+        block.getWorld().dropItemNaturally(block.getLocation(), getBlockItem(block.getType()));
+    }
+
+    @Override
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Bukkit.broadcast(Component.text("Normal priority event"));
     }
 
     @Override

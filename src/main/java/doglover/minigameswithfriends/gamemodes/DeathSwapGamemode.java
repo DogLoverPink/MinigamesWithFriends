@@ -1,12 +1,16 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.configs.DeathSwapConfig;
 import doglover.minigameswithfriends.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -15,6 +19,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DeathSwapGamemode extends TimeEventBasedGamemode{
+
+    public DeathSwapGamemode() {
+        subscribeToEvent(PlayerDeathEvent.class, EventPriority.HIGH);
+    }
+
+    @Override
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Bukkit.broadcast(Component.text("High priority event"));
+        if (getGame().isInDeathMatch()) {
+            return;
+        }
+        DeathSwapConfig config = getGame().getConfig().getDeathSwapConfig();
+        Player swapper = getSwapperFromSwapee(event.getPlayer());
+        if (config.shouldKeepInventoryOnSwapRelatedDeath() && swapper != null) {
+            event.setKeepInventory(true);
+        }
+        if (swapper == null) {
+            return;
+        }
+        int pointsToGive = config.getPointsPerImpressiveDeath();
+        DamageType damageType = event.getDamageSource().getDamageType();
+        if (damageType == DamageType.FALL
+                || damageType == DamageType.LAVA
+                || damageType == DamageType.OUT_OF_WORLD) {
+            pointsToGive = config.getPointsPerLameDeath();
+        }
+        getGame().addPointsToPlayer(swapper, pointsToGive);
+        nullifySwapper(event.getPlayer());
+    }
 
     @Override
     public void tick() {
