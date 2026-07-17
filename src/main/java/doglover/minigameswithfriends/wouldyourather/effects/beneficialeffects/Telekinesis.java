@@ -1,16 +1,12 @@
 package doglover.minigameswithfriends.wouldyourather.effects.beneficialeffects;
 
 import doglover.minigameswithfriends.utils.ItemUtils;
-import doglover.minigameswithfriends.utils.PlayerUtils;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class Telekinesis extends WYREffect {
 
@@ -27,7 +23,7 @@ public class Telekinesis extends WYREffect {
     public Telekinesis(Player player) {
         super(player);
         setRepeatable(false);
-        subscribeToEvent(BlockDropItemEvent.class, EventPriority.LOW);
+        subscribeToEvent(BlockDropItemEvent.class, EventPriority.HIGH);
     }
 
     @Override

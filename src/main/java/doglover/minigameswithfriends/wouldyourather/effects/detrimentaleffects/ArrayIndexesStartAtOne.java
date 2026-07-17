@@ -2,16 +2,11 @@ package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,7 +25,7 @@ public class ArrayIndexesStartAtOne extends WYREffect {
     public ArrayIndexesStartAtOne(Player player) {
         super(player);
         setRepeatable(false);
-        subscribeToEvent(InventoryClickEvent.class, EventPriority.LOW);
+        subscribeToEvent(InventoryClickEvent.class, EventPriority.HIGH);
     }
 
 

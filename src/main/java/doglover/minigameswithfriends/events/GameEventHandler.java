@@ -37,7 +37,7 @@ public class GameEventHandler {
     private static void addSubscriberInCorrectOrder(Class<? extends Event> eventClass, SubscriberWithPriority subscriberWithPriority) {
         List<SubscriberWithPriority> subscribers = eventMappings.computeIfAbsent(eventClass, k -> new ArrayList<>());
         int index = 0;
-        while (index < subscribers.size() && subscribers.get(index).priority().ordinal() >= subscriberWithPriority.priority().ordinal()) {
+        while (index < subscribers.size() && subscribers.get(index).priority().ordinal() <= subscriberWithPriority.priority().ordinal()) {
             index++;
         }
         subscribers.add(index, subscriberWithPriority);
