@@ -3,6 +3,7 @@ package doglover.minigameswithfriends.gamemodes;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.JarUtils;
+import doglover.minigameswithfriends.configs.WouldYouRatherConfig;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.audience.Audience;
@@ -29,7 +30,10 @@ import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.f
 
 public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
+    private static final WouldYouRatherConfig CONFIG = new WouldYouRatherConfig();
+
     static {
+        Gamemode.register("WouldYouRather", WouldYouRatherGamemode.class, WouldYouRatherGamemode::new, CONFIG);
         CommandHandler.registerCommand("WouldYouRather",
                 WouldYouRatherGamemode::handleWouldYouRatherCommand,
                 WouldYouRatherGamemode::handleWouldYouRatherCompletions);
@@ -38,6 +42,15 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     public WouldYouRatherGamemode() {
         subscribeToEvent(PlayerDropItemEvent.class);
+    }
+
+    public static WouldYouRatherConfig config() {
+        return CONFIG;
+    }
+
+    @Override
+    public WouldYouRatherConfig getConfig() {
+        return CONFIG;
     }
 
     /**
@@ -198,10 +211,10 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
             currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).add(badEffect.getClass());
         }
         plr.sendMessage(Component.text("You chose!"));
-        if (getGame().getConfig().getWouldYouRatherConfig().shouldApplyDamageImmunityDuringChoiceSelection()) {
+        if (getConfig().shouldApplyDamageImmunityDuringChoiceSelection()) {
             plr.removePotionEffect(PotionEffectType.RESISTANCE);
         }
-        if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
+        if (getConfig().shouldPreventMovingDuringChoiceSelection()) {
             plr.getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(preventMovingKey);
             plr.getAttribute(Attribute.JUMP_STRENGTH).removeModifier(preventJumpingKey);
         }
@@ -233,10 +246,10 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     public void onTimeEventTrigger() {
         isCurrentChoosing = true;
         for (Player plr : getGame().getPlayers()) {
-            if (getGame().getConfig().getWouldYouRatherConfig().shouldApplyDamageImmunityDuringChoiceSelection()) {
+            if (getConfig().shouldApplyDamageImmunityDuringChoiceSelection()) {
                 plr.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, -1, 4));
             }
-            if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
+            if (getConfig().shouldPreventMovingDuringChoiceSelection()) {
                 if (plr.getAttribute(Attribute.MOVEMENT_SPEED).getModifier(preventMovingKey) == null
                         && plr.getAttribute(Attribute.JUMP_STRENGTH).getModifier(preventJumpingKey) == null) {
                     plr.getAttribute(Attribute.MOVEMENT_SPEED).addModifier(new AttributeModifier(preventMovingKey, -1, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
@@ -261,7 +274,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
     }
 
     private void runChoiceChooseTimer() {
-        setTickGoal(20 * getGame().getConfig().getWouldYouRatherConfig().getAllocatedSecondsForChoosingOption());
+        setTickGoal(20 * getConfig().getAllocatedSecondsForChoosingOption());
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -330,7 +343,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         currentlyAppliedBenefitsAndDetriments.clear();
         WYREffectHandler.clearAndDecomposeManagedEffects();
         for (Player plr : getGame().getPlayers()) {
-            if (getGame().getConfig().getWouldYouRatherConfig().shouldPreventMovingDuringChoiceSelection()) {
+            if (getConfig().shouldPreventMovingDuringChoiceSelection()) {
                 plr.getAttribute(Attribute.MOVEMENT_SPEED).removeModifier(preventMovingKey);
                 plr.getAttribute(Attribute.JUMP_STRENGTH).removeModifier(preventJumpingKey);
             }
@@ -344,15 +357,15 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void updateConfig() {
-        this.setMinTicks(getGame().getConfig().getWouldYouRatherConfig().getMinimumSecondsBeforeNewChoice() * 20);
-        this.setMaxTicks(getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 20);
+        this.setMinTicks(getConfig().getMinimumSecondsBeforeNewChoice() * 20);
+        this.setMaxTicks(getConfig().getMaximumSecondsBeforeNewChoice() * 20);
     }
 
     @Override
     public void onGameStart() {
         updateConfig();
         super.onGameStart();
-        if (this.getGame().getConfig().getWouldYouRatherConfig().shouldStartGameWithAChoicePrompt()) {
+        if (this.getConfig().shouldStartGameWithAChoicePrompt()) {
             setTickGoal(60);
         }
         for (Player plr : this.getGame().getPlayers()) {

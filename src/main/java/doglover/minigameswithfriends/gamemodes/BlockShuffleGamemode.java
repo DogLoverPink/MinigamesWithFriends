@@ -2,6 +2,7 @@ package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
+import doglover.minigameswithfriends.configs.BlockShuffleConfig;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
 import org.bukkit.Bukkit;
@@ -21,11 +22,19 @@ import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.f
 public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
 
+    private static final BlockShuffleConfig CONFIG = new BlockShuffleConfig();
+
     static {
+        Gamemode.register("BlockShuffle", BlockShuffleGamemode.class, BlockShuffleGamemode::new, CONFIG);
         CommandHandler.registerCommand(
                 "BlockShuffle",
                 BlockShuffleGamemode::handleBlockShuffleCommand,
                 BlockShuffleGamemode::handleBlockShuffleCompletions);
+    }
+
+    @Override
+    public BlockShuffleConfig getConfig() {
+        return CONFIG;
     }
 
     private static void handleBlockShuffleCommand(CommandSender commandSender, String[] args) {
@@ -175,7 +184,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     }
 
     void removeNetherBlocksIfApplicable() {
-        if (!getGame().getConfig().getBlockShuffleConfig().shouldAllowNetherBlocks()) {
+        if (!getConfig().shouldAllowNetherBlocks()) {
             unbannedBlocksList.removeIf(BlockUtils::isLikelyNetherBlock);
         }
     }
@@ -197,8 +206,8 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void updateConfig() {
-        this.setMinTicks(getGame().getConfig().getBlockShuffleConfig().getMinimumSecondsBeforeShuffle() * 20);
-        this.setMaxTicks(getGame().getConfig().getBlockShuffleConfig().getMaximumSecondsBeforeShuffle() * 20);
+        this.setMinTicks(getConfig().getMinimumSecondsBeforeShuffle() * 20);
+        this.setMaxTicks(getConfig().getMaximumSecondsBeforeShuffle() * 20);
     }
 
 
@@ -214,12 +223,12 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
             return;
         }
         ParticleUtils.createParticleCloud(player.getLocation(), 3, Particle.FIREWORK, 75);
-        if (getGame().getConfig().getBlockShuffleConfig().shouldGivePointsAtEndOfRound()) {
+        if (getConfig().shouldGivePointsAtEndOfRound()) {
             playersWhoHaveSteppedOnBlock.add(player.getUniqueId());
             playerBlocks.remove(player.getUniqueId());
             getGame().broadcast("§b" + player.getName() + "§a has found their block!");
         } else {
-            getGame().addPointsToPlayer(player, getGame().getConfig().getBlockShuffleConfig().getPointsPerSuccessfulBlockStep());
+            getGame().addPointsToPlayer(player, getConfig().getPointsPerSuccessfulBlockStep());
             getGame().broadcast("§b" + player.getName() + "§a has found their block!");
             playerBlocks.remove(player.getUniqueId());
         }
@@ -238,7 +247,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     private void assignNewBlocks() {
         playerBlocks.clear();
-        if (getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
+        if (getConfig().shouldShuffleBlocksPerPlayer()) {
             for (Player player : getGame().getPlayers()) {
                 Material newBlock = getUnbannedBlock();
                 playerBlocks.put(player.getUniqueId(), newBlock);
@@ -259,7 +268,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onPlayerJoin(Player plr) {
-        if (getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
+        if (getConfig().shouldShuffleBlocksPerPlayer()) {
             Material newBlock = getUnbannedBlock();
             playerBlocks.put(plr.getUniqueId(), newBlock);
         } else {
@@ -290,7 +299,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
             }
         }
         getGame().addScoreboardContribution("§dBlock Shuffle in: §b" + getFormattedTimeRemaining());
-        if (!getGame().getConfig().getBlockShuffleConfig().shouldShuffleBlocksPerPlayer()) {
+        if (!getConfig().shouldShuffleBlocksPerPlayer()) {
             if (!playerBlocks.isEmpty()) {
                 getGame().addScoreboardContribution("§dTarget Block: §b" + playerBlocks.values().toArray()[0]);
             }
@@ -314,7 +323,7 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
     public void onTimeEventTrigger() {
         for (UUID uuid : playersWhoHaveSteppedOnBlock) {
             Player plr = Bukkit.getPlayer(uuid);
-            getGame().addPointsToPlayer(plr, getGame().getConfig().getBlockShuffleConfig().getPointsPerSuccessfulBlockStep());
+            getGame().addPointsToPlayer(plr, getConfig().getPointsPerSuccessfulBlockStep());
         }
         playersWhoHaveSteppedOnBlock.clear();
         assignNewBlocks();

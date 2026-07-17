@@ -2,6 +2,7 @@ package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
+import doglover.minigameswithfriends.configs.DimensionSwapConfig;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.WorldFileUtils;
 import net.kyori.adventure.audience.Audience;
@@ -25,11 +26,19 @@ import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.f
 
 public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
+    private static final DimensionSwapConfig CONFIG = new DimensionSwapConfig();
+
     static {
+        Gamemode.register("DimensionSwap", DimensionSwapGamemode.class, DimensionSwapGamemode::new, CONFIG);
         CommandHandler.registerCommand(
                 "DimensionSwap",
                 DimensionSwapGamemode::handleDimensionSwapCommand,
                 DimensionSwapGamemode::handleDimensionSwapCompletions);
+    }
+
+    @Override
+    public DimensionSwapConfig getConfig() {
+        return CONFIG;
     }
 
     private static void handleDimensionSwapCommand(CommandSender commandSender, String[] args) {
@@ -85,7 +94,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onGameEnd() {
-        if (getGame().getConfig().getDimensionSwapConfig().shouldSendPlayersToMainWorldAfterGameEnds()) {
+        if (getConfig().shouldSendPlayersToMainWorldAfterGameEnds()) {
             for (Player plr : this.getGame().getPlayers()) {
                 plr.teleport(Bukkit.getWorld("world").getSpawnLocation());
             }
@@ -94,9 +103,9 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void updateConfig() {
-        this.setMinTicks(getGame().getConfig().getDimensionSwapConfig().getMinimumSecondsBeforeSwap() * 20);
-        this.setMaxTicks(getGame().getConfig().getDimensionSwapConfig().getMaximumSecondsBeforeSwap() * 20);
-        this.maxRounds = getGame().getConfig().getDimensionSwapConfig().getNumberOfSwaps();
+        this.setMinTicks(getConfig().getMinimumSecondsBeforeSwap() * 20);
+        this.setMaxTicks(getConfig().getMaximumSecondsBeforeSwap() * 20);
+        this.maxRounds = getConfig().getNumberOfSwaps();
     }
 
     @Override

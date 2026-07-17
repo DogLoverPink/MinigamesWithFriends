@@ -1,42 +1,8 @@
 package doglover.minigameswithfriends.configs;
 
+import doglover.minigameswithfriends.gamemodes.Gamemode;
+
 public class MainGameConfig extends GamemodeConfig {
-
-    private final DimensionSwapConfig dimensionSwapConfig = new DimensionSwapConfig();
-
-    public DimensionSwapConfig getDimensionSwapConfig() {
-        return dimensionSwapConfig;
-    }
-
-    private final DeathSwapConfig deathSwapConfig = new DeathSwapConfig();
-
-    public DeathSwapConfig getDeathSwapConfig() {
-        return deathSwapConfig;
-    }
-
-    private final BlockShuffleConfig blockShuffleConfig = new BlockShuffleConfig();
-
-    public BlockShuffleConfig getBlockShuffleConfig() {
-        return blockShuffleConfig;
-    }
-
-    private final RandomizerConfig randomizerConfig = new RandomizerConfig();
-
-    public RandomizerConfig getRandomizerConfig() {
-        return randomizerConfig;
-    }
-
-    private final DeathmatchConfig deathMatchConfig = new DeathmatchConfig();
-
-    public DeathmatchConfig getDeathMatchConfig() {
-        return deathMatchConfig;
-    }
-
-    private final WouldYouRatherConfig wouldYouRatherConfig = new WouldYouRatherConfig();
-
-    public WouldYouRatherConfig getWouldYouRatherConfig() {
-        return wouldYouRatherConfig;
-    }
 
     public MainGameConfig() {
         super("MainGame");
@@ -50,16 +16,10 @@ public class MainGameConfig extends GamemodeConfig {
 
 
     public GamemodeConfig getGamemodeConfigFromName(String name) {
-        return switch (name.toLowerCase()) {
-            case "dimensionswap" -> getDimensionSwapConfig();
-            case "deathswap" -> getDeathSwapConfig();
-            case "deathmatch" -> getDeathMatchConfig();
-            case "randomizer" -> getRandomizerConfig();
-            case "blockshuffle" -> getBlockShuffleConfig();
-            case "wouldyourather" -> getWouldYouRatherConfig();
-            case "maingame" -> this;
-            default -> null;
-        };
+        if (name.equalsIgnoreCase("maingame")) {
+            return this;
+        }
+        return Gamemode.getConfigFromName(name);
     }
 
     public boolean shouldSetToDayOnGameStart() {

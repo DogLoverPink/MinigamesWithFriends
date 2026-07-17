@@ -1,10 +1,15 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.Game;
+import doglover.minigameswithfriends.configs.GamemodeConfig;
 import doglover.minigameswithfriends.events.EventSubscriber;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public abstract class Gamemode extends EventSubscriber {
 
@@ -36,42 +41,63 @@ public abstract class Gamemode extends EventSubscriber {
         this.game = game;
     }
 
-    public static boolean isValidGamemode(String gamemodeName) {
-        return switch (gamemodeName) {
-            case "DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather", "Deathmatch" -> true;
-            default -> false;
-        };
-    }
-
     public abstract void updateConfig();
 
-    public static Gamemode getGamemodeFromName(String gamemodeName) {
-        return switch (gamemodeName) {
-            case "DeathSwap" -> new DeathSwapGamemode();
-            case "DimensionSwap" -> new DimensionSwapGamemode();
-            case "Randomizer" -> new RandomizerGamemode();
-            case "BlockShuffle" -> new BlockShuffleGamemode();
-            case "WouldYouRather" -> new WouldYouRatherGamemode();
-            case "Deathmatch" -> new DeathmatchGamemode();
-            default -> null;
-        };
+    public abstract GamemodeConfig getConfig();
+
+    public record Registration(String name, Class<? extends Gamemode> type,
+                               Supplier<Gamemode> factory, GamemodeConfig config) {
     }
 
-    public static String getGamemodeListString() {
-        return "DeathSwap, DimensionSwap, Randomizer, BlockShuffle, WouldYouRather, Deathmatch";
+    private static final Map<String, Registration> REGISTRY = new LinkedHashMap<>();
+
+    public static void register(String name, Class<? extends Gamemode> type,
+                                Supplier<Gamemode> factory, GamemodeConfig config) {
+        REGISTRY.put(name.toLowerCase(), new Registration(name, type, factory, config));
+    }
+
+    private static Registration lookup(String name) {
+        return name == null ? null : REGISTRY.get(name.toLowerCase());
+    }
+
+    public static boolean isValidGamemode(String gamemodeName) {
+        return lookup(gamemodeName) != null;
+    }
+
+    public static Gamemode getGamemodeFromName(String gamemodeName) {
+        Registration registration = lookup(gamemodeName);
+        return registration == null ? null : registration.factory().get();
+    }
+
+    public static GamemodeConfig getConfigFromName(String gamemodeName) {
+        Registration registration = lookup(gamemodeName);
+        return registration == null ? null : registration.config();
     }
 
     public static List<String> getGamemodeList() {
-        return List.of("DeathSwap", "DimensionSwap", "Randomizer", "BlockShuffle", "WouldYouRather", "Deathmatch");
+        return REGISTRY.values().stream().map(Registration::name).toList();
+    }
+
+    public static String getGamemodeListString() {
+        return String.join(", ", getGamemodeList());
     }
 
     public static List<Class<? extends Gamemode>> getGamemodeClassList() {
-        return List.of(DeathSwapGamemode.class, DimensionSwapGamemode.class, RandomizerGamemode.class, BlockShuffleGamemode.class, WouldYouRatherGamemode.class, DeathmatchGamemode.class);
+        List<Class<? extends Gamemode>> classes = new ArrayList<>();
+        for (Registration registration : REGISTRY.values()) {
+            classes.add(registration.type());
+        }
+        return classes;
     }
 
     public static String getGamemodeNameFromClass(Class<? extends Gamemode> gamemodeClass) {
         if (gamemodeClass == null) {
             return "";
+        }
+        for (Registration registration : REGISTRY.values()) {
+            if (registration.type() == gamemodeClass) {
+                return registration.name();
+            }
         }
         return gamemodeClass.getSimpleName().replace("Gamemode", "");
     }

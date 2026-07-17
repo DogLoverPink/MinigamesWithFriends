@@ -1,6 +1,6 @@
 package doglover.minigameswithfriends.wouldyourather.effects.detrimentaleffects;
 
-import doglover.minigameswithfriends.MinigamesWithFriends;
+import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.audience.Audience;
@@ -20,8 +20,8 @@ import java.util.*;
 
 public class Hallucinate extends WYREffect {
 
-    private final int minTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMinimumSecondsBeforeNewChoice() * 5;
-    private final int maxTime = MinigamesWithFriends.getGame().getConfig().getWouldYouRatherConfig().getMaximumSecondsBeforeNewChoice() * 5;
+    private final int minTime = WouldYouRatherGamemode.config().getMinimumSecondsBeforeNewChoice() * 5;
+    private final int maxTime = WouldYouRatherGamemode.config().getMaximumSecondsBeforeNewChoice() * 5;
     private int goal = -1;
     private int ticker = 0;
 

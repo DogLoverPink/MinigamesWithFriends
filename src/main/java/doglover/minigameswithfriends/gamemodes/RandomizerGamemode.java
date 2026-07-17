@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import com.google.common.collect.Lists;
+import doglover.minigameswithfriends.configs.RandomizerConfig;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
@@ -16,6 +17,17 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class RandomizerGamemode extends TimeEventBasedGamemode {
+
+    private static final RandomizerConfig CONFIG = new RandomizerConfig();
+
+    static {
+        Gamemode.register("Randomizer", RandomizerGamemode.class, RandomizerGamemode::new, CONFIG);
+    }
+
+    @Override
+    public RandomizerConfig getConfig() {
+        return CONFIG;
+    }
 
     Map<Material, ItemStack> blockMap = new HashMap<>();
     Map<Material, Enchantment> enchantmentMap = new HashMap<>();
@@ -66,7 +78,7 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
         blockMap.clear();
         for (int i = 0; i < materials.size(); i++) {
             ItemStack itemStack = new ItemStack(materials2.get(i));
-            if (getGame().getConfig().getRandomizerConfig().isRandomlyEnchantingGear()) {
+            if (getConfig().isRandomlyEnchantingGear()) {
                 randomlyEnchantItemStack(itemStack);
             }
             blockMap.put(materials.get(i), itemStack);
@@ -105,7 +117,7 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     @Override
     public void onDeathMatchEnd() {
-        if (this.getGame().getConfig().getRandomizerConfig().isRerandomizeAfterDeathMatch()) {
+        if (getConfig().isRerandomizeAfterDeathMatch()) {
             randomizeBlocks();
         }
     }

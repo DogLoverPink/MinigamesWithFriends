@@ -20,8 +20,19 @@ import java.util.Map;
 
 public class DeathSwapGamemode extends TimeEventBasedGamemode{
 
+    private static final DeathSwapConfig CONFIG = new DeathSwapConfig();
+
+    static {
+        Gamemode.register("DeathSwap", DeathSwapGamemode.class, DeathSwapGamemode::new, CONFIG);
+    }
+
     public DeathSwapGamemode() {
         subscribeToEvent(PlayerDeathEvent.class, EventPriority.HIGH);
+    }
+
+    @Override
+    public DeathSwapConfig getConfig() {
+        return CONFIG;
     }
 
     @Override
@@ -30,7 +41,7 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
         if (getGame().isInDeathMatch()) {
             return;
         }
-        DeathSwapConfig config = getGame().getConfig().getDeathSwapConfig();
+        DeathSwapConfig config = getConfig();
         Player swapper = getSwapperFromSwapee(event.getPlayer());
         if (config.shouldKeepInventoryOnSwapRelatedDeath() && swapper != null) {
             event.setKeepInventory(true);
@@ -82,8 +93,8 @@ public class DeathSwapGamemode extends TimeEventBasedGamemode{
 
     @Override
     public void updateConfig() {
-        this.setMinTicks(getGame().getConfig().getDeathSwapConfig().getMinimumSecondsBeforeSwap() * 20);
-        this.setMaxTicks(getGame().getConfig().getDeathSwapConfig().getMaximumSecondsBeforeSwap() * 20);
+        this.setMinTicks(getConfig().getMinimumSecondsBeforeSwap() * 20);
+        this.setMaxTicks(getConfig().getMaximumSecondsBeforeSwap() * 20);
     }
 
     private final Map<Player, Player> swapMap = new HashMap<>();

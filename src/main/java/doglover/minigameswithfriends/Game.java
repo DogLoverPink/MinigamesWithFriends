@@ -1,6 +1,7 @@
 package doglover.minigameswithfriends;
 
 import doglover.minigameswithfriends.configs.MainGameConfig;
+import doglover.minigameswithfriends.gamemodes.DeathmatchGamemode;
 import doglover.minigameswithfriends.gamemodes.Gamemode;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
@@ -384,7 +385,7 @@ public class Game {
         }
         if (isInDeathMatch()) {
             Location dmloc = deathmatchWorld.getSpawnLocation();
-            BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
+            BlockUtils.removeWallsAroundLocation(dmloc, DeathmatchGamemode.config().getDeathmatchAreaRadiusBlocks());
         }
         players.clear();
         spectators.clear();
@@ -444,8 +445,8 @@ public class Game {
         Player randomPlayer = playersList.get(new Random().nextInt(playersList.size()));
         Location loc = BlockUtils.findSafeBlock(randomPlayer.getWorld().getSpawnLocation());
         deathmatchWorld = loc.getWorld();
-        BlockUtils.createWallsAroundLocation(loc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
-        BlockUtils.createSafePlatformIfNotExist(loc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
+        BlockUtils.createWallsAroundLocation(loc, DeathmatchGamemode.config().getDeathmatchAreaRadiusBlocks());
+        BlockUtils.createSafePlatformIfNotExist(loc, DeathmatchGamemode.config().getDeathmatchAreaRadiusBlocks());
         BlockUtils.createHollowBoxAroundLocation(loc);
         for (Player player : getPlayers()) {
             previousLocations.put(player.getUniqueId(), player.getLocation());
@@ -502,7 +503,7 @@ public class Game {
 
         if (!isRunning) {
             Location dmloc = deathmatchWorld.getSpawnLocation();
-            BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
+            BlockUtils.removeWallsAroundLocation(dmloc, DeathmatchGamemode.config().getDeathmatchAreaRadiusBlocks());
             aliveDeathMatchPlayers.clear();
             deadDeathMatchPlayers.clear();
             inDeathMatch = false;
@@ -510,7 +511,7 @@ public class Game {
         }
 
         Location dmloc = deathmatchWorld.getSpawnLocation();
-        BlockUtils.removeWallsAroundLocation(dmloc, getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks());
+        BlockUtils.removeWallsAroundLocation(dmloc, DeathmatchGamemode.config().getDeathmatchAreaRadiusBlocks());
 
 
         for (Player plr : getPlayers()) {
@@ -565,7 +566,7 @@ public class Game {
             Location worldSpawn = player.getWorld().getSpawnLocation();
             double xDistance = Math.abs(player.getLocation().getX() - worldSpawn.getX());
             double zDistance = Math.abs(player.getLocation().getZ() - worldSpawn.getZ());
-            int deathMatchRadius = getConfig().getDeathMatchConfig().getDeathmatchAreaRadiusBlocks();
+            int deathMatchRadius = DeathmatchGamemode.config().getDeathmatchAreaRadiusBlocks();
             if (xDistance >= deathMatchRadius || zDistance >= deathMatchRadius) {
                 if (xDistance - 3 >= deathMatchRadius || zDistance - 3 >= deathMatchRadius) {
                     BlockUtils.removeBlockOfTypeNearThenReplace(player.getLocation(), Material.AIR, (Material[]) null);
