@@ -75,10 +75,10 @@ public class BlockShuffleGamemode extends TimeEventBasedGamemode {
                 commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + materialName));
             }
         } else if (args[1].equalsIgnoreCase("skip")) {
-            if (!MinigamesWithFriends.getGame().isRunning() || !MinigamesWithFriends.getGame().isGamemodeActive(BlockShuffleGamemode.class)) {
+            if (!MinigamesWithFriends.getGame().isRunning() || !MinigamesWithFriends.getGame().isModuleActive(BlockShuffleGamemode.class)) {
                 return;
             }
-            MinigamesWithFriends.getGame().getGamemode(BlockShuffleGamemode.class).skip();
+            MinigamesWithFriends.getGame().getModule(BlockShuffleGamemode.class).skip();
         }
     }
 

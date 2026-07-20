@@ -54,13 +54,9 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
         return CONFIG;
     }
 
-    /**
-     * Whether the Would You Rather gamemode is currently live (game running and gamemode enabled).
-     * Replaces the old {@code WYREventHandler.isActive()} check.
-     */
     private static boolean isWouldYouRatherActive() {
         return MinigamesWithFriends.getGame().isRunning()
-                && MinigamesWithFriends.getGame().isGamemodeActive(WouldYouRatherGamemode.class);
+                && MinigamesWithFriends.getGame().isModuleActive(WouldYouRatherGamemode.class);
     }
 
 
@@ -126,7 +122,7 @@ public class WouldYouRatherGamemode extends TimeEventBasedGamemode {
                 commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>The Would You Rather gamemode is not active!"));
                 return;
             }
-            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).onTimeEventTrigger();
+            MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).onTimeEventTrigger();
         }
     }
 

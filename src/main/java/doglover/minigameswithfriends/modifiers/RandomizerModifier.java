@@ -1,27 +1,25 @@
-package doglover.minigameswithfriends.gamemodes;
+package doglover.minigameswithfriends.modifiers;
 
 import com.google.common.collect.Lists;
 import doglover.minigameswithfriends.configs.RandomizerConfig;
+import doglover.minigameswithfriends.gamemodes.Modifier;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-public class RandomizerGamemode extends TimeEventBasedGamemode {
+public class RandomizerModifier extends Modifier {
 
     private static final RandomizerConfig CONFIG = new RandomizerConfig();
 
     static {
-        Gamemode.register("Randomizer", RandomizerGamemode.class, RandomizerGamemode::new, CONFIG);
+        Modifier.register("Randomizer", RandomizerModifier.class, RandomizerModifier::new, CONFIG);
     }
 
     @Override
@@ -36,7 +34,7 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
 
     static Random random = new Random();
 
-    public RandomizerGamemode() {
+    public RandomizerModifier() {
         subscribeToEvent(BlockBreakEvent.class);
     }
 
@@ -49,15 +47,6 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
         Block block = event.getBlock();
         event.setDropItems(false);
         block.getWorld().dropItemNaturally(block.getLocation(), getBlockItem(block.getType()));
-    }
-
-    @Override
-    public void onGameEnd() {
-
-    }
-
-    @Override
-    public void updateConfig() {
     }
 
     public void randomizeBlocks() {
@@ -93,20 +82,23 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
     }
 
     @Override
-    public void onGameStart() {
-       // this.setMinTicks(this.getGame().getConfig().getRandomizerConfig().getMinimumSecondsBeforeDeathMatch() * 20);
-      //  this.setMaxTicks(this.getGame().getConfig().getRandomizerConfig().getMaximumSecondsBeforeDeathMatch() * 20);
-        super.onGameStart();
-        randomizeBlocks();
+    public void tick() {
 
     }
 
     @Override
-    public void tick() {
-        super.tick();
-//        if (this.getGame().getConfig().getRandomizerConfig().isEnableDeathMatches()) {
-//            this.getGame().addScoreboardContributution("§dDeathmatch in: §b" + getFormattedTimeRemaining());
-//        }
+    public void onGameStart() {
+        randomizeBlocks();
+    }
+
+    @Override
+    public void onGameEnd() {
+
+    }
+
+    @Override
+    public void updateConfig() {
+
     }
 
     @Override
@@ -114,14 +106,6 @@ public class RandomizerGamemode extends TimeEventBasedGamemode {
         if (getConfig().isRerandomizeAfterDeathMatch()) {
             randomizeBlocks();
         }
-    }
-
-    @Override
-    public void onTimeEventTrigger() {
-//        if (this.getGame().getConfig().getRandomizerConfig().isEnableDeathMatches()) {
-//            this.getGame().startDeathMatch();
-//        }
-
     }
 
     @Override

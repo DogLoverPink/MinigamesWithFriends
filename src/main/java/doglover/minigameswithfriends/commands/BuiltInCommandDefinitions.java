@@ -3,7 +3,7 @@ package doglover.minigameswithfriends.commands;
 import doglover.minigameswithfriends.Game;
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.configs.GamemodeConfig;
-import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.gamemodes.GameModule;
 import doglover.minigameswithfriends.utils.TextUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,6 +27,14 @@ public class BuiltInCommandDefinitions {
                 "DisableGamemode",
                 BuiltInCommandDefinitions::handleDisableGamemodeCommand,
                 BuiltInCommandDefinitions::handleDisableGamemodeCompletions);
+        CommandHandler.registerCommand(
+                "EnableModifier",
+                BuiltInCommandDefinitions::handleEnableModifierCommand,
+                BuiltInCommandDefinitions::handleEnableModifierCompletions);
+        CommandHandler.registerCommand(
+                "DisableModifier",
+                BuiltInCommandDefinitions::handleDisableModifierCommand,
+                BuiltInCommandDefinitions::handleDisableModifierCompletions);
         CommandHandler.registerCommand(
                 "help",
                 BuiltInCommandDefinitions::handleHelpCommand);
@@ -60,38 +68,54 @@ public class BuiltInCommandDefinitions {
     }
 
     private static void handleEnableGamemodeCommand(CommandSender commandSender, String[] args) {
+        handleEnableModuleCommand(commandSender, args, GameModule.Type.GAMEMODE, "Gamemode");
+    }
+
+    private static void handleEnableModifierCommand(CommandSender commandSender, String[] args) {
+        handleEnableModuleCommand(commandSender, args, GameModule.Type.MODIFIER, "Modifier");
+    }
+
+    private static void handleEnableModuleCommand(CommandSender commandSender, String[] args, GameModule.Type type, String label) {
         if (args.length == 2) {
             String moduleName = args[1];
-            if (!Gamemode.isValidGamemode(moduleName)) {
-                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid gamemode name."));
-                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
+            if (!GameModule.isValidModule(moduleName, type)) {
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid " + label.toLowerCase() + " name."));
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + GameModule.getModuleListString(type)));
                 return;
             }
-            if (MinigamesWithFriends.getGame().isGamemodeActive(Gamemode.getGamemodeFromName(moduleName).getClass())) {
-                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Gamemode " + moduleName + " is already enabled."));
+            if (MinigamesWithFriends.getGame().isModuleActive(GameModule.getModuleFromName(moduleName).getClass())) {
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>" + label + " " + moduleName + " is already enabled."));
                 return;
             }
-            MinigamesWithFriends.getGame().addGamemode(Gamemode.getGamemodeFromName(moduleName));
-            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Gamemode " + moduleName + " enabled."));
+            MinigamesWithFriends.getGame().addModule(GameModule.getModuleFromName(moduleName));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>" + label + " " + moduleName + " enabled."));
         } else {
-            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a module name."));
-            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a " + label.toLowerCase() + " name."));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + GameModule.getModuleListString(type)));
         }
     }
 
     private static List<String> handleEnableGamemodeCompletions(String[] args) {
+        return enableCompletions(args, GameModule.Type.GAMEMODE);
+    }
+
+    private static List<String> handleEnableModifierCompletions(String[] args) {
+        return enableCompletions(args, GameModule.Type.MODIFIER);
+    }
+
+    private static List<String> enableCompletions(String[] args, GameModule.Type type) {
         String input = args.length > 1 ? args[1] : "";
         Game game = MinigamesWithFriends.getGame();
-        List<String> gamemodes = Gamemode.getGamemodeClassList().stream()
-                .filter(gamemode -> !game.isGamemodeActive(gamemode))
-                .map(Gamemode::getGamemodeNameFromClass)
+        List<String> names = GameModule.getModuleClassList(type).stream()
+                .filter(moduleClass -> !game.isModuleActive(moduleClass))
+                .map(GameModule::getModuleNameFromClass)
                 .toList();
-        return filterByStartsWith(gamemodes, input);
+        return filterByStartsWith(names, input);
     }
 
 
     private static void handleClearGamemodesCommand(CommandSender commandSender, String[] args) {
-        MinigamesWithFriends.getGame().clearGamemodes();
+        MinigamesWithFriends.getGame().clearModules();
         commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Cleared all gamemodes."));
     }
 
@@ -117,7 +141,7 @@ public class BuiltInCommandDefinitions {
             sender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Game already started!"));
             return false;
         }
-        if (MinigamesWithFriends.getGame().getGamemodes().isEmpty()) {
+        if (MinigamesWithFriends.getGame().getModules().isEmpty()) {
             sender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>No gamemodes enabled. Add some by doing <yellow>/minigames EnableGamemode \\<gamemodeName\\>."));
             return false;
         }
@@ -172,23 +196,44 @@ public class BuiltInCommandDefinitions {
     }
 
     private static void handleDisableGamemodeCommand(CommandSender commandSender, String[] args) {
+        handleDisableModuleCommand(commandSender, args, GameModule.Type.GAMEMODE, "Gamemode");
+    }
+
+    private static void handleDisableModifierCommand(CommandSender commandSender, String[] args) {
+        handleDisableModuleCommand(commandSender, args, GameModule.Type.MODIFIER, "Modifier");
+    }
+
+    private static void handleDisableModuleCommand(CommandSender commandSender, String[] args, GameModule.Type type, String label) {
         if (args.length == 2) {
             String moduleName = args[1];
-            if (!Gamemode.isValidGamemode(moduleName)) {
-                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid gamemode name."));
-                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
+            if (!GameModule.isValidModule(moduleName, type)) {
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Invalid " + label.toLowerCase() + " name."));
+                commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + GameModule.getModuleListString(type)));
                 return;
             }
-            MinigamesWithFriends.getGame().removeGamemode(Gamemode.getGamemodeFromName(moduleName).getClass());
-            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Gamemode " + moduleName + " disabled."));
+            MinigamesWithFriends.getGame().removeModule(GameModule.getModuleFromName(moduleName).getClass());
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>" + label + " " + moduleName + " disabled."));
         } else {
-            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a module name."));
-            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + Gamemode.getGamemodeListString()));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red>Please specify a " + label.toLowerCase() + " name."));
+            commandSender.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>Valid options are: <aqua>" + GameModule.getModuleListString(type)));
         }
     }
 
     private static List<String> handleDisableGamemodeCompletions(String[] args) {
-        return filterByStartsWith(MinigamesWithFriends.getGame().getGamemodesAsString(), args[1]);
+        return disableCompletions(args, GameModule.Type.GAMEMODE);
+    }
+
+    private static List<String> handleDisableModifierCompletions(String[] args) {
+        return disableCompletions(args, GameModule.Type.MODIFIER);
+    }
+
+    private static List<String> disableCompletions(String[] args, GameModule.Type type) {
+        String input = args.length > 1 ? args[1] : "";
+        List<String> names = MinigamesWithFriends.getGame().getModules().stream()
+                .filter(module -> module.getType() == type)
+                .map(module -> GameModule.getModuleNameFromClass(module.getClass()))
+                .toList();
+        return filterByStartsWith(names, input);
     }
 
     private static void handleConfigCommand(CommandSender commandSender, String[] args) {
@@ -213,9 +258,9 @@ public class BuiltInCommandDefinitions {
 
     private static List<String> handleConfigCompletions(String[] args) {
         if (args.length == 2) {
-            List<String> gamemodes = new ArrayList<>(Gamemode.getGamemodeList());
-            gamemodes.add("mainGame");
-            return filterByStartsWith(gamemodes, args[1]);
+            List<String> configurables = new ArrayList<>(GameModule.getModuleList());
+            configurables.add("mainGame");
+            return filterByStartsWith(configurables, args[1]);
         }
         if (args.length == 3) {
             String configName = args[1];

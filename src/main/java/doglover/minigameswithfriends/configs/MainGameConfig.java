@@ -1,6 +1,6 @@
 package doglover.minigameswithfriends.configs;
 
-import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.gamemodes.GameModule;
 
 public class MainGameConfig extends GamemodeConfig {
 
@@ -19,7 +19,7 @@ public class MainGameConfig extends GamemodeConfig {
         if (name.equalsIgnoreCase("maingame")) {
             return this;
         }
-        return Gamemode.getConfigFromName(name);
+        return GameModule.getConfigFromName(name);
     }
 
     public boolean shouldSetToDayOnGameStart() {

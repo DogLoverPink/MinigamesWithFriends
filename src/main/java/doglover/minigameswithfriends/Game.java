@@ -2,7 +2,7 @@ package doglover.minigameswithfriends;
 
 import doglover.minigameswithfriends.configs.MainGameConfig;
 import doglover.minigameswithfriends.gamemodes.DeathmatchGamemode;
-import doglover.minigameswithfriends.gamemodes.Gamemode;
+import doglover.minigameswithfriends.gamemodes.GameModule;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
@@ -50,7 +50,7 @@ public class Game {
         isRunning = running;
     }
 
-    private List<Gamemode> gamemodes = new ArrayList<>();
+    private List<GameModule> modules = new ArrayList<>();
     private boolean isRunning;
 
     private final Map<UUID, FastBoard> boards = new HashMap<>();
@@ -107,8 +107,8 @@ public class Game {
         this.players.add(player.getUniqueId());
         invalidateCaches();
         if (isRunning) {
-            for (Gamemode gamemode : gamemodes) {
-                gamemode.onPlayerJoin(player);
+            for (GameModule module : modules) {
+                module.onPlayerJoin(player);
             }
         }
     }
@@ -145,8 +145,8 @@ public class Game {
         this.players.remove(player.getUniqueId());
         invalidateCaches();
         if (isRunning) {
-            for (Gamemode gamemode : gamemodes) {
-                gamemode.onPlayerLeave(player);
+            for (GameModule module : modules) {
+                module.onPlayerLeave(player);
             }
         }
     }
@@ -162,60 +162,52 @@ public class Game {
     }
 
 
-    public List<Gamemode> getGamemodes() {
-        return gamemodes;
+    public List<GameModule> getModules() {
+        return modules;
     }
 
-    public List<String> getGamemodesAsString() {
-        List<String> gamemodeNames = new ArrayList<>();
-        for (Gamemode gamemode : gamemodes) {
-            gamemodeNames.add(Gamemode.getGamemodeNameFromClass(gamemode.getClass()));
-        }
-        return gamemodeNames;
+    protected void setModules(List<GameModule> modules) {
+        this.modules = modules;
     }
 
-    protected void setGamemodes(List<Gamemode> gamemodes) {
-        this.gamemodes = gamemodes;
-    }
-
-    public void addGamemode(Gamemode gamemode) {
-        this.gamemodes.add(gamemode);
-        gamemode.setGame(this);
+    public void addModule(GameModule module) {
+        this.modules.add(module);
+        module.setGame(this);
         if (isRunning) {
-            gamemode.registerSubscribedEvents();
-            gamemode.onGameStart();
-            broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + gamemode.getClass().getSimpleName() + " <green>has been enabled."));
+            module.registerSubscribedEvents();
+            module.onGameStart();
+            broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + module.getClass().getSimpleName() + " <green>has been enabled."));
         }
     }
 
-    public void removeGamemode(Class<? extends Gamemode> gamemodeClazz) {
-        for (Gamemode gamemode : gamemodes) {
-            if (gamemode.getClass() == gamemodeClazz) {
+    public void removeModule(Class<? extends GameModule> moduleClazz) {
+        for (GameModule module : modules) {
+            if (module.getClass() == moduleClazz) {
                 if (isRunning) {
-                    gamemode.onGameEnd();
-                    gamemode.unregisterSubscribedEvents();
-                    broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + gamemode.getClass().getSimpleName() + " <green>has been disabled"));
+                    module.onGameEnd();
+                    module.unregisterSubscribedEvents();
+                    broadcast(TextUtils.MINI_MESSAGE.deserialize("<aqua>" + module.getClass().getSimpleName() + " <green>has been disabled"));
                 }
-                this.gamemodes.remove(gamemode);
-                gamemode.setGame(null);
+                this.modules.remove(module);
+                module.setGame(null);
                 return;
             }
         }
     }
 
-    public void clearGamemodes() {
-        List<Class<? extends Gamemode>> gamemodes = new ArrayList<>();
-        for (Gamemode gamemode : this.gamemodes) {
-            gamemodes.add(gamemode.getClass());
+    public void clearModules() {
+        List<Class<? extends GameModule>> moduleClasses = new ArrayList<>();
+        for (GameModule module : this.modules) {
+            moduleClasses.add(module.getClass());
         }
-        for (Class<? extends Gamemode> gamemode : gamemodes) {
-            removeGamemode(gamemode);
+        for (Class<? extends GameModule> moduleClass : moduleClasses) {
+            removeModule(moduleClass);
         }
     }
 
-    public boolean isGamemodeActive(Class<? extends Gamemode> gamemodeClass) {
-        for (Gamemode gamemode : gamemodes) {
-            if (gamemode.getClass() == gamemodeClass) {
+    public boolean isModuleActive(Class<? extends GameModule> moduleClass) {
+        for (GameModule module : modules) {
+            if (module.getClass() == moduleClass) {
                 return true;
             }
         }
@@ -223,10 +215,10 @@ public class Game {
     }
 
 
-    public <T extends Gamemode> T getGamemode(Class<T> gamemodeClass) {
-        for (Gamemode gamemode : gamemodes) {
-            if (gamemodeClass.isInstance(gamemode)) {
-                return gamemodeClass.cast(gamemode);
+    public <T extends GameModule> T getModule(Class<T> moduleClass) {
+        for (GameModule module : modules) {
+            if (moduleClass.isInstance(module)) {
+                return moduleClass.cast(module);
             }
         }
         return null;
@@ -279,7 +271,7 @@ public class Game {
         if (players.contains(player.getUniqueId())) {
             setupBoardForPlayer(player);
             player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Continued game in progress!"));
-            player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Enabled gamemodes: <aqua>" + this.getGamemodes().toString().replace("[", "").replace("]", "")));
+            player.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Enabled gamemodes: <aqua>" + this.getModules().toString().replace("[", "").replace("]", "")));
         } else {
             setupBoardForPlayer(player);
             addSpectator(player);
@@ -293,8 +285,8 @@ public class Game {
     public void updateConfig() {
         pointsToWin = config.getPointsToWin();
         if (isRunning) {
-            for (Gamemode gamemode : gamemodes) {
-                gamemode.updateConfig();
+            for (GameModule module : modules) {
+                module.updateConfig();
             }
         }
     }
@@ -348,7 +340,7 @@ public class Game {
 
             setupBoardForPlayer(everyone);
             everyone.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green><bold>Game Started!"));
-            everyone.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Enabled gamemodes: <aqua>" + this.getGamemodes().toString().replace("[", "").replace("]", "")));
+            everyone.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<green>Enabled gamemodes: <aqua>" + this.getModules().toString().replace("[", "").replace("]", "")));
 
         }
 
@@ -356,9 +348,9 @@ public class Game {
             spectator.setGameMode(GameMode.SPECTATOR);
             spectator.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<yellow>You are <aqua>spectating"));
         }
-        for (Gamemode gamemode : gamemodes) {
-            gamemode.registerSubscribedEvents();
-            gamemode.onGameStart();
+        for (GameModule module : modules) {
+            module.registerSubscribedEvents();
+            module.onGameStart();
         }
     }
 
@@ -371,9 +363,9 @@ public class Game {
 
     public void endGame() {
         isRunning = false;
-        for (Gamemode gamemode : gamemodes) {
-            gamemode.onGameEnd();
-            gamemode.unregisterSubscribedEvents();
+        for (GameModule module : modules) {
+            module.onGameEnd();
+            module.unregisterSubscribedEvents();
         }
         for (Player player : getPlayersAndSpectators()) {
             FastBoard board = boards.get(player.getUniqueId());
@@ -389,7 +381,7 @@ public class Game {
         spectators.clear();
         boards.clear();
         points.clear();
-        gamemodes.clear();
+        modules.clear();
 
     }
 
@@ -528,8 +520,8 @@ public class Game {
             plr.sendMessage(TextUtils.MINI_MESSAGE.deserialize("<red><bold>Deathmatch Ended!"));
         }
 
-        for (Gamemode gamemode : gamemodes) {
-            gamemode.onDeathMatchEnd();
+        for (GameModule module : modules) {
+            module.onDeathMatchEnd();
         }
 
         Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), () -> inDeathMatch = false, 60);
@@ -646,16 +638,16 @@ public class Game {
         }
         actionBars.values().removeIf(actionBar -> actionBar.serverTickEndTime() < Bukkit.getCurrentTick());
         if (inDeathMatch) {
-            if (isGamemodeActive(WouldYouRatherGamemode.class)) {
-                getGamemode(WouldYouRatherGamemode.class).tick();
+            if (isModuleActive(WouldYouRatherGamemode.class)) {
+                getModule(WouldYouRatherGamemode.class).tick();
             }
             scoreboardContributions.clear();
             tickDeathMatch();
             return;
         }
         scoreboardContributions.clear();
-        for (Gamemode gamemode : gamemodes) {
-            gamemode.tick();
+        for (GameModule module : modules) {
+            module.tick();
         }
         scoreboardContributions.add("§dPoints: (First to " + pointsToWin + ")");
         List<Player> sortedPlayerPoints = new ArrayList<>(getPlayers());

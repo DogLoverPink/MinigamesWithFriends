@@ -111,7 +111,7 @@ public class WYREffectHandler {
             }
         }
         for (WYREffect effect : effectsToDecompose) {
-            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).removeEffectFromPlayer(effect.getPlayer(), effect.getClass());
+            MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).removeEffectFromPlayer(effect.getPlayer(), effect.getClass());
             effect.onEffectDecompose();
         }
         effectsToDecompose.clear();

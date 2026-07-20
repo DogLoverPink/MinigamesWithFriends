@@ -136,7 +136,7 @@ public class DimensionSwapGamemode extends TimeEventBasedGamemode {
                     "<red>Tell the server owner to add unzipped minecraft maps/worlds to </red>"
                     +"<yellow>/world/dimensions/minecraft/saveddimensiontpworlds</yellow><red>!</red>"
             ));
-            Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), ()-> getGame().removeGamemode(DimensionSwapGamemode.class), 0);
+            Bukkit.getScheduler().runTaskLater(MinigamesWithFriends.getGamePlugin(), ()-> getGame().removeModule(DimensionSwapGamemode.class), 0);
         } else {
             shufflePlayers();
         }

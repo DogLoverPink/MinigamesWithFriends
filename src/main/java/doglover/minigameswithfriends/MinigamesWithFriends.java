@@ -33,6 +33,7 @@ public final class MinigamesWithFriends extends JavaPlugin {
 
         //Run all static blocks, to make sure any registered commands are ran on startup (this isn't an ai slop comment I swear)
         JarUtils.initalizeClassesInPackage("doglover.minigameswithfriends.gamemodes");
+        JarUtils.initalizeClassesInPackage("doglover.minigameswithfriends.modifiers");
 
         minigameCommand.setExecutor(new MinigamesWithFriendCommand());
         minigameCommand.setTabCompleter(new GameCommandTabCompleter());

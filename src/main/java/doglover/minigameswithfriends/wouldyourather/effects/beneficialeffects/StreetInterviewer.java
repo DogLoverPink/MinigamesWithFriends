@@ -208,12 +208,12 @@ public class StreetInterviewer extends WYREffect {
     private void gainBeneficialWYREffect(Player plr) {
         for (int i = 0; i < intensity; i++) {
 
-            List<Class<? extends WYREffect>> current = MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
-            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).effectsToChooseFrom.putIfAbsent(plr.getUniqueId(), new ArrayList<>());
+            List<Class<? extends WYREffect>> current = MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
+            MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).effectsToChooseFrom.putIfAbsent(plr.getUniqueId(), new ArrayList<>());
             WYREffect good1 = WYREffectHandler.getRandomBeneficialWYREffectExceptFor(plr, current);
 
             if (!good1.isRepeatable()) {
-                MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).add(good1.getClass());
+                MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).add(good1.getClass());
             }
 
             plr.sendMessage(mm.deserialize("<yellow>You gained <green>" + good1.getDescriptionBlurb() + "</green>!</yellow>"));
@@ -243,12 +243,12 @@ public class StreetInterviewer extends WYREffect {
     private void gainDetrimentalWYREffect(Player plr) {
 
         for (int i = 0; i < intensity; i++) {
-            List<Class<? extends WYREffect>> current = MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
-            MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).effectsToChooseFrom.putIfAbsent(plr.getUniqueId(), new ArrayList<>());
+            List<Class<? extends WYREffect>> current = MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId());
+            MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).effectsToChooseFrom.putIfAbsent(plr.getUniqueId(), new ArrayList<>());
             WYREffect bad1 = WYREffectHandler.getRandomDetrimentialWYREffectExceptFor(plr, current);
 
             if (!bad1.isRepeatable()) {
-                MinigamesWithFriends.getGame().getGamemode(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).add(bad1.getClass());
+                MinigamesWithFriends.getGame().getModule(WouldYouRatherGamemode.class).currentlyAppliedBenefitsAndDetriments.get(plr.getUniqueId()).add(bad1.getClass());
             }
 
             plr.sendMessage(mm.deserialize("<yellow>You gained <red>" + bad1.getDescriptionBlurb() + "</red>!</yellow>"));
