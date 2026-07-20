@@ -2,7 +2,7 @@ package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
-import doglover.minigameswithfriends.configs.BlockShuffleConfig;
+import doglover.minigameswithfriends.configs.gamemodeconfigs.BlockShuffleConfig;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
 import doglover.minigameswithfriends.utils.TextUtils;

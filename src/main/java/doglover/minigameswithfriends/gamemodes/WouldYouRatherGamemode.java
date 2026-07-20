@@ -4,7 +4,7 @@ import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
 import doglover.minigameswithfriends.utils.JarUtils;
 import doglover.minigameswithfriends.utils.TextUtils;
-import doglover.minigameswithfriends.configs.WouldYouRatherConfig;
+import doglover.minigameswithfriends.configs.gamemodeconfigs.WouldYouRatherConfig;
 import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import net.kyori.adventure.audience.Audience;

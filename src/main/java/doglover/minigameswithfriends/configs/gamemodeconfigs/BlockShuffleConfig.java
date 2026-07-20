@@ -1,6 +1,8 @@
-package doglover.minigameswithfriends.configs;
+package doglover.minigameswithfriends.configs.gamemodeconfigs;
 
-public class BlockShuffleConfig extends GamemodeConfig {
+import doglover.minigameswithfriends.configs.GameModuleConfig;
+
+public class BlockShuffleConfig extends GameModuleConfig {
 
     public BlockShuffleConfig() {
         super("BlockShuffle");

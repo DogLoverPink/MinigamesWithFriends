@@ -1,6 +1,8 @@
-package doglover.minigameswithfriends.configs;
+package doglover.minigameswithfriends.configs.gamemodeconfigs;
 
-public class WouldYouRatherConfig extends GamemodeConfig {
+import doglover.minigameswithfriends.configs.GameModuleConfig;
+
+public class WouldYouRatherConfig extends GameModuleConfig {
 
     public WouldYouRatherConfig() {
         super("WouldYouRather");

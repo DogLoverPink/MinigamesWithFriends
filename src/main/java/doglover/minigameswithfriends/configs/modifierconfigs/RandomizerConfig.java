@@ -1,6 +1,8 @@
-package doglover.minigameswithfriends.configs;
+package doglover.minigameswithfriends.configs.modifierconfigs;
 
-public class RandomizerConfig extends GamemodeConfig{
+import doglover.minigameswithfriends.configs.GameModuleConfig;
+
+public class RandomizerConfig extends GameModuleConfig {
 
     public RandomizerConfig() {
         super("Randomizer");

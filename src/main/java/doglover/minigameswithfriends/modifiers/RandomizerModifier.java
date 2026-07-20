@@ -1,7 +1,7 @@
 package doglover.minigameswithfriends.modifiers;
 
 import com.google.common.collect.Lists;
-import doglover.minigameswithfriends.configs.RandomizerConfig;
+import doglover.minigameswithfriends.configs.modifierconfigs.RandomizerConfig;
 import doglover.minigameswithfriends.gamemodes.Modifier;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;

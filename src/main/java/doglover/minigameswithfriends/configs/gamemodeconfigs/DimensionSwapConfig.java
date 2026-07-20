@@ -1,6 +1,8 @@
-package doglover.minigameswithfriends.configs;
+package doglover.minigameswithfriends.configs.gamemodeconfigs;
 
-public class DimensionSwapConfig extends GamemodeConfig {
+import doglover.minigameswithfriends.configs.GameModuleConfig;
+
+public class DimensionSwapConfig extends GameModuleConfig {
 
     public DimensionSwapConfig() {
         super("DimensionSwap");

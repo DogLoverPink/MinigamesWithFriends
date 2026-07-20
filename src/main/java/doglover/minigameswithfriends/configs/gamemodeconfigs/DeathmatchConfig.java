@@ -1,6 +1,8 @@
-package doglover.minigameswithfriends.configs;
+package doglover.minigameswithfriends.configs.gamemodeconfigs;
 
-public class DeathmatchConfig extends GamemodeConfig {
+import doglover.minigameswithfriends.configs.GameModuleConfig;
+
+public class DeathmatchConfig extends GameModuleConfig {
 
     public DeathmatchConfig() {
         super("Deathmatch");

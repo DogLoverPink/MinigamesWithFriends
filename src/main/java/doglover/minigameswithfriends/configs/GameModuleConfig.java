@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GamemodeConfig {
+public class GameModuleConfig {
 
     Map<String, Class<?>> configValues = new HashMap<>();
     FileConfiguration config = MinigamesWithFriends.getGamePlugin().getConfig();
@@ -34,7 +34,7 @@ public class GamemodeConfig {
         config.addDefault(prefix + "." + key, defaultValue);
     }
 
-    public GamemodeConfig(String prefix) {
+    public GameModuleConfig(String prefix) {
         this.prefix = prefix;
     }
 

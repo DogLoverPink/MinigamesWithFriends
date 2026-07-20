@@ -1,7 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.Game;
-import doglover.minigameswithfriends.configs.GamemodeConfig;
+import doglover.minigameswithfriends.configs.GameModuleConfig;
 import doglover.minigameswithfriends.events.EventSubscriber;
 import org.bukkit.entity.Player;
 
@@ -48,18 +48,18 @@ public abstract class GameModule extends EventSubscriber {
 
     public abstract void updateConfig();
 
-    public abstract GamemodeConfig getConfig();
+    public abstract GameModuleConfig getConfig();
 
     public abstract Type getType();
 
     public record Registration(String name, Class<? extends GameModule> moduleClass,
-                               Supplier<? extends GameModule> factory, GamemodeConfig config, Type type) {
+                               Supplier<? extends GameModule> factory, GameModuleConfig config, Type type) {
     }
 
     private static final Map<String, Registration> REGISTRY = new LinkedHashMap<>();
 
     static void registerModule(String name, Class<? extends GameModule> moduleClass,
-                               Supplier<? extends GameModule> factory, GamemodeConfig config, Type type) {
+                               Supplier<? extends GameModule> factory, GameModuleConfig config, Type type) {
         REGISTRY.put(name.toLowerCase(), new Registration(name, moduleClass, factory, config, type));
     }
 
@@ -81,7 +81,7 @@ public abstract class GameModule extends EventSubscriber {
         return registration == null ? null : registration.factory().get();
     }
 
-    public static GamemodeConfig getConfigFromName(String name) {
+    public static GameModuleConfig getConfigFromName(String name) {
         Registration registration = lookup(name);
         return registration == null ? null : registration.config();
     }

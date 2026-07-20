@@ -2,7 +2,7 @@ package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
 import doglover.minigameswithfriends.commands.CommandHandler;
-import doglover.minigameswithfriends.configs.DimensionSwapConfig;
+import doglover.minigameswithfriends.configs.gamemodeconfigs.DimensionSwapConfig;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.TextUtils;
 import doglover.minigameswithfriends.utils.WorldFileUtils;

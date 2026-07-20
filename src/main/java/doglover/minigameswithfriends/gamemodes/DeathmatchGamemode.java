@@ -1,6 +1,6 @@
 package doglover.minigameswithfriends.gamemodes;
 
-import doglover.minigameswithfriends.configs.DeathmatchConfig;
+import doglover.minigameswithfriends.configs.gamemodeconfigs.DeathmatchConfig;
 
 public class DeathmatchGamemode extends TimeEventBasedGamemode {
 

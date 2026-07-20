@@ -2,7 +2,7 @@ package doglover.minigameswithfriends.configs;
 
 import doglover.minigameswithfriends.gamemodes.GameModule;
 
-public class MainGameConfig extends GamemodeConfig {
+public class MainGameConfig extends GameModuleConfig {
 
     public MainGameConfig() {
         super("MainGame");
@@ -15,7 +15,7 @@ public class MainGameConfig extends GamemodeConfig {
     }
 
 
-    public GamemodeConfig getGamemodeConfigFromName(String name) {
+    public GameModuleConfig getGamemodeConfigFromName(String name) {
         if (name.equalsIgnoreCase("maingame")) {
             return this;
         }

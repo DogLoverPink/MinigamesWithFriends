@@ -2,7 +2,7 @@ package doglover.minigameswithfriends.commands;
 
 import doglover.minigameswithfriends.Game;
 import doglover.minigameswithfriends.MinigamesWithFriends;
-import doglover.minigameswithfriends.configs.GamemodeConfig;
+import doglover.minigameswithfriends.configs.GameModuleConfig;
 import doglover.minigameswithfriends.gamemodes.GameModule;
 import doglover.minigameswithfriends.utils.TextUtils;
 import net.kyori.adventure.text.Component;
@@ -264,7 +264,7 @@ public class BuiltInCommandDefinitions {
         }
         if (args.length == 3) {
             String configName = args[1];
-            GamemodeConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
+            GameModuleConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
             if (conf == null) {
                 return List.of();
             }
@@ -273,7 +273,7 @@ public class BuiltInCommandDefinitions {
         if (args.length == 4) {
             String configName = args[1];
             String key = args[2];
-            GamemodeConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
+            GameModuleConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
             if (conf == null) {
                 return List.of();
             }
@@ -291,7 +291,7 @@ public class BuiltInCommandDefinitions {
     }
 
     private static void handleSettingConfigValue(CommandSender commandSender, String configName, String configKey, String value) {
-        GamemodeConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
+        GameModuleConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
         if (conf == null) {
             sendValidGamemodeNames(commandSender);
             return;
@@ -311,7 +311,7 @@ public class BuiltInCommandDefinitions {
     }
 
     private static void handleFetchingConfigValue(CommandSender commandSender, String configName, String configKey) {
-        GamemodeConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
+        GameModuleConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
         if (conf == null) {
             sendValidGamemodeNames(commandSender);
             return;
@@ -332,7 +332,7 @@ public class BuiltInCommandDefinitions {
     }
 
     private static void handleConfig2Args(CommandSender commandSender, String configName) {
-        GamemodeConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
+        GameModuleConfig conf = MinigamesWithFriends.getGame().getConfig().getGamemodeConfigFromName(configName);
         if (conf == null) {
             sendValidGamemodeNames(commandSender);
             return;

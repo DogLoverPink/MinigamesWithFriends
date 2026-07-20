@@ -1,7 +1,7 @@
 package doglover.minigameswithfriends.gamemodes;
 
 import doglover.minigameswithfriends.MinigamesWithFriends;
-import doglover.minigameswithfriends.configs.DeathSwapConfig;
+import doglover.minigameswithfriends.configs.gamemodeconfigs.DeathSwapConfig;
 import doglover.minigameswithfriends.utils.PlayerUtils;
 import doglover.minigameswithfriends.utils.TextUtils;
 import org.bukkit.Bukkit;
