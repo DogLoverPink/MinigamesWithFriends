@@ -17,7 +17,7 @@ Tip: try to get at minimum 2-3 maps per player for the best experience. (ex. if 
 DimensionSwap works great with basically any combination of gamemodes. I'd say the one that works the best is Blockshuffle, as going to new maps exposes you to a large variety of blocks. I would NOT recommend running this gamemode with the Deathmatch gamemode, as deathmatches are already built in.
 
 ## Config
-Accessed with `/mg config dimensionswap [config key] [config value]`
+Accessed with `/mg ConfigGamemode DimensionSwap [config key] [config value]`
 
 | Config Key                            | Description                                                                                                                                           | Type    | Default / Recommended |
 |---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|

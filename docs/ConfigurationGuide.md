@@ -1,10 +1,15 @@
 ## Configuration guide
-Configuration for each gamemode is handled seperately, and can be accomplished with the `/mg config` commmand.
+Configuration is handled separately for each gamemode and modifier, and is accomplished with one of three commands, depending on what you're configuring.
 
 ### Usage
-`/mg config <gamemode name> [config key] [config value]`
-<br>
-If the \[config key\] field is left blank, it will show all the available config options for that specific gamemode, and their current values.
+| Command                                                          | Configures                                                          |
+|------------------------------------------------------------------|---------------------------------------------------------------------|
+| `/mg ConfigMainGame [config key] [config value]`                 | Config command for the game as a whole                              |
+| `/mg ConfigGamemode <gamemode name> [config key] [config value]` | Config command for a gamemodes (ex: BlockShuffle, DeathSwap)        |
+| `/mg ConfigModifier <modifier name> [config key] [config value]` | Config command for modifiers (ex: Randomizer, AllBlocksHaveGravity) |
+
+
+If the \[config key\] field is left blank, it will show all the available config options for that gamemode/modifier, and their current values.
 <br>
 **Example:**
 [image.jpg]
@@ -17,10 +22,10 @@ Config values can be updated on the fly during a game, and a changed value will 
 
 Also, you may notice that many gamemodes have config options for MinimumTime\[...\] and MaximumTime\[...\]. What this means is that a random value between the min and max will be chosen for the that time value. Ex: if MinTime is 60, and MaxTime is 90, that time period will be a random time between 1 minute and 1 minute & 30 seconds.
 
-## Gamemode specific configuration
+## Main game configuration
 
-### Main Game (all gamemodes)
-Accessed with `/mg config mainGame [config key] [config value]`
+### Main Game (applies to everything)
+Accessed with `/mg ConfigMainGame [config key] [config value]`
 
 | Config Key                             | Description                                                                   | Type    | Default/Recomended                                                                                                  |
 |----------------------------------------|-------------------------------------------------------------------------------|---------|---------------------------------------------------------------------------------------------------------------------|
@@ -31,8 +36,10 @@ Accessed with `/mg config mainGame [config key] [config value]`
 | ResetAdvancementsOnGameStart           | Set to true to reset every player's advancements when the starts.             | Boolean | true                                                                                                                |
 | TeleportPlayersToWorldSpawnOnGameStart | Set to true to teleport every player to the world spawn when the game starts. | Boolean | true                                                                                                                |
 
+## Gamemode specific configuration
+
 ### Block Shuffle
-Accessed with `/mg config blockShuffle [config key] [config value]`
+Accessed with `/mg ConfigGamemode BlockShuffle [config key] [config value]`
 
 | Config Key                     | Description                                                                                                                                                            | Type    | Default/Recomended |
 |--------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|--------------------|
@@ -44,7 +51,7 @@ Accessed with `/mg config blockShuffle [config key] [config value]`
 | `AllowNetherBlocks`            | If false, blocks exclusive to the nether will not appear as a target block.                                                                                            | Boolean | `false`            |
 
 ### DeathSwap
-Accessed with `/mg config deathswap [config key] [config value]`
+Accessed with `/mg ConfigGamemode DeathSwap [config key] [config value]`
 
 | Config Key                        | Description                                                                                                                                               | Type    | Default / Recommended |
 |-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
@@ -54,16 +61,8 @@ Accessed with `/mg config deathswap [config key] [config value]`
 | `PointsPerLameKill`               | The number of points awarded for a "lame" kill caused by basic environmental damage such as lava, void, or fall damage immediately after a swap.          | Integer | `1`                   |
 | `KeepInventoryOnSwapRelatedDeath` | If true, players will keep their inventory when they die as a direct result of a swap. If false, normal death item drops will occur.                      | Boolean | `true`                |
 
-### Randomizer
-Accessed with `/mg config randomizer [config key] [config value]`
-
-| Config Key                   | Description                                                                      | Type    | Default / Recommended |
-|------------------------------|----------------------------------------------------------------------------------|---------|-----------------------|
-| `RerandomizeAfterDeathMatch` | If true, all block drop mappings will be rerandomized after a deathmatch ends.   | Boolean | `false`               |
-| `RandomlyEnchantGear`        | If true, gear obtained through randomized drops may receive random enchantments. | Boolean | `true`                |
-
 ### Deathmatch
-Accessed with `/mg config deathmatch [config key] [config value]`
+Accessed with `/mg ConfigGamemode Deathmatch [config key] [config value]`
 
 | Config Key                       | Description                                                                                                                                          | Type    | Default / Recommended |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
@@ -72,7 +71,7 @@ Accessed with `/mg config deathmatch [config key] [config value]`
 | `DeathmatchAreaRadiusBlocks`     | The radius (in blocks) of the deathmatch arena from its center point.                                                                                | Integer | `35`                  |
 
 ### DimensionSwap
-Accessed with `/mg config dimensionswap [config key] [config value]`
+Accessed with `/mg ConfigGamemode DimensionSwap [config key] [config value]`
 
 | Config Key                            | Description                                                                                                                                           | Type    | Default / Recommended |
 |---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
@@ -82,7 +81,7 @@ Accessed with `/mg config dimensionswap [config key] [config value]`
 | `SendPlayersToMainWorldAfterGameEnds` | If true, players will be teleported back to the main world when the game ends.                                                                        | Boolean | `false`               |
 
 ### WouldYouRather
-Accessed with `/mg config wouldyourather [config key] [config value]`
+Accessed with `/mg ConfigGamemode WouldYouRather [config key] [config value]`
 
 | Config Key                                 | Description                                                                                                                                                              | Type    | Default / Recommended |
 |--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
@@ -93,5 +92,28 @@ Accessed with `/mg config wouldyourather [config key] [config value]`
 | `ApplyDamageImmunityDuringChoiceSelection` | If true, players can't take damage while selecting their choice                                                                                                          | Boolean | `true`                |
 | `StartGameWithAChoicePrompt`               | If true, players are given a Would You Rather prompt at the start of the game.                                                                                           | Boolean | `true`                |
 
+## Modifier specific configuration
 
+### Randomizer
+Accessed with `/mg ConfigModifier Randomizer [config key] [config value]`
 
+| Config Key                   | Description                                                                      | Type    | Default / Recommended |
+|------------------------------|----------------------------------------------------------------------------------|---------|-----------------------|
+| `RerandomizeAfterDeathMatch` | If true, all block drop mappings will be rerandomized after a deathmatch ends.   | Boolean | `false`               |
+| `RandomlyEnchantGear`        | If true, gear obtained through randomized drops may receive random enchantments. | Boolean | `true`                |
+
+### AllBlocksHaveGravity
+Accessed with `/mg ConfigModifier AllBlocksHaveGravity [config key] [config value]`
+
+Most of these options tune the performance/appearance trade-off. If this modifier is causing lag, the settings with the largest impact are `HorizontalEffectRadius`, `VerticalEffectRadius`, and `MaxConcurrentFallingBlockEntities`. See the [AllBlocksHaveGravity page](AllBlocksHaveGravity.md) for more detail.
+
+| Config Key                           | Description                                                                                                                                              | Type    | Default / Recommended |
+|--------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
+| `HorizontalEffectRadius`             | How far out from each player, in blocks, the game looks for blocks that should fall.                                                                     | Integer | `10`                  |
+| `VerticalEffectRadius`               | How far above and below each player, in blocks, the game looks for blocks that should fall.                                                              | Integer | `40`                  |
+| `EnableInvisibleBlockCulling`        | If true, blocks that no player can see are not spawned as falling block entities. They still land exactly when and where they would have.                | Boolean | `true`                |
+| `MaxBlockVisibilityDistance`         | Blocks further than this from every player are never drawn as falling entities. They still fall and land normally.                                       | Integer | `48`                  |
+| `AlwaysVisibleRadiusBlocks`          | Block entities that spawn within this radius of any player will never be culled.                                                                         | Integer | `6`                   |
+| `MaxConcurrentFallingBlockEntities`  | The most falling block entities allowed at once. When the cap is hit, the entities furthest from any player are retired first. Set to `-1` for no limit. | Integer | `5000`                |
+| `MaxDroppedItemsPerWorld`            | The most dropped block items allowed on the ground per world. Oldest items are cleaned up first. Set to `-1` for no limit.                               | Integer | `500`                 |
+| `ApplyPhysicsUpdatesToFallingBlocks` | If true, blocks that fall run phyiscs check on nearby blocks, meaning more vanilla behaviour is kept, at the cost of performance                         | Boolean | `false`               |

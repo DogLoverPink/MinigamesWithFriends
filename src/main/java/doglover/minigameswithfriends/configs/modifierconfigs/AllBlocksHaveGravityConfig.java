@@ -47,10 +47,6 @@ public class AllBlocksHaveGravityConfig extends GameModuleConfig {
         return Math.max(0, getInt("MaxConcurrentFallingBlockEntities"));
     }
 
-
-    /**
-     * The limit of item entities in a world before culling begins
-     */
     public int getMaxDroppedItemsPerWorld() {
         return Math.max(0, getInt("MaxDroppedItemsPerWorld"));
     }

@@ -3,7 +3,7 @@
 Deathmatch is a gamemode where, after a configurable amount of time, all players are teleported into a arena and forced to fight to the death. Players who die in the deathmatch keep their inventory, and the last player standing earns a point. The point of this gamemode is that during the downtime between deatchmatches, players scramble to get the best gear that they can, in order to give them the biggest advantage in combat.
 
 ## Config
-Accessed with `/mg config deathmatch [config key] [config value]`
+Accessed with `/mg ConfigGamemode Deathmatch [config key] [config value]`
 
 | Config Key                       | Description                                                                                                                                          | Type    | Default / Recommended |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|

@@ -13,7 +13,7 @@ DeathSwap is a gamemode that involves players getting points by killing their op
 Another thing to note is that by default, dying as a result of another player killing you during a swap will make you not lose your inventory, though this can be configured as well.
 
 ## Config
-Accessed with `/mg config deathswap [config key] [config value]`
+Accessed with `/mg ConfigGamemode DeathSwap [config key] [config value]`
 
 | Config Key                        | Description                                                                                                                                               | Type    | Default / Recommended |
 |-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|

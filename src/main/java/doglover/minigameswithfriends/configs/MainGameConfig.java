@@ -1,7 +1,5 @@
 package doglover.minigameswithfriends.configs;
 
-import doglover.minigameswithfriends.gamemodes.GameModule;
-
 public class MainGameConfig extends GameModuleConfig {
 
     public MainGameConfig() {
@@ -14,13 +12,6 @@ public class MainGameConfig extends GameModuleConfig {
         registerConfigValue("TeleportPlayersToWorldSpawnOnGameStart", Boolean.class, true);
     }
 
-
-    public GameModuleConfig getGamemodeConfigFromName(String name) {
-        if (name.equalsIgnoreCase("maingame")) {
-            return this;
-        }
-        return GameModule.getConfigFromName(name);
-    }
 
     public boolean shouldSetToDayOnGameStart() {
         return getBoolean("SetToDayOnGameStart");

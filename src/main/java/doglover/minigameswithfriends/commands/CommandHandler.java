@@ -11,8 +11,8 @@ import static doglover.minigameswithfriends.commands.BuiltInCommandDefinitions.f
 
 public class CommandHandler {
 
-    private static final Map<String, BiConsumer<CommandSender, String[]>> commandMap = new HashMap<>();
-    private static final Map<String, Function<String[], List<String>>> tabCompletionsMap = new HashMap<>();
+    private static final Map<String, BiConsumer<CommandSender, String[]>> commandMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final Map<String, Function<String[], List<String>>> tabCompletionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public static void registerCommand(String commandName, BiConsumer<CommandSender, String[]> command) {
         commandMap.put(commandName, command);
@@ -20,12 +20,12 @@ public class CommandHandler {
 
     public static void registerCommand(String commandName, BiConsumer<CommandSender, String[]> command, Function<String[], List<String>> tabCompletions) {
         registerCommand(commandName, command);
-        tabCompletionsMap.put(commandName.toLowerCase(), tabCompletions);
+        tabCompletionsMap.put(commandName, tabCompletions);
     }
 
 
     public static List<String> getTabCompletions(CommandSender sender, String[] args) {
-        String commandName = args[0].toLowerCase();
+        String commandName = args[0];
         if (args.length == 1) {
             return filterByStartsWith(new ArrayList<>(commandMap.keySet()), args[0]);
         }

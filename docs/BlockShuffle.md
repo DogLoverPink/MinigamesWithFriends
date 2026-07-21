@@ -24,7 +24,7 @@ Usage: `/mg blockshuffle (BanBlock/UnbanBlock/ListBannedBlocks/Skip) [Block]"`
 
 
 ## Config
-Accessed with `/mg config blockShuffle [config key] [config value]`
+Accessed with `/mg ConfigGamemode BlockShuffle [config key] [config value]`
 
 | Config Key                     | Description                                                                                                                                                            | Type    | Default/Recomended |
 |--------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|--------------------|

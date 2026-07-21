@@ -36,7 +36,7 @@ Usage: `/mg wouldyourather (RemoveEffect/CheckActiveEffects/SendNewPrompt) [Play
 
 
 ## Config
-Accessed with `/mg config WouldYouRather [config key] [config value]`
+Accessed with `/mg ConfigGamemode WouldYouRather [config key] [config value]`
 
 | Config Key                                 | Description                                                                                                                                                              | Type    | Default / Recommended |
 |--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
