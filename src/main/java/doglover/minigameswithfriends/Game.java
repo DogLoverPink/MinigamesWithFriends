@@ -3,6 +3,7 @@ package doglover.minigameswithfriends;
 import doglover.minigameswithfriends.configs.MainGameConfig;
 import doglover.minigameswithfriends.gamemodes.DeathmatchGamemode;
 import doglover.minigameswithfriends.gamemodes.GameModule;
+import doglover.minigameswithfriends.gamemodes.Gamemode;
 import doglover.minigameswithfriends.gamemodes.WouldYouRatherGamemode;
 import doglover.minigameswithfriends.utils.BlockUtils;
 import doglover.minigameswithfriends.utils.ParticleUtils;
@@ -585,6 +586,15 @@ public class Game {
         for (Player plr : getPlayersAndSpectators()) {
 
             FastBoard board = boards.get(plr.getUniqueId());
+            if (lines.isEmpty() && board != null) {
+                if (!board.isDeleted()) {
+                    board.delete();
+                }
+                continue;
+            } else if (board == null || board.isDeleted()) {
+                setupBoardForPlayer(plr);
+                board = boards.get(plr.getUniqueId());
+            }
             if (board != null) {
                 board.updateLines(lines);
             }
@@ -649,11 +659,17 @@ public class Game {
         for (GameModule module : modules) {
             module.tick();
         }
-        scoreboardContributions.add("§dPoints: (First to " + pointsToWin + ")");
         List<Player> sortedPlayerPoints = new ArrayList<>(getPlayers());
         sortedPlayerPoints.sort(Comparator.comparingInt(this::getPointsFromPlayer).reversed());
-        for (Player player : sortedPlayerPoints) {
-            scoreboardContributions.add("§b" + player.getName() + ": §d" + getPointsFromPlayer(player));
+
+        //hide scoreboard if no player has points, and only modifiers are enabled, to look better
+        boolean anyPlayerHasAPoint = sortedPlayerPoints.stream().anyMatch(player -> getPointsFromPlayer(player) >= 1);
+        boolean anyGamemodeIsEnabled = getModules().stream().anyMatch(module -> module.getType() == GameModule.Type.GAMEMODE);
+        if (anyPlayerHasAPoint || anyGamemodeIsEnabled) {
+            scoreboardContributions.add("§dPoints: (First to " + pointsToWin + ")");
+            for (Player player : sortedPlayerPoints) {
+                scoreboardContributions.add("§b" + player.getName() + ": §d" + getPointsFromPlayer(player));
+            }
         }
         displayOnBoard(scoreboardContributions);
         invalidateCaches();
