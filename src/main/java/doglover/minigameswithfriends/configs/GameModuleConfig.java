@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameModuleConfig {
@@ -27,6 +28,20 @@ public class GameModuleConfig {
     }
 
     String prefix;
+
+    public record StringEnum(String[] values) {
+
+    }
+
+    private final Map<String, List<String>> stringEnums =  new HashMap<>();
+
+    public List<String> getCompletionsForStringEnum(String key) {
+        return stringEnums.get(key);
+    }
+
+    public void registerStringEnum(String key, String... values) {
+        stringEnums.put(key, List.of(values));
+    }
 
 
     protected void registerConfigValue(String key, Class<?> type, Object defaultValue) {
@@ -69,6 +84,11 @@ public class GameModuleConfig {
                 return false;
             }
             set(key, material);
+        } else if (type == StringEnum.class) {
+            if (!getCompletionsForStringEnum(key).contains(value)) {
+                return false;
+            }
+            set(key, value);
         } else if (type == String.class) {
             set(key, value);
         } else {

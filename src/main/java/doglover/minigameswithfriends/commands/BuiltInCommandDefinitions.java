@@ -332,10 +332,14 @@ public class BuiltInCommandDefinitions {
             return List.of();
         }
         Class<?> type = conf.getConfigValues().get(key);
-        if (type == null || !type.equals(Boolean.class)) {
+        if (type == null) {
             return List.of();
+        } else if (type.equals(Boolean.class)) {
+            return filterByStartsWith(List.of("true", "false"), input);
+        } else if (type.equals(GameModuleConfig.StringEnum.class)) {
+            return filterByStartsWith(conf.getCompletionsForStringEnum(key), input);
         }
-        return filterByStartsWith(List.of("true", "false"), input);
+        return List.of();
     }
 
     private static void listConfigValues(CommandSender commandSender, GameModuleConfig conf) {
