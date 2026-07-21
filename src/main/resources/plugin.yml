@@ -1,5 +1,5 @@
 name: MinigamesWithFriends
-version: '1.2.2'
+version: '1.2.3'
 main: doglover.minigameswithfriends.MinigamesWithFriends
 api-version: '1.21'
 author: Dogloverpink

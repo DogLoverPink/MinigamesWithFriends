@@ -4,8 +4,13 @@ import doglover.minigameswithfriends.MinigamesWithFriends;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.SoundCategory;
+import org.bukkit.SoundGroup;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.FallingBlock;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,6 +23,47 @@ public class BlockUtils {
         return matName.contains("NETHER") || matName.contains("CRIMSON") || matName.contains("WARPED") || matName.contains("TWISTING") ||
                 matName.contains("WEEPING") || matName.equals("SHROOMLIGHT") || matName.contains("BLACKSTONE") || matName.contains("QUARTZ") ||
                 matName.contains("SOUL") || matName.contains("BASALT") || matName.equals("GLOWSTONE") || matName.equals("REDSTONE_LAMP");
+    }
+    
+
+    public static void breakBlockWithParticlesAndSounds(Block block, boolean playSounds, boolean playParticles, boolean dropItems) {
+        if (block.getType().isAir()) {
+            return;
+        }
+        BlockData data = block.getBlockData();
+        World world = block.getWorld();
+        Location center = block.getLocation().toCenterLocation();
+
+        if (playSounds) {
+            SoundGroup soundGroup = data.getSoundGroup();
+            world.playSound(center, soundGroup.getBreakSound(), SoundCategory.BLOCKS,
+                    (soundGroup.getVolume() + 1f) / 2f, soundGroup.getPitch() * 0.8f);
+        }
+        if (playParticles) {
+            world.spawnParticle(Particle.BLOCK, center, 30, 0.25, 0.25, 0.25, 0, data);
+        }
+
+        if (dropItems) {
+            block.breakNaturally(false);
+        } else {
+            block.setType(Material.AIR, false);
+        }
+    }
+
+    public static FallingBlock convertBlockToFallingBlock(Block block, boolean applyPhysics) {
+        BlockData data = block.getBlockData();
+        Location loc = block.getLocation();
+
+        loc.setX(Math.floor(loc.getX()) + 0.5);
+        loc.setZ(Math.floor(loc.getZ()) + 0.5);
+        FallingBlock blockEntity = block.getWorld().spawn(loc, FallingBlock.class,
+                fallingBlock -> {
+                    fallingBlock.setBlockData(data);
+                    fallingBlock.setDropItem(true);
+                }
+        );
+        block.setType(Material.AIR, applyPhysics);
+        return blockEntity;
     }
 
     public static void createHollowBoxAroundLocation(Location loc) {

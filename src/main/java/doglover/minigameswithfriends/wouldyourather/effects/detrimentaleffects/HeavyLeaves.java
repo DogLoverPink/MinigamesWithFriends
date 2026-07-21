@@ -5,9 +5,7 @@ import doglover.minigameswithfriends.wouldyourather.WYREffect;
 import doglover.minigameswithfriends.wouldyourather.WYREffectHandler;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -57,16 +55,8 @@ public class HeavyLeaves extends WYREffect {
             }
         }
         for (Block block : leaves) {
-
-            Location loc = block.getLocation();
-            BlockData data = block.getBlockData();
-            loc.setX(Math.floor(loc.getX()) + 0.5);
-            loc.setZ(Math.floor(loc.getZ()) + 0.5);
-            FallingBlock fallingBlockEntity = getPlayer().getWorld().spawn(loc, FallingBlock.class,
-                    fallingBlock -> fallingBlock.setBlockData(data)
-            );
+            FallingBlock fallingBlockEntity = BlockUtils.convertBlockToFallingBlock(block, true);
             fallingBlocks.add(fallingBlockEntity.getUniqueId());
-            block.setType(Material.AIR);
 
         }
     }
