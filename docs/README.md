@@ -43,6 +43,7 @@ Modifiers add complexity and fundamentally change how the vanilla game works, an
   https://github.com/user-attachments/assets/c69ab889-85bf-4577-a80c-cb71b246696c
   </details>
 - **AllBlocksHaveGravity:** Every block near a player is subject to gravity, meaning all blocks around the players functions like sand or gravel would.
+- **BreakingABlockBreaksWholeColumn:** Breaking any block also breaks the whole vertical column above and/or below it, turning ordinary mining into rapid terrain destruction.
 
 ## Getting Started
 To get Minigames With Friends up and running, here and the steps you need to follow.

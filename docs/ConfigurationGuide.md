@@ -105,7 +105,7 @@ Accessed with `/mg ConfigModifier Randomizer [config key] [config value]`
 ### AllBlocksHaveGravity
 Accessed with `/mg ConfigModifier AllBlocksHaveGravity [config key] [config value]`
 
-Most of these options tune the performance/appearance trade-off. If this modifier is causing lag, the settings with the largest impact are `HorizontalEffectRadius`, `VerticalEffectRadius`, and `MaxConcurrentFallingBlockEntities`. See the [AllBlocksHaveGravity page](AllBlocksHaveGravity.md) for more detail.
+Most of these options tune the performance/appearance trade-off. If this modifier is causing lag, the settings with the largest impact are `HorizontalEffectRadius`, `VerticalEffectRadius`, and `MaxConcurrentFallingBlockEntities`. See the [AllBlocksHaveGravity page](Modifiers/AllBlocksHaveGravity.md) for more detail.
 
 | Config Key                           | Description                                                                                                                                              | Type    | Default / Recommended |
 |--------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-----------------------|
@@ -117,3 +117,14 @@ Most of these options tune the performance/appearance trade-off. If this modifie
 | `MaxConcurrentFallingBlockEntities`  | The most falling block entities allowed at once. When the cap is hit, the entities furthest from any player are retired first. Set to `-1` for no limit. | Integer | `5000`                |
 | `MaxDroppedItemsPerWorld`            | The most dropped block items allowed on the ground per world. Oldest items are cleaned up first. Set to `-1` for no limit.                               | Integer | `500`                 |
 | `ApplyPhysicsUpdatesToFallingBlocks` | If true, blocks that fall run phyiscs check on nearby blocks, meaning more vanilla behaviour is kept, at the cost of performance                         | Boolean | `false`               |
+
+### BreakingABlockBreaksWholeColumn
+Accessed with `/mg ConfigModifier BreakingABlockBreaksWholeColumn [config key] [config value]`
+
+See the [BreakingABlockBreaksWholeColumn page](Modifiers/BreakingABlockBreaksWholeColumn.md) for a fuller description of each animation mode.
+
+| Config Key       | Description                                                                                                                            | Type                                             | Default / Recommended |
+|------------------|--------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|-----------------------|
+| `BreakDirection` | Which blocks in the column break. `Below` breaks only the blocks beneath the one you broke; `AboveAndBelow` breaks the entire column. | Enum: `Below` / `AboveAndBelow`                  | `AboveAndBelow`       |
+| `AnimationMode`  | How the column is removed: `None` (instant), `RapidBreaking` (one block per tick, top to bottom), or `FallingBlocks` (blocks collapse as falling entities). | Enum: `None` / `RapidBreaking` / `FallingBlocks` | `None`                |
+| `DropItems`      | Whether the destroyed blocks drop their items. Has no effect in `FallingBlocks` mode.                                                 | Boolean                                          | `true`                |
